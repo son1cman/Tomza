@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/desglose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="dda"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/efectivo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Efectivo" />
+
+    <EditText
+        android:id="@+id/edtEfeQ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Cantidad Efectivo"
+        android:inputType="number" />
+    <CheckBox
+        android:id="@+id/transferencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transferencia" />
+
+    <EditText
+        android:id="@+id/edttransQ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Cantidad Tranferencia" />
+
+    <EditText
+        android:id="@+id/edtNumeroCuenta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="20"
+        android:hint="Numero de cuenta"
+        android:inputType="number" />
+    <CheckBox
+        android:id="@+id/cheque"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cheque" />
+
+    <EditText
+        android:id="@+id/edtchequeQ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Cantidad Cheque"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edtchequeN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:hint="Numero Cheque"
+        android:inputType="text|number" />
+    <EditText
+        android:id="@+id/edtchequeB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:hint="Banco"
+        android:inputType="text|number" />
+
+    <TextView
+        android:id="@+id/tvtotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total" />
+
+</LinearLayout>
+</ScrollView>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/edt50k"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Cantidad 50 MIL"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edt20k"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+
+        android:hint="20 MIL"
+        android:inputType="number"
+        android:layout_toRightOf="@+id/edt10k"
+        android:layout_toEndOf="@+id/edt10k" />
+    <EditText
+        android:id="@+id/edt10k"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/edt50k"
+        android:ems="10"
+        android:hint="Cantidad 10 MIL"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edt5k"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="De 5 MIL"
+        android:inputType="number"
+        android:layout_toRightOf="@+id/edt10k"
+        android:layout_below="@+id/edt50k"
+         />
+    <EditText
+        android:id="@+id/edt2k"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+
+        android:layout_below="@+id/edt10k"
+        android:hint="Cantidad 2 MIL"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edt1k"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_toRightOf="@+id/edt2k"
+        android:layout_below="@+id/edt10k"
+        android:hint="De MIL"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edt500"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+
+        android:layout_below="@+id/edt2k"
+        android:hint="Cantidad 500"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edt100"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/edt2k"
+        android:hint="De 100 "
+        android:inputType="number"
+        android:layout_toRightOf="@+id/edt2k"
+        android:layout_toEndOf="@+id/edt2k" />
+    <EditText
+        android:id="@+id/edt50"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+
+        android:layout_below="@+id/edt500"
+        android:hint="Cantidad 50"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edt25"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/edt500"
+        android:hint="De 25"
+        android:inputType="number"
+        android:layout_alignLeft="@+id/edt100"
+        android:layout_alignStart="@+id/edt100" />
+    <EditText
+        android:id="@+id/edt10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+
+        android:layout_below="@+id/edt50"
+        android:hint="Cantidad 10"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/edt5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/edt50"
+        android:hint="5"
+        android:inputType="number"
+        android:layout_alignLeft="@+id/edt25"
+        android:layout_alignStart="@+id/edt25" />
+    <EditText
+        android:id="@+id/edtDol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/edt10"
+        android:hint="Dolares"
+        android:inputType="number"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <EditText
+        android:id="@+id/edtVale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/edt10"
+        android:hint="Vale"
+        android:inputType="number"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/edt5"
+        android:layout_alignStart="@+id/edt5" />
+
+
+</RelativeLayout>

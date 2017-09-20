@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TOMZA CR - version 0.34</string>
+    <string-array name="TiposDescuentos">
+        <item>Normal</item>
+        <item>Tienda Descuento Fijo</item>
+        <item>Tienda Descuento Escala</item>
+        <item>Tienda Desc Escala + Fijo</item>
+    </string-array>
+    <string-array name="TipoFacGranel">
+        <item>Credito</item>
+        <item>Contado</item>
+
+    </string-array>
+    <string-array name="motivos">
+        <item>No necesita</item>
+        <item>Competencia</item>
+        <item>Precio y descuento</item>
+        <item>No esta el jefe</item>
+    </string-array>
+</resources>
