@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "915625889476",
+    "firebase_url": "https://firecast-app-90718.firebaseio.com",
+    "project_id": "firecast-app-90718",
+    "storage_bucket": "firecast-app-90718.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915625889476:android:13dc66d947a47155",
+        "android_client_info": {
+          "package_name": "net.simplifiedcoding.androidmysqlsync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915625889476-do1nflp1mi91s1j5dpp07m1aehbsh6kc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.simplifiedcoding.androidmysqlsync",
+            "certificate_hash": "cf0b492d77c69a251486beb974180c92900c32d1"
+          }
+        },
+        {
+          "client_id": "915625889476-huosne9idgmi6bp22n752h6i9ue0rj0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkrWn8Xin8gOfpLq0InPYTzflCKg_8MwY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915625889476-huosne9idgmi6bp22n752h6i9ue0rj0a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
