@@ -156,7 +156,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     public Cursor getNombre() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + "CLIENTE" + " ORDER BY " + COLUMN_ID + " DESC;";
+        String sql = "SELECT * FROM " + "CLIENTE" + " ORDER BY " + "NOMBRE" + " ASC;";
         Cursor c = db.rawQuery(sql, null);
         android.util.Log.d("dat01",c.toString());
         return c;

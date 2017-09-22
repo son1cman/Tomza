@@ -100,6 +100,7 @@ public class catalogo {
     public void setDescuentoAsignado(boolean descuentoAsignado) {
 
         DescuentoAsignado = descuentoAsignado;
+
         calcular();
     }
 

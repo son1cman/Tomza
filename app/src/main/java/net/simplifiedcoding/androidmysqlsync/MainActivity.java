@@ -705,11 +705,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(Integer.valueOf(_actual.getTipoFactura()) == 1){
                             //ES TIENDA ESCALA NORMAL
 
+
                             double conso = (_25p.getQty() + _25r.getQty()) + ( _100r.getQty()*4) +
                                     ((_20p.getQty() * 0.8f) + (_20r.getQty() *0.8f)) + (_10r.getQty() *0.4f) +  (_35r.getQty() *1.4f) +
-                                    (_40r.getQty() *1.6f) + (_45r.getQty() *1.8f) + (_50r.getQty() *2f) + (_60r.getQty() *2.4f);
+                                    (_40r.getQty() *1.6f) + (_45r.getQty() *1.8f) + (_50r.getQty() *2f) + (_60r.getQty() *2.4f) + (_30r.getQty() *1.2f) ;
 
-                            if((conso) < 10)
+                            if((conso) < 11)
                                 _descCilindro25 = 1574;
                             if((conso > 10) && (conso < 21))
                                 _descCilindro25 = 1754;
@@ -723,10 +724,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 _descCilindro25 = 1923;
                             if(conso >= 60)
                                 _descCilindro25 = 1933;
+
                             _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
                                     _35r.getQtyTotal() + _40r.getQtyTotal() + _45r.getQtyTotal() + _50r.getQtyTotal() + _60r.getQtyTotal() + _100r.getQtyTotal();
 
                             _totaldesc = conso * _descCilindro25;
+
+
                             if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n";
                             if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n";
                             if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n";
@@ -735,13 +739,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n";
                             if (_100r.getDesQTY() != null) fac_detail += _100r.getDesQTY()+ "\n";
 
-                            if (_10r.getDesDESC() != null) desc_detail += _10r.getDesDESC() + "\n";
-                            if (_20p.getDesDESC() != null) desc_detail += _20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += _20r.getDesDESC()+ "\n";
-                            if (_25p.getDesDESC() != null) desc_detail += _25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += _25r.getDesDESC()+ "\n";
-                            if (_30r.getDesDESC() != null) desc_detail += _30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += _35r.getDesDESC()+ "\n";
-                            if (_40r.getDesDESC() != null) desc_detail += _40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += _45r.getDesDESC()+ "\n";
-                            if (_50r.getDesDESC() != null) desc_detail += _50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += _60r.getDesDESC()+ "\n";
-                            if (_100r.getDesDESC() != null) desc_detail += _100r.getDesDESC()+ "\n";
+
+                            if (_10r.getDesDESC() != null) desc_detail += " " + String.valueOf(_10r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*0.4f)*100.0)/100.0) + "  = " + String.format("%.2f", _10r.getQty()*_descCilindro25*0.4f) + "\n";
+                            if (_20p.getDesDESC() != null)desc_detail += " " + String.valueOf(_20p.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*0.8f)*100.0)/100.0) + "  = " + String.format("%.2f", _20p.getQty()*_descCilindro25*0.8f) + "\n";
+                            if (_20r.getDesDESC() != null)desc_detail += " " + String.valueOf(_20r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*0.8f)*100.0)/100.0) + "  = " + String.format("%.2f", _20r.getQty()*_descCilindro25*0.8f) + "\n";
+                            if (_25p.getDesDESC() != null) desc_detail +=" " + String.valueOf(_25p.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*1.0f)*100.0)/100.0) + "  = " + String.format("%.2f", _25p.getQty()*_descCilindro25*1.0f) + "\n";
+                            if (_25r.getDesDESC() != null)desc_detail += " " + String.valueOf(_25r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*1.0f)*100.0)/100.0) + "  = " + String.format("%.2f", _25r.getQty()*_descCilindro25*1.0f) + "\n";
+                            if (_30r.getDesDESC() != null)desc_detail += " " + String.valueOf(_30r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*1.2f)*100.0)/100.0) + "  = " + String.format("%.2f", _30r.getQty()*_descCilindro25*1.2f) + "\n";
+                            if (_35r.getDesDESC() != null)desc_detail += " " + String.valueOf(_35r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*1.4f)*100.0)/100.0) + "  = " + String.format("%.2f", _35r.getQty()*_descCilindro25*1.4f) + "\n";
+                            if (_40r.getDesDESC() != null)desc_detail += " " + String.valueOf(_40r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*1.6f)*100.0)/100.0) + "  = " + String.format("%.2f", _40r.getQty()*_descCilindro25*1.6f) + "\n";
+                            if (_45r.getDesDESC() != null)desc_detail += " " + String.valueOf(_45r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*1.8f)*100.0)/100.0) + "  = " + String.format("%.2f", _45r.getQty()*_descCilindro25*1.8f) + "\n";
+                            if (_50r.getDesDESC() != null)desc_detail += " " + String.valueOf(_50r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*2f)*100.0)/100.0)+ "  = " + String.format("%.2f", _50r.getQty()*_descCilindro25*2f) + "\n";
+                            if (_60r.getDesDESC() != null)desc_detail += " " + String.valueOf(_60r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*2.4f)*100.0)/100.0) + "  = " + String.format("%.2f", _60r.getQty()*_descCilindro25*2.4f) + "\n";
+                            if (_100r.getDesDESC() != null)desc_detail += " " + String.valueOf(_100r.getQty()) + " " + String.valueOf(Math.round((_descCilindro25*4f)*100.0)/100.0) + "  = " + String.format("%.2f", _100r.getQty()*_descCilindro25*4f) + "\n";
                             _totaldesc = Math.round(_totaldesc*100.0)/100.0;
                             _totalfac = Math.round(_totalfac *100.0)/100.0;
 
@@ -844,7 +854,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
                     edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
-                    txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac - _totaldesc));
+                    txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + "\n" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac - _totaldesc));
                     b.show();
 /****************************************************************************************************/
                     }else{
@@ -1177,13 +1187,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     _totalfac = _lts.getTotal() + _kgs.getTotal();
                     _totaldesc = _lts.getDescTotal() + _kgs.getDescTotal();
-                    saveNameToServer(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                    LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+                    final View dialogView = inflater.inflate(R.layout.tipopago, null);
+                    dialogBuilder.setView(dialogView);
+
+                    final EditText edtEfeQ = (EditText) dialogView.findViewById(R.id.edtEfeQ);
+                    final EditText edttransQ = (EditText) dialogView.findViewById(R.id.edttransQ);
+                    final EditText edtNumeroCuenta = (EditText) dialogView.findViewById(R.id.edtNumeroCuenta);
+                    final EditText edtchequeQ = (EditText) dialogView.findViewById(R.id.edtchequeQ);
+                    final EditText edtchequeN = (EditText) dialogView.findViewById(R.id.edtchequeN);
+                    final EditText edtchequeB = (EditText) dialogView.findViewById(R.id.edtchequeB);
+                    final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
+
+
+
+                    dialogBuilder.setTitle(tokens[2]);
+                    dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    });
+                    dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //pass
+                        }
+                    });
+                    AlertDialog b = dialogBuilder.create();
+
+                    String _dat = "Total factura: " + "\n" + tokens[3] + "\n Total Descuento:" + tokens[4]  + "\n" ;
+
+                    if (!tokens[6].equals("0")) _dat += "Contado"  + "\n"; else _dat += "Credito" + "\n";
+                    //if (tokens[7] != "0") _dat += "30 Lbs :" + "\n"; //Libre recarga
+                    if (!tokens[9].equals("0"))  _dat += "Litros :" + tokens[9] +"\n";
+                    if (!tokens[16].equals("0"))  _dat += "Kilogramos :" +tokens[16] + "\n";
+                    if (!tokens[17].equals("0")) _dat += "Litros Consignacion :" +tokens[17] + "\n";
+
+                    if (!tokens[24].equals("0")) edtEfeQ.setText(tokens[24]);
+                    if (!tokens[25].equals("0")) edttransQ.setText(tokens[25]);
+                    if (!tokens[26].equals("0")) edtNumeroCuenta .setText(tokens[26]);
+                    if (!tokens[27].equals("0")) edtchequeN.setText(tokens[27]);
+                    if (!tokens[28].equals("0")) edtchequeB.setText(tokens[28]);
+                    if (!tokens[29].equals("0")) edtchequeQ.setText(tokens[29]);
+
+                   /* saveNameToServer(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
                             +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(Q20)
-                            + "," + String.valueOf(_lts.getQty())+ "," + String.valueOf(Q35)+ "," + String.valueOf(Q40r)+ "," + String.valueOf(Q50)
-                            + "," + String.valueOf(Q100r)
-                            + "," + String.valueOf(Q10r) + "," + String.valueOf(Q20r)+
-                            "," + String.valueOf(_kgs.getQty())+ "," + String.valueOf(Q35r)+ "," + String.valueOf(Q45r)+ "," + String.valueOf(Q60r)
-                            + "," + LAT + "," + LONG +","+_CurrentGPS);
+                            + "," + String.va9lueOf(_lts.getQty())+ "," + String.va10lueOf(Q35)+ "," + String.va11lueOf(Q40r)+ "," + St12ring.valueOf(Q50)
+                            + "," + String.valu13eOf(Q100r)
+                            + "," + String.valu14eOf(Q10r) + "," + String.va15lueOf(Q20r)+
+                            "," + String.valu16eOf(_kgs.getQty())+ "," + String.valueOf(Q35r)+ "," + String.valueOf(Q45r)+ "," + String.valueOf(Q60r)
+                            + "," + LAT + "," + LONG +","+_CurrentGPS);*/
+
+
+                    txvDesglose.setText(_dat);
+
+                    b.show();
+
+
                 }
 
 
