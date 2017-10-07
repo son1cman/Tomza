@@ -201,6 +201,7 @@ public void DescuentoEspecial35y45(int _presentacion){
     }
 
 
+
 }
     private void calcular(){
         if (lbs != 0){//cilindro
@@ -211,14 +212,35 @@ public void DescuentoEspecial35y45(int _presentacion){
 
             if(PrecioAsignado == true && DescuentoAsignado == true)//agencia + descuento
             {
-                this.PrecioSel = agencia;
-                this.DescSel = descuento;
-                DescuentoEspecial35y45(lbs);
-                total = ((Qty * agencia)-(Qty*descuento));
-                qtyTotal = (Qty * agencia);
-                descTotal = (Qty*descuento);
-                desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + "  = " + String.format("%.2f", (Qty * agencia) );
-                desDESC = " " + String.valueOf(Qty) + " " + String.valueOf(descuento) + "  = " + String.format("%.2f", descTotal) + "\n"; ;
+
+                if(Tipo == 4){
+                    double age  = agencia - descuento;
+                    this.PrecioSel = agencia;
+                    this.DescSel = descuento;
+
+                    total = (Qty * age);
+                    qtyTotal = (Qty * age);
+                    descTotal = 0d;
+                    desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(age) + "  = " + String.format("%.2f", (Qty * age) );
+                    desDESC = " " + String.valueOf(Qty) + " " + String.valueOf(descuento) + "  = " + String.format("%.2f", descTotal) + "\n"; ;
+
+                }
+                else {
+                    this.PrecioSel = agencia;
+
+
+                    this.DescSel = descuento;
+                    DescuentoEspecial35y45(lbs);
+                    total = ((Qty * agencia)-(Qty*descuento));
+                    qtyTotal = (Qty * agencia);
+                    descTotal = (Qty*descuento);
+                    desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + "  = " + String.format("%.2f", (Qty * agencia) );
+                    desDESC = " " + String.valueOf(Qty) + " " + String.valueOf(descuento) + "  = " + String.format("%.2f", descTotal) + "\n"; ;
+
+                }
+
+
+
             }
             if(PrecioAsignado == true && DescuentoAsignado == false)//agencia + descuento
             {
@@ -243,6 +265,7 @@ public void DescuentoEspecial35y45(int _presentacion){
             }
             if(PrecioAsignado == false && DescuentoAsignado == true)//consumidor + con descuento
             {
+
                 this.PrecioSel = consumidor;
                 this.DescSel = descuento;
                 DescuentoEspecial35y45(lbs);

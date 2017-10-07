@@ -3,6 +3,9 @@ package net.simplifiedcoding.androidmysqlsync;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +34,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.DialogInterface;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import com.android.volley.AuthFailureError;
@@ -57,6 +65,8 @@ import android.view.KeyEvent;
 import android.widget.ToggleButton;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 
 import static java.lang.Math.round;
 
@@ -67,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * CILINDROSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     * */
     private boolean _FacCilindro = true;
+    private boolean _bt = false;
     private  String _sDescuento = "";
     private  String _sTipo = "";
 
@@ -125,6 +136,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String MIRUTA = "MI_RUTA";
     public static final String TOTALFACTURADO = "TOTAL_FACTURADO";
 
+    // android built in classes for bluetooth operations
+    BluetoothAdapter mBluetoothAdapter;
+    BluetoothSocket mmSocket;
+    BluetoothDevice mmDevice;
+    // needed for communication to bluetooth device / network
+    OutputStream mmOutputStream;
+    InputStream mmInputStream;
+    Thread workerThread;
+
+
+
+    byte[] readBuffer;
+    int readBufferPosition;
+    volatile boolean stopWorker;
 
     //public static final String TOTALDESCUENTO = "TOTAL_DESCUENTO";
 
@@ -266,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseHelper db;
 
     //View objects
-    private Button buttonAdd,buttonSync;
+    private Button buttonAdd;
     EditText myUserName;
 
     private ListView listViewNames;
@@ -581,13 +606,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                     _35r.getDescTotal() + _40r.getDescTotal() + _45r.getDescTotal() + _50r.getDescTotal() + _60r.getDescTotal() + _100r.getDescTotal();
 */                            if(_FacCilindro){
 
-                                saveNameToServer(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
-                                        +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(_20p.getQty())
-                                        + "," + String.valueOf(_25p.getQty())+ "," + String.valueOf(_30r.getQty())+ "," + String.valueOf(_40r.getQty())+ "," + String.valueOf(_50r.getQty())
-                                        + "," + String.valueOf(_100r.getQty())
-                                        + "," + String.valueOf(_10r.getQty()) + "," + String.valueOf(_20r.getQty())+
-                                        "," + String.valueOf(_25r.getQty())+ "," + String.valueOf(_35r.getQty())+ "," + String.valueOf(_45r.getQty())+ "," + String.valueOf(_60r.getQty())
-                                        + "," + LAT + "," + LONG +","+_CurrentGPS);
+                                    saveNameToServer(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
+                                            +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(_20p.getQty())
+                                            + "," + String.valueOf(_25p.getQty())+ "," + String.valueOf(_30r.getQty())+ "," + String.valueOf(_40r.getQty())+ "," + String.valueOf(_50r.getQty())
+                                            + "," + String.valueOf(_100r.getQty())
+                                            + "," + String.valueOf(_10r.getQty()) + "," + String.valueOf(_20r.getQty())+
+                                            "," + String.valueOf(_25r.getQty())+ "," + String.valueOf(_35r.getQty())+ "," + String.valueOf(_45r.getQty())+ "," + String.valueOf(_60r.getQty())
+                                            + "," + LAT + "," + LONG +","+_CurrentGPS);
+
+
 
                             }else{//GRANEL
 
@@ -601,6 +628,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         "," + String.valueOf(_kgs.getQty())+ "," + String.valueOf(Q35r)+ "," + String.valueOf(Q45r)+ "," + String.valueOf(Q60r)
                                         + "," + LAT + "," + LONG +","+_CurrentGPS);
                             }
+                            try {
+                                try {
+                                    double _tt = _totalfac-_totaldesc;
+                                    sendData(String.valueOf(_tt),String.valueOf(_totaldesc));
+
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                }
+                            } catch(Exception e) {
+
+
+                                e.printStackTrace();
+                            }
+
 
 
 
@@ -608,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             codigocliente = -1;
 
 
-                            resetUI();
+
                             Toast.makeText(getApplicationContext(),"Factura realizada con exito",Toast.LENGTH_LONG).show();
 
 
@@ -676,21 +717,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //DESCUENTOS Y PRECIO SEGUN FACTOR NO OLVIDARRRR
                         if(Integer.valueOf(_actual.getTipoFactura()) == 2){
                             //ES TIENDA Descuento fijo
-                            if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n";
-                            if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n";
-                            if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n";
-                            if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n";if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n";
-                            if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n";if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n";
-                            if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n";
-                            if (_100r.getDesQTY() != null) fac_detail += _100r.getDesQTY()+ "\n";
+                            if (_10r.getDesQTY() != null) fac_detail += "    " +_10r.getDesQTY() + "\n";
+                            if (_20p.getDesQTY() != null) fac_detail += "    " +_20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += "    " +_20r.getDesQTY() + "\n";
+                            if (_25p.getDesQTY() != null) fac_detail += "    " +_25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += "    " +_25r.getDesQTY() + "\n";
+                            if (_30r.getDesQTY() != null) fac_detail += "    " +_30r.getDesQTY() + "\n";if (_35r.getDesQTY() != null) fac_detail += "    " +_35r.getDesQTY() + "\n";
+                            if (_40r.getDesQTY() != null) fac_detail += "    " +_40r.getDesQTY()+ "\n";if (_45r.getDesQTY() != null) fac_detail += "    " +_45r.getDesQTY()+ "\n";
+                            if (_50r.getDesQTY() != null) fac_detail += "    " +_50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += "    " +_60r.getDesQTY()+ "\n";
+                            if (_100r.getDesQTY() != null) fac_detail += "    " +_100r.getDesQTY()+ "\n";
 
-                            if (_10r.getDesDESC() != null) desc_detail += _10r.getDesDESC() + "\n";
-                            if (_20p.getDesDESC() != null) desc_detail += _20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += _20r.getDesDESC()+ "\n";
-                            if (_25p.getDesDESC() != null) desc_detail += _25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += _25r.getDesDESC()+ "\n";
-                            if (_30r.getDesDESC() != null) desc_detail += _30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += _35r.getDesDESC()+ "\n";
-                            if (_40r.getDesDESC() != null) desc_detail += _40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += _45r.getDesDESC()+ "\n";
-                            if (_50r.getDesDESC() != null) desc_detail += _50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += _60r.getDesDESC()+ "\n";
-                            if (_100r.getDesDESC() != null) desc_detail += _100r.getDesDESC()+ "\n";
+                            if (_10r.getDesDESC() != null) desc_detail += "    " +_10r.getDesDESC() + "\n";
+                            if (_20p.getDesDESC() != null) desc_detail += "    " +_20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += "    " +_20r.getDesDESC()+ "\n";
+                            if (_25p.getDesDESC() != null) desc_detail += "    " +_25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += "    " +_25r.getDesDESC()+ "\n";
+                            if (_30r.getDesDESC() != null) desc_detail += "    " +_30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += "    " +_35r.getDesDESC()+ "\n";
+                            if (_40r.getDesDESC() != null) desc_detail += "    " +_40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += "    " +_45r.getDesDESC()+ "\n";
+                            if (_50r.getDesDESC() != null) desc_detail += "    " +_50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += "    " +_60r.getDesDESC()+ "\n";
+                            if (_100r.getDesDESC() != null) desc_detail += "    " +_100r.getDesDESC()+ "\n";
 
                             _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
                                     _35r.getQtyTotal() + _40r.getQtyTotal() + _45r.getQtyTotal() + _50r.getQtyTotal() + _60r.getQtyTotal() + _100r.getQtyTotal();
@@ -767,21 +808,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(Integer.valueOf(_actual.getTipoFactura()) == 0){
                             //Precio Agencia
                             //No es tienda
-                            if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n";
-                            if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n";
-                            if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n";
-                            if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n";if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n";
-                            if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n";if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n";
-                            if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n";
-                            if (_100r.getDesQTY() != null) fac_detail += _100r.getDesQTY()+ "\n";
+                            if (_10r.getDesQTY() != null) fac_detail += "    " +_10r.getDesQTY() + "\n";
+                            if (_20p.getDesQTY() != null) fac_detail += "    " +_20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += "    " +_20r.getDesQTY() + "\n";
+                            if (_25p.getDesQTY() != null) fac_detail += "    " +_25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += "    " +_25r.getDesQTY() + "\n";
+                            if (_30r.getDesQTY() != null) fac_detail += "    " +_30r.getDesQTY() + "\n";if (_35r.getDesQTY() != null) fac_detail += "    " +_35r.getDesQTY() + "\n";
+                            if (_40r.getDesQTY() != null) fac_detail += "    " +_40r.getDesQTY()+ "\n";if (_45r.getDesQTY() != null) fac_detail += "    " +_45r.getDesQTY()+ "\n";
+                            if (_50r.getDesQTY() != null) fac_detail += "    " +_50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += "    " +_60r.getDesQTY()+ "\n";
+                            if (_100r.getDesQTY() != null) fac_detail += "    " +_100r.getDesQTY()+ "\n";
 
-                            if (_10r.getDesDESC() != null) desc_detail += _10r.getDesDESC() + "\n";
-                            if (_20p.getDesDESC() != null) desc_detail += _20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += _20r.getDesDESC()+ "\n";
-                            if (_25p.getDesDESC() != null) desc_detail += _25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += _25r.getDesDESC()+ "\n";
-                            if (_30r.getDesDESC() != null) desc_detail += _30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += _35r.getDesDESC()+ "\n";
-                            if (_40r.getDesDESC() != null) desc_detail += _40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += _45r.getDesDESC()+ "\n";
-                            if (_50r.getDesDESC() != null) desc_detail += _50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += _60r.getDesDESC()+ "\n";
-                            if (_100r.getDesDESC() != null) desc_detail += _100r.getDesDESC()+ "\n";
+                            if (_10r.getDesDESC() != null) desc_detail += "    " +_10r.getDesDESC() + "\n";
+                            if (_20p.getDesDESC() != null) desc_detail += "    " +_20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += "    " +_20r.getDesDESC()+ "\n";
+                            if (_25p.getDesDESC() != null) desc_detail += "    " +_25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += "    " +_25r.getDesDESC()+ "\n";
+                            if (_30r.getDesDESC() != null) desc_detail += "    " +_30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += "    " +_35r.getDesDESC()+ "\n";
+                            if (_40r.getDesDESC() != null) desc_detail += "    " +_40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += "    " +_45r.getDesDESC()+ "\n";
+                            if (_50r.getDesDESC() != null) desc_detail += "    " +_50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += "    " +_60r.getDesDESC()+ "\n";
+                            if (_100r.getDesDESC() != null) desc_detail += "    " +_100r.getDesDESC()+ "\n";
                             _descCilindro25 = 0;
 
                             _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
@@ -796,25 +837,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(Integer.valueOf(_actual.getTipoFactura()) == 4){
                             //Factura Especial
                             //No es tienda
-                            if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n";
-                            if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n";
-                            if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n";
-                            if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n";if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n";
-                            if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n";if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n";
-                            if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n";
-                            if (_100r.getDesQTY() != null) fac_detail += _100r.getDesQTY()+ "\n";
+                            if (_10r.getDesQTY() != null) fac_detail += "    " +_10r.getDesQTY() + "\n";
+                            if (_20p.getDesQTY() != null) fac_detail += "    " +_20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += "    " +_20r.getDesQTY() + "\n";
+                            if (_25p.getDesQTY() != null) fac_detail += "    " +_25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += "    " +_25r.getDesQTY() + "\n";
+                            if (_30r.getDesQTY() != null) fac_detail += "    " +_30r.getDesQTY() + "\n";if (_35r.getDesQTY() != null) fac_detail += "    " +_35r.getDesQTY() + "\n";
+                            if (_40r.getDesQTY() != null) fac_detail += "    " +_40r.getDesQTY()+ "\n";if (_45r.getDesQTY() != null) fac_detail += "    " +_45r.getDesQTY()+ "\n";
+                            if (_50r.getDesQTY() != null) fac_detail += "    " +_50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += "    " +_60r.getDesQTY()+ "\n";
+                            if (_100r.getDesQTY() != null) fac_detail += "    " +_100r.getDesQTY()+ "\n";
 
-                            if (_10r.getDesDESC() != null) desc_detail += _10r.getDesDESC() + "\n";
-                            if (_20p.getDesDESC() != null) desc_detail += _20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += _20r.getDesDESC()+ "\n";
-                            if (_25p.getDesDESC() != null) desc_detail += _25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += _25r.getDesDESC()+ "\n";
-                            if (_30r.getDesDESC() != null) desc_detail += _30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += _35r.getDesDESC()+ "\n";
-                            if (_40r.getDesDESC() != null) desc_detail += _40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += _45r.getDesDESC()+ "\n";
-                            if (_50r.getDesDESC() != null) desc_detail += _50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += _60r.getDesDESC()+ "\n";
-                            if (_100r.getDesDESC() != null) desc_detail += _100r.getDesDESC()+ "\n";
+                            if (_10r.getDesDESC() != null) desc_detail += "    " +_10r.getDesDESC() + "\n";
+                            if (_20p.getDesDESC() != null) desc_detail += "    " +_20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += "    " +_20r.getDesDESC()+ "\n";
+                            if (_25p.getDesDESC() != null) desc_detail += "    " +_25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += "    " +_25r.getDesDESC()+ "\n";
+                            if (_30r.getDesDESC() != null) desc_detail += "    " +_30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += "    " +_35r.getDesDESC()+ "\n";
+                            if (_40r.getDesDESC() != null) desc_detail += "    " +_40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += "    " +_45r.getDesDESC()+ "\n";
+                            if (_50r.getDesDESC() != null) desc_detail += "    " +_50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += "    " +_60r.getDesDESC()+ "\n";
+                            if (_100r.getDesDESC() != null) desc_detail += "    " +_100r.getDesDESC()+ "\n";
                             _descCilindro25 = 0;
 
-                            _totalfac = _10r.getTotal() + _20p.getTotal() + _20r.getTotal() + _25r.getTotal() + _25p.getTotal() + _30r.getTotal() +
-                                    _35r.getTotal() + _40r.getTotal() + _45r.getTotal() + _50r.getTotal() + _60r.getTotal() + _100r.getTotal();
+                            _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
+                                    _35r.getQtyTotal() + _40r.getQtyTotal() + _45r.getQtyTotal() + _50r.getQtyTotal() + _60r.getQtyTotal() + _100r.getQtyTotal();
+                            _totaldesc = 0d;
                             // _totaldesc = _10r.getDescTotal() + _20p.getDescTotal() + _20r.getDescTotal() + _25r.getDescTotal() + _25p.getDescTotal() + _30r.getDescTotal() +
                             //       _35r.getDescTotal() + _40r.getDescTotal() + _45r.getDescTotal() + _50r.getDescTotal() + _60r.getDescTotal() + _100r.getDescTotal();
                                  /*   builder.setMessage("Desglose de factura: " + "\n" + fac_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac ) )
@@ -843,8 +885,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (_100r.getDesDESC() != null) desc_detail += _100r.getDesDESC()+ "\n";
                             _descCilindro25 = 0;
 
-                            _totalfac = _10r.getTotal() + _20p.getTotal() + _20r.getTotal() + _25r.getTotal() + _25p.getTotal() + _30r.getTotal() +
-                                    _35r.getTotal() + _40r.getTotal() + _45r.getTotal() + _50r.getTotal() + _60r.getTotal() + _100r.getTotal();
+                            _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
+                                    _35r.getQtyTotal() + _40r.getQtyTotal() + _45r.getQtyTotal() + _50r.getQtyTotal() + _60r.getQtyTotal() + _100r.getQtyTotal();
                             _totaldesc = _10r.getDescTotal() + _20p.getDescTotal() + _20r.getDescTotal() + _25r.getDescTotal() + _25p.getDescTotal() + _30r.getDescTotal() +
                                     _35r.getDescTotal() + _40r.getDescTotal() + _45r.getDescTotal() + _50r.getDescTotal() + _60r.getDescTotal() + _100r.getDescTotal();
                                    /* builder.setMessage("Desglose de factura: " + "\n" + fac_detail + "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac) )
@@ -853,12 +895,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         }
 
-                    edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
-                    txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + "\n" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac - _totaldesc));
-                    b.show();
+                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
+                            txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + "\n" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac-_totaldesc));
+                            b.show();
+
 /****************************************************************************************************/
                     }else{
                         if(_lts.getQty() > 0){
+                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
+                            fac_detail = _lts.getDesQTY(); desc_detail = _lts.getDesDESC();
+                            _totalfac = _lts.getTotal();_totaldesc = _lts.getDescTotal();
                             edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
                             txvDesglose.setText("Desglose de factura: " + "\n" + _lts.getDesQTY() +  "\n Desglose Descuento:" + "\n" + _lts.getDesDESC() +  "\n TOTAL A FACTURAR:" + "\n" +  _lts.getTotal().toString() );
                             b.show();
@@ -866,6 +912,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         if(_kgs.getQty() > 0){
                             edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
+                            fac_detail =  _kgs.getDesQTY(); desc_detail = _kgs.getDesDESC();
+                            _totalfac = _kgs.getTotal();_totaldesc = _kgs.getDescTotal();
+                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc));
                             txvDesglose.setText("Desglose de factura: " + "\n"  + _kgs.getDesQTY()  +  "\n Desglose Descuento:" + "\n"  + _kgs.getDesDESC() +  "\n TOTAL A FACTURAR:" + "\n" +  _kgs.getTotal().toString());
                             b.show();
 
@@ -1265,20 +1314,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
 
 
-                //codigocliente = getClienteFromGPS(_TRON8);
-                /*
-                usardos = 0;
-                if (getClienteFromGPS(_TRON1) == -1){
-                    codigocliente = getClienteFromGPS(_TRON1_2);
-                    charSequences.add(new String(_ruta1_2[codigocliente]));
-                }else{
-                    codigocliente = getClienteFromGPS(_TRON1);
-                    charSequences.add(new String(_ruta1[codigocliente]));
-                    usardos = 1;
-                }*/
 
-
-                //db.addCliente("NERD","250","0","NOTHIM","0","7","5","1","0","9.86547841","-84.978545","JPHL7685","1","1","1",0);
 
                 getClienteFromGPS();
 
@@ -1389,6 +1425,145 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //registering the broadcast receiver to update sync status
         registerReceiver(broadcastReceiver, new IntentFilter(DATA_SAVED_BROADCAST));
+    }
+
+    void sendData(String t, String d) throws IOException {
+        _date = DateFormat.getDateTimeInstance().format(new Date());
+        try {
+
+            // the text typed by the user
+            String msg = "\n";// myTextbox.getText().toString();
+            msg += "           Gas Tomza de Costa Rica S.A.         ";
+            msg += "\n";
+            msg += "              Ced. Jur. 3-101-349880            ";
+            msg += "\n";
+            msg += "          La lima de Cartago, Costa Rica        ";
+            msg += "\n";
+            msg += "              Telefono:(506)2201-6000           ";
+            msg += "\n";
+            msg += "                www.gastomza.co.cr            ";
+            msg += "\n";
+            msg += "            servicioalcliente.cr@tomza.com      ";
+            msg += "\n";
+
+            msg += "\n";
+            msg += "   Factura: " +"0000";
+            msg += "\n";
+            msg += "   Rutero: "+_actual.getRuta() ;
+            msg += "\n";
+            msg += "   Fecha:"+ _date;
+            msg += "\n";
+            if(_actual.getCredito().equals("0"))
+                msg += "   CREDITO ";
+            else
+                msg += "   CONTADO ";
+            msg += "\n";
+            msg += "   Razon Social:"+ _actual.getRazon();
+            msg += "\n";
+            msg += "   Direccion:  ";
+            msg += "\n";
+            msg += "   Telefono:" + "Codigo Cliente:" +  _codigocliente;
+            msg += "\n";
+            msg += "\n";
+            msg += "   CANT.  PRODUCTO   P.UNITARIO     TOTAL    ";
+            msg += "\n";
+            msg += "   -------------------------------------------- ";
+            msg += "\n";
+            /*if(_SelectedOption == 0)
+                msg += "     "+ mTextView.getText().toString()  +"              Cilind. 25 lbs      "+ String.valueOf(Result_25) +"    ";
+            else
+                msg += "     "+ mTextView.getText().toString()  +"                 GLP lts          "+ String.valueOf(Result_lts) +"    ";
+*/
+            if(fac_detail != "" )
+                msg += fac_detail;
+            //msg += "\n";
+            //msg += "     275                Granel GLP      61050   ";
+            msg += "\n";
+            msg += "   -------------------------------------------- ";
+            msg += "\n";
+            msg += "    TOTAL(CRC):               "+String.format("%.2f", _totalfac)+"   ";
+
+            msg += "\n";
+
+            msg += "     Sello de garantia en www.tomza.co.cr    ";
+            msg += "     AUTORIZADO MEDIANTE EL OFICIO NUMERO    ";
+            msg += "\n";
+            msg += "    03-0001-2003 del 6 de feb de D.G.T.D   ";
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
+
+            if(!d.equals("0.0")){//if(_credit == "y" || _desc == "y"){
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "           Gas Tomza de Costa Rica S.A.         ";
+                msg += "\n";
+                msg += "              Ced. Jur. 3-101-349880            ";
+                msg += "\n";
+                msg += "          La lima de Cartago, Costa Rica        ";
+                msg += "\n";
+                msg += "              Telefono:(506)2201-6000           ";
+                msg += "\n";
+                msg += "                www.gastomza.co.cr            ";
+                msg += "\n";
+                msg += "            servicioalcliente.cr@tomza.com      ";
+                msg += "\n";
+                msg += "                    DESCUENTO                   ";
+                msg += "\n";
+                msg += "   Fecha:"+_date.toString();
+                msg += "\n";
+                msg += "   Codigo de cliente:"+  _codigocliente;
+                msg += "\n";
+                msg += "   Cliente: " + _actual.getRazon();
+                msg += "\n";
+                msg += "   Asignado a factura No: " + "0000";
+                msg += "\n";
+                msg += "   CANT.  DESC.   TOTAL    ";
+                msg += "\n";
+                msg += "   -------------------------------------------- ";
+                msg += desc_detail;
+                msg += "\n";
+                msg += "    TOTAL DESCUENTO(CRC):" + d;
+                msg += "\n";
+                msg += "\n";
+                msg += "    TOTAL A PAGAR(CRC):" + t;
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "       Firma:_______________________    ";
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+
+
+
+
+            }//end is _credit
+
+
+
+
+
+
+            mmOutputStream.write(msg.getBytes());
+
+            // tell the user data were sent
+            myLabel.setText("Data sent."); _facok = true;
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 
     public void addQuantity(final catalogo _zPre,final RadioButton _sd){
@@ -1610,7 +1785,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.billetes, null);
+        final View dialogView = inflater.inflate(R.layout.billetes , null);
         dialogBuilder.setView(dialogView);
         final EditText edt50k = (EditText) dialogView.findViewById(R.id.edt50k);
         final EditText edt20k = (EditText) dialogView.findViewById(R.id.edt20k);
@@ -1833,104 +2008,89 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //MODIFICAR ANTES DE CARGAR CLIENTES
     public int getClienteFromGPS(){
+        if(myUserName.getText().toString().equals("billete")){
+            custombilletes();
+            return -1;
+        }
 
-        if (LAT.equals("-10000")){
-            _CurrentGPS = "Aun no";
 
-            if (myUserName.getText().toString().equals("zz")){
-                customDialog();
-            }
-            if (myUserName.getText().toString().equals("tomza")){
-                loadClientes();
-            }
-            if (myUserName.getText().toString().equals("cargar")){
-                if(mTextView.getText().toString() != ""){
-                    db.DeleteClients();
-                    ReadCommand(mTextView.getText().toString());
-                }
-            }
-            if(myUserName.getText().toString().equals("billete")){
-                custombilletes();
-            }
-            if(myUserName.getText().toString().equals("no")){
-                //custommotivos();
-            }
+        if(myUserName.getText().toString().equals("cierre")){
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int choice) {
+                    switch (choice) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            Cursor cursor = db.getUnsyncedNames();
+                            if (cursor.getCount() == 0){
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
 
-            if(myUserName.getText().toString().equals("cierre")){
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int choice) {
-                        switch (choice) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                Cursor cursor = db.getUnsyncedNames();
-                                if (cursor.getCount() == 0){
-                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString(_Tcontado ,String.valueOf(0));
+                                editor.putString(_TdescuentoC ,String.valueOf(0));
+                                editor.putString(_TdescuentoCo ,String.valueOf(0));
+                                editor.putString(_Tcredito,String.valueOf(0));
 
-                                    editor.putString(_Tcontado ,String.valueOf(0));
-                                    editor.putString(_TdescuentoC ,String.valueOf(0));
-                                    editor.putString(_TdescuentoCo ,String.valueOf(0));
-                                    editor.putString(_Tcredito,String.valueOf(0));
+                                editor.commit();
 
-                                    editor.commit();
+                                Toast.makeText(getApplicationContext(),"Cierre Hecho con exito",Toast.LENGTH_SHORT).show();
+                                db.Delete();
+                            }
+                            else
+                            if (cursor.moveToFirst()) {
+                                do {
+                                    //calling the method to save the unsynced name to MySQL
+                                    saveName(
+                                            cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
+                                            cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME))
+                                    );
+                                } while (cursor.moveToNext());
+                                Toast.makeText(getApplicationContext(),"No Sincronizado",Toast.LENGTH_SHORT).show();
+                            }
 
-                                    Toast.makeText(getApplicationContext(),"Cierre Hecho con exito",Toast.LENGTH_SHORT).show();
-                                    db.Delete();
-                                }
-                                else
-                                if (cursor.moveToFirst()) {
-                                    do {
-                                        //calling the method to save the unsynced name to MySQL
-                                        saveName(
-                                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
-                                                cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME))
-                                        );
-                                    } while (cursor.moveToNext());
-                                    Toast.makeText(getApplicationContext(),"No Sincronizado",Toast.LENGTH_SHORT).show();
-                                }
+                            resetUI();
 
-                                resetUI();
+                            //saveNameToServer("0,"+editTextName.getText().toString()+","+LAT+","+LONG+","+_supervisor);
+                            break;
 
-                                //saveNameToServer("0,"+editTextName.getText().toString()+","+LAT+","+LONG+","+_supervisor);
-                                break;
+                        case DialogInterface.BUTTON_NEGATIVE:
 
-                            case DialogInterface.BUTTON_NEGATIVE:
-
-                                break;
-                        }
+                            break;
                     }
-                };
+                }
+            };
 
 
-                //calcularFactura(codigocliente);
+            //calcularFactura(codigocliente);
 
 
 
 
-                //calcularFactura(_descuento8,_credit8,_ruta8,codigocliente);
-                //calcularFactura(_descuento8,_credit8,_ruta8,codigocliente);
+            //calcularFactura(_descuento8,_credit8,_ruta8,codigocliente);
+            //calcularFactura(_descuento8,_credit8,_ruta8,codigocliente);
 
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Deseas hacer el cierre?");
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Deseas hacer el cierre?");
 
-                builder.setMessage("Asegurate de estar en el CEDI \n Creditos:"+sharedpreferences.getString(_Tcredito,"0") +  " \n Descuento Credito:" + sharedpreferences.getString(_TdescuentoC,"0") +
-                        " \n Contado:" + sharedpreferences.getString(_Tcontado,"0") +  " \n Descuento Contado:" + sharedpreferences.getString(_TdescuentoCo,"0") +
-                        " \n \n \n Total Contado:" + String.valueOf(Double.valueOf(sharedpreferences.getString(_Tcontado,"0")) - Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")))
-                        +  " \n Total Credito:" + String.valueOf(Double.valueOf(sharedpreferences.getString(_Tcredito,"0")) - Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0"))))
-                        .setPositiveButton("Pura Vida", dialogClickListener)
-                        .setNegativeButton("Cancelar", dialogClickListener).show();
-
-            }
+            builder.setMessage("Asegurate de estar en el CEDI \n Creditos:"+sharedpreferences.getString(_Tcredito,"0") +  " \n Descuento Credito:" + sharedpreferences.getString(_TdescuentoC,"0") +
+                    " \n Contado:" + sharedpreferences.getString(_Tcontado,"0") +  " \n Descuento Contado:" + sharedpreferences.getString(_TdescuentoCo,"0") +
+                    " \n \n \n Total Contado:" + String.valueOf(Double.valueOf(sharedpreferences.getString(_Tcontado,"0")) - Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")))
+                    +  " \n Total Credito:" + String.valueOf(Double.valueOf(sharedpreferences.getString(_Tcredito,"0")) - Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0"))))
+                    .setPositiveButton("Pura Vida", dialogClickListener)
+                    .setNegativeButton("Cancelar", dialogClickListener).show();
             return -1;
 
+        }
+        if(myUserName.getText().toString().equals("no")){
+            //custommotivos();
+            return -1;
+        }
 
-
-
-            }
 
         if (myUserName.getText().toString().equals("cargar")){
             if(mTextView.getText().toString() != ""){
                 db.DeleteClients();
                 ReadCommand(mTextView.getText().toString());
+
+                //loadClientes();
                 return -1;
             }
         }
@@ -1940,8 +2100,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (myUserName.getText().toString().equals("tomza")){
             loadClientes();
+            return -1;
         }
-            else{
+
+        if (LAT.equals("-10000"))   {
+            _CurrentGPS = "No se detecto GPS";
+
+
+            return -1;
+
+
+
+
+            }
+
+
+
+
 
 
             String _t = c.convertLatLonToMGRS(Double.parseDouble(LAT),Double.parseDouble(LONG));
@@ -1971,7 +2146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        }
+
 
 
 
@@ -2302,6 +2477,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
 
 
+        }
+        if(_bt != false)
+        if(mmDevice == null) {
+            try {
+                findBT();
+                openBT();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
 
 
@@ -2649,6 +2833,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
                                 else
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                                resetUI();
 
 
                             } else {
@@ -2658,9 +2843,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
                                 else
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                                resetUI();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            resetUI();
                         }
 
                     }
@@ -2678,6 +2865,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
                         else
                             saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                        resetUI();
                     }
                 }) {
             @Override
@@ -2960,6 +3148,142 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         }
+    //Bluetooth Functions
+    // this will find a bluetooth printer device
+    void findBT() {
+        //myLabel.setText("Buscando....");
+        sendButton.setText("Buscando");
+        try {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            if(mBluetoothAdapter == null) {
+                sendButton.setText("No bluetooth adapter available");
+            }
+
+            if(!mBluetoothAdapter.isEnabled()) {
+                Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE); //Ask for user permission if bluetooth is not on
+                startActivityForResult(enableBluetooth, 0);
+            }
+
+            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+            if(pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+
+
+                    // RPP300 is the name of the bluetooth printer device
+                    // we got this name from the list of paired devices
+                    String _tm =  device.getName();
+                    if (device.getName().equals("PTP-III")) {
+                        mmDevice = device;
+                        sendButton.setText("Encontrado");
+                        break;
+
+                    }
+                }
+            }
+
+            //myLabel.setText("Bluetooth device found.");
+
+        }catch(Exception e){
+            //sendButton.setText(e.getMessage());
+            //sendButton.setText("Imprimir");
+            e.printStackTrace();
+        }
+    }
+    // tries to open a connection to the bluetooth printer device
+    void openBT() throws IOException {
+        try {
+
+            // Standard SerialPortService ID
+            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            mmSocket.connect();
+            mmOutputStream = mmSocket.getOutputStream();
+            mmInputStream = mmSocket.getInputStream();
+
+            beginListenForData();
+
+            sendButton.setText("Imprimir");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendButton.setText("Err Open BT");
+        }
+    }
+
+    /*
+ * after opening a connection to bluetooth printer device,
+ * we have to listen and check if a data were sent to be printed.
+ */
+    void beginListenForData() {
+        try {
+            final Handler handler = new Handler();
+
+            // this is the ASCII code for a newline character
+            final byte delimiter = 10;
+
+            stopWorker = false;
+            readBufferPosition = 0;
+            readBuffer = new byte[1024];
+
+            workerThread = new Thread(new Runnable() {
+                public void run() {
+
+                    while (!Thread.currentThread().isInterrupted() && !stopWorker) {
+
+                        try {
+
+                            int bytesAvailable = mmInputStream.available();
+
+                            if (bytesAvailable > 0) {
+
+                                byte[] packetBytes = new byte[bytesAvailable];
+                                mmInputStream.read(packetBytes);
+
+                                for (int i = 0; i < bytesAvailable; i++) {
+
+                                    byte b = packetBytes[i];
+                                    if (b == delimiter) {
+
+                                        byte[] encodedBytes = new byte[readBufferPosition];
+                                        System.arraycopy(
+                                                readBuffer, 0,
+                                                encodedBytes, 0,
+                                                encodedBytes.length
+                                        );
+
+                                        // specify US-ASCII encoding
+                                        final String data = new String(encodedBytes, "US-ASCII");
+                                        readBufferPosition = 0;
+
+                                        // tell the user data were sent to bluetooth printer device
+                                        handler.post(new Runnable() {
+                                            public void run() {
+                                                myLabel.setText(data);
+                                            }
+                                        });
+
+                                    } else {
+                                        readBuffer[readBufferPosition++] = b;
+                                    }
+                                }
+                            }
+
+                        } catch (IOException ex) {
+                            stopWorker = true;
+                        }
+
+                    }
+                }
+            });
+
+            workerThread.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
