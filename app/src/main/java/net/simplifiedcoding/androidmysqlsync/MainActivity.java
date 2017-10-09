@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
     * CILINDROSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     * */
-    private boolean _FacCilindro = true;
+    private boolean _FacCilindro = false;
     private boolean _bt = false;
     private  String _sDescuento = "";
     private  String _sTipo = "";
