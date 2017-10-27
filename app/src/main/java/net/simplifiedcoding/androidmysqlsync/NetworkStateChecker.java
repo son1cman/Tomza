@@ -65,7 +65,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
                     do {
                         //calling the method to save the unsynced name to MySQL
                         savecliente(
-                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
+                                cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),cursor.getString(cursor.getColumnIndex("CODIGO")),
                                 cursor.getString(cursor.getColumnIndex("NOMBRE")),cursor.getString(cursor.getColumnIndex("DESCUENTO")),
                                 cursor.getString(cursor.getColumnIndex("RUTA")),cursor.getString(cursor.getColumnIndex("RAZON")),
                                 cursor.getString(cursor.getColumnIndex("CREDITO")),cursor.getString(cursor.getColumnIndex("SUB_CANAL")),
@@ -101,7 +101,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
             do {
                 //calling the method to save the unsynced name to MySQL
                 savecliente(
-                        cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),
+                        cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID)),cursor.getString(cursor.getColumnIndex("CODIGO")),
                         cursor.getString(cursor.getColumnIndex("NOMBRE")),cursor.getString(cursor.getColumnIndex("DESCUENTO")),
                         cursor.getString(cursor.getColumnIndex("RUTA")),cursor.getString(cursor.getColumnIndex("RAZON")),
                         cursor.getString(cursor.getColumnIndex("CREDITO")),cursor.getString(cursor.getColumnIndex("SUB_CANAL")),
@@ -160,7 +160,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 //CLIENTESSSSSSSSSSSS
-    private void savecliente(final int id,final String name, final String descuento, final String ruta, final String Razon,final String credito,final String sub_canal,final String ldescuento,
+    private void savecliente(final int id, final String codigo, final String name, final String descuento, final String ruta, final String Razon,final String credito,final String sub_canal,final String ldescuento,
                         final String lprecioa,final String lprecioc,final String LAT,final String LONG,final String G,final String FormaPago,final String puedoFacturar,final String tipoFactura
     ) {
 
@@ -178,11 +178,11 @@ public class NetworkStateChecker extends BroadcastReceiver {
                             if (!obj.getBoolean("error")) {
                                 //if there is a success
                                 //storing the name to sqlite with status synced
-                               db.updateClienteStatus (id,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, 1);
+                               db.updateClienteStatus (id,codigo,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, 1);
                             } else {
                                 //if there is some error
                                 //saving the name to sqlite with status unsynced
-                                db.updateClienteStatus (id,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura,0);
+                                db.updateClienteStatus (id,codigo,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura,0);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

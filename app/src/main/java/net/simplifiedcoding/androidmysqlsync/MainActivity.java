@@ -76,10 +76,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
     * CILINDROSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     * */
-    private boolean _FacCilindro = false;
-    private boolean _bt = false;
+    private boolean _FacCilindro = true;
+    private boolean _bt = true;
     private  String _sDescuento = "";
     private  String _sTipo = "";
+    private String _printer = "BlueTooth Printer"; //cashino = PTP-III    Koolertron = BlueTooth Printer
+
+
 
     private String efectivo,transC,transNum,chknum,chkmont,chkbank;
 
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String URL_GET_COMM_PRICES = "http://www.tomzacr.com/t/commprices.php"; //Cargar
     public static String URL_GET_CLIENTE = "http://www.tomzacr.com/t/cliente.php"; //Clientes
     public static String URL_GET_BILLETES = "http://www.tomzacr.com/t/billete.php"; //Clientes
+    public static String COUNT_CLIENTES = "COUNTCLI";
 
 //JULIO 6
     //OSCAR 7
@@ -160,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //1 luis
     //2 andres
     //valerin
-    String _supervisor = "5";
+    String _supervisor = "0";
+    String _clienteC = "0";
 
     //Cartago
 
@@ -396,8 +401,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             URL_GET_CLIENTE = "http://www.tomzacr.com/t/clienteg.php"; //Clientes
         }
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        _supervisor = sharedpreferences.getString(MIRUTA,null);
-        if (_supervisor == null) _supervisor = "0";
+        _supervisor = sharedpreferences.getString(MIRUTA,"0");
+        _clienteC = sharedpreferences.getString(COUNT_CLIENTES,"0");
+
         _10r = new catalogo("10 lbs Rosca",Double.valueOf(sharedpreferences.getString(_Precioa10,"0")),Double.valueOf(sharedpreferences.getString(_Precioc10,"0")),10);
         _20r = new catalogo("20 lbs Rosca",Double.valueOf(sharedpreferences.getString(_Precioa20,"0")),Double.valueOf(sharedpreferences.getString(_Precioc20,"0")),20);
         _20p = new catalogo("20 lbs Mejorado",Double.valueOf(sharedpreferences.getString(_Precioa20,"0")),Double.valueOf(sharedpreferences.getString(_Precioc20,"0")),20);
@@ -548,6 +554,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         m_add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                try {
+
+                    sendData2("","");
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 resetUI();
                 //customDialog(); //Agregar Cliente
                 //Toast.makeText(getApplicationContext(),sharedpreferences.getString(MIRUTA,null),Toast.LENGTH_LONG).show();
@@ -606,7 +619,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                     _35r.getDescTotal() + _40r.getDescTotal() + _45r.getDescTotal() + _50r.getDescTotal() + _60r.getDescTotal() + _100r.getDescTotal();
 */                            if(_FacCilindro){
 
-                                    saveNameToServer(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
+                                    saveNameToServer(_supervisor+","+ _actual.getCodigo() +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
                                             +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(_20p.getQty())
                                             + "," + String.valueOf(_25p.getQty())+ "," + String.valueOf(_30r.getQty())+ "," + String.valueOf(_40r.getQty())+ "," + String.valueOf(_50r.getQty())
                                             + "," + String.valueOf(_100r.getQty())
@@ -902,18 +915,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 /****************************************************************************************************/
                     }else{
                         if(_lts.getQty() > 0){
-                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
+                            //edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
                             fac_detail = _lts.getDesQTY(); desc_detail = _lts.getDesDESC();
-                            _totalfac = _lts.getTotal();_totaldesc = _lts.getDescTotal();
-                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
+                            _totalfac = _lts.getQtyTotal();_totaldesc = _lts.getDescTotal();
+                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc));
                             txvDesglose.setText("Desglose de factura: " + "\n" + _lts.getDesQTY() +  "\n Desglose Descuento:" + "\n" + _lts.getDesDESC() +  "\n TOTAL A FACTURAR:" + "\n" +  _lts.getTotal().toString() );
                             b.show();
                         }
 
                         if(_kgs.getQty() > 0){
-                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
+                            //edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
                             fac_detail =  _kgs.getDesQTY(); desc_detail = _kgs.getDesDESC();
-                            _totalfac = _kgs.getTotal();_totaldesc = _kgs.getDescTotal();
+                            _totalfac = _kgs.getQtyTotal();_totaldesc = _kgs.getDescTotal();
                             edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc));
                             txvDesglose.setText("Desglose de factura: " + "\n"  + _kgs.getDesQTY()  +  "\n Desglose Descuento:" + "\n"  + _kgs.getDesDESC() +  "\n TOTAL A FACTURAR:" + "\n" +  _kgs.getTotal().toString());
                             b.show();
@@ -1364,7 +1377,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 builder.show();
                 }else{
-                    Toast.makeText(getApplicationContext(),_CurrentGPS + "No se han detectado clientes",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), _CurrentGPS + "No se han detectado clientes",Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -1565,6 +1578,90 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
     }
+    void sendData2(String t, String d) throws IOException {
+
+        try {
+
+            // the text typed by the user
+            String msg = "\n";// myTextbox.getText().toString();
+            msg += "     Inversiones  Robus";
+            msg += "\n";
+            msg += "    Ced. Jur. 3-101-314880";
+            msg += "\n";
+            msg += "   Gerente Mario Rodriguez";
+            msg += "\n";
+            msg += "  Telefono:(506)2201-9888           ";
+            msg += "\n";
+
+
+
+            msg += "\n";
+
+            msg += "\n";
+            msg += "Factura: " +"2130000";
+            msg += "\n";
+
+            msg += "Fecha: 30/09/2017 06:30:42";
+            msg += "\n";
+
+                msg += "CONTADO ";
+            msg += "\n";
+            msg += "Razon Social: GAS TOMZA DE COSTA RICA";
+            msg += "\n";
+            msg += "Caja: 1";
+
+
+            msg += "\n";
+
+            msg += "\n";
+            msg += "Unitario  Desc   Cant   Total \n";
+            msg += "--------------------------------";
+            msg += "\n";
+            /*if(_SelectedOption == 0)
+                msg += "     "+ mTextView.getText().toString()  +"              Cilind. 25 lbs      "+ String.valueOf(Result_25) +"    ";
+            else
+                msg += "     "+ mTextView.getText().toString()  +"                 GLP lts          "+ String.valueOf(Result_lts) +"    ";
+*/
+            msg += "500   Papel Term   90    45,000";
+            //msg += "\n";
+            //msg += "     275                Granel GLP      61050   ";
+            msg += "\n";
+            msg += "--------------------------------";
+            msg += "\n";
+            msg += " TOTAL(CRC):"+"45,000.00  ";
+
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
+
+
+            msg += "AUTORIZADO MEDIANTE EL OFICIO NUMERO";
+
+            msg += " 03-0001-2017 del 15 de feb de D.G.T.D";
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
+
+
+
+
+
+
+
+
+            mmOutputStream.write(msg.getBytes());
+
+            // tell the user data were sent
+            myLabel.setText("Data sent."); _facok = true;
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
 
     public void addQuantity(final catalogo _zPre,final RadioButton _sd){
 
@@ -1746,12 +1843,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String _tt = c.convertLatLonToMGRS(Double.parseDouble(LAT),Double.parseDouble(LONG));
 
                         _tt = _tt.replace(" ","");
-                        if(_FacCilindro)//cliente cilindros
-                        saveClienteToServer(edt.getText().toString(), edt3.getText().toString(), _supervisor,edt2.getText().toString() , "1",
+                        _clienteC = String.valueOf(Integer.valueOf(_clienteC) + 1);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+
+
+                        editor.putString(COUNT_CLIENTES,_clienteC);
+                        editor.commit();
+
+                    if(_FacCilindro)//clien te cilindros
+                        saveClienteToServer(_supervisor + _clienteC,edt.getText().toString(), edt3.getText().toString(), _supervisor,edt2.getText().toString() , "1",
                                 _tiposub,edt3.getText().toString(),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
                                 "0","1",String.valueOf(spiTipo.getSelectedItemPosition()));
                         else //granel
-                        saveClienteToServer(edt.getText().toString(), edt3.getText().toString(), _supervisor,edt2.getText().toString() , String.valueOf(spiTipo.getSelectedItemPosition()),
+                        saveClienteToServer(_supervisor +  _clienteC,edt.getText().toString(), edt3.getText().toString(), _supervisor,edt2.getText().toString() , String.valueOf(spiTipo.getSelectedItemPosition()),
                                 _tiposub,edt3.getText().toString(),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
                                 "0","1","0");
 
@@ -2079,6 +2183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return -1;
 
         }
+
         if(myUserName.getText().toString().equals("no")){
             //custommotivos();
             return -1;
@@ -2467,6 +2572,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
 
         ReadPrices();
+        if(_bt != false)// Detectar impresora en start
+            {
+                try {
+                    findBT();
+                    openBT();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},10);
@@ -2522,7 +2636,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (cursor.moveToFirst()) {
             do {
                 _actual.AddCliente(
-
+                        cursor.getString(cursor.getColumnIndex("id")),cursor.getString(cursor.getColumnIndex("CODIGO")),
                         cursor.getString(cursor.getColumnIndex("NOMBRE")),cursor.getString(cursor.getColumnIndex("DESCUENTO")),
                         cursor.getString(cursor.getColumnIndex("RUTA")),cursor.getString(cursor.getColumnIndex("RAZON")),
                         cursor.getString(cursor.getColumnIndex("CREDITO")),cursor.getString(cursor.getColumnIndex("SUB_CANAL")),
@@ -2691,7 +2805,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
     * this method is saving the name to ther server
     * */
+private int _countclie = 0;
     private void ReadCommand(String _rutaa) {
+        _countclie = 0;
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Obteniendo Datos");
         progressDialog.show();
@@ -2737,8 +2853,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             if (key.equals("AddClient")){
                                                 JSONArray jsonarray = obj.getJSONArray(key); //new JSONArray(key);
                                                 for (int i = 0; i < jsonarray.length(); i++) {
+                                                    _countclie++;
                                                     JSONObject jsonobject = jsonarray.getJSONObject(i);
-                                                    db.addCliente(jsonobject.getString("nombre"),jsonobject.getString("descuento"),
+                                                    db.addCliente(jsonobject.getString("id"),jsonobject.getString("nombre"),jsonobject.getString("descuento"),
                                                             jsonobject.getString("ruta"),jsonobject.getString("razon"),
                                                             jsonobject.getString("credito"),jsonobject.getString("subcanal"),
                                                             jsonobject.getString("ldescuento"),jsonobject.getString("lprecioa"),
@@ -2752,10 +2869,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                     //String xd = jsonobject.getString("descuento");
                                                 }
                                             }
+
                                         }
 
                                     }
 
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+
+
+                                    editor.putString(COUNT_CLIENTES,String.valueOf(_countclie));
+                                    editor.commit();
 
 
 
@@ -2778,7 +2901,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        _supervisor = sharedpreferences.getString(MIRUTA,null);
+                        _supervisor = sharedpreferences.getString(MIRUTA,"0");
+                        _clienteC = sharedpreferences.getString(COUNT_CLIENTES,"0");
+                        Toast.makeText(getApplicationContext(),"Clientes cargados corrrectamente",Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -2787,6 +2912,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         progressDialog.dismiss();
                         //Toast.makeText(getApplicationContext(), ,Toast.LENGTH_SHORT);
                         error.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"No se cargaron corrrectamente",Toast.LENGTH_LONG).show();
                         //Log.e("okas:", Log.getStackTraceString(error) );
 
                         //on error storing the name to sqlite with status unsynced
@@ -2816,7 +2942,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog.show();
         if (transC.equals("") ) transC = "0"; if (transNum.equals("")) transNum = "0"; if (chknum.equals("")) chknum = "0";
         if (chkbank.equals("")) chkbank = "0";if (chkmont.equals("")) chkmont = "0";
-        final String name = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont;
+        final String name = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+_actual.getTipoFactura();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
                 new Response.Listener<String>() {
@@ -2961,7 +3087,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
     }
-    private void saveClienteToServer(final String name, final String descuento, final String ruta, final String Razon,final String credito,final String sub_canal,final String ldescuento,
+    private void saveClienteToServer(final String codigo,final String name, final String descuento, final String ruta, final String Razon,final String credito,final String sub_canal,final String ldescuento,
                                      final String lprecioa,final String lprecioc,final String LAT,final String LONG,final String G,final String FormaPago,final String puedoFacturar,final String tipoFactura
                                     ) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -2969,7 +3095,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog.show();
 
         final String _name = name+","+descuento+","+ruta+","+Razon+","+credito+","+sub_canal+","+ldescuento+
-                ","+lprecioa+","+lprecioc+","+LAT+","+LONG+","+G+","+FormaPago+","+puedoFacturar+","+tipoFactura;
+                ","+lprecioa+","+lprecioc+","+LAT+","+LONG+","+G+","+FormaPago+","+puedoFacturar+","+tipoFactura+","+codigo;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_GET_CLIENTE,
                 new Response.Listener<String>() {
@@ -2981,11 +3107,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (!obj.getBoolean("error")) {
                                 //if there is a success
                                 //storing the name to sqlite with status synced
-                                saveClienteToLocalStorage(name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, NAME_SYNCED_WITH_SERVER);
+                                saveClienteToLocalStorage(codigo,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, NAME_SYNCED_WITH_SERVER);
                             } else {
                                 //if there is some error
                                 //saving the name to sqlite with status unsynced
-                                saveClienteToLocalStorage(name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, NAME_NOT_SYNCED_WITH_SERVER);
+                                saveClienteToLocalStorage(codigo,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, NAME_NOT_SYNCED_WITH_SERVER);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -3002,7 +3128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //Log.e("okas:", Log.getStackTraceString(error) );
 
                         //on error storing the name to sqlite with status unsynced
-                        saveClienteToLocalStorage(name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, NAME_NOT_SYNCED_WITH_SERVER);
+                        saveClienteToLocalStorage(codigo,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura, NAME_NOT_SYNCED_WITH_SERVER);
                     }
                 }) {
             @Override
@@ -3076,14 +3202,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
     //saving the name to local storage
-    private void saveClienteToLocalStorage(String name, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
+    private void saveClienteToLocalStorage(String codigo,String name, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
                                            String lprecioa,String lprecioc,String LAT, String LONG, String G, String FormaPago, String puedoFacturar,String tipoFactura,
                                            int status) {
 
 
 
 
-        db.addCliente(name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura,status);
+        db.addCliente(codigo,name,descuento,ruta,Razon,credito,sub_canal,ldescuento,lprecioa,lprecioc,LAT,LONG,G,FormaPago,puedoFacturar,tipoFactura,status);
         //Name n = new Name(name, status);
         //names.add(n);
         loadNames();
@@ -3174,7 +3300,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // RPP300 is the name of the bluetooth printer device
                     // we got this name from the list of paired devices
                     String _tm =  device.getName();
-                    if (device.getName().equals("PTP-III")) {
+                    if (device.getName().equals(_printer)) {
                         mmDevice = device;
                         sendButton.setText("Encontrado");
                         break;

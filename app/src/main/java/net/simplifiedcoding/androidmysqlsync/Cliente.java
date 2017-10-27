@@ -7,8 +7,18 @@ package net.simplifiedcoding.androidmysqlsync;
 public class Cliente {
 
 
-    private int id;
+    private String id;
     private String nombre;
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    private String codigo;
     private String descuento;
     private int status;
     private String ruta;
@@ -19,11 +29,11 @@ public class Cliente {
     private String FormaPago,puedoFacturar;
     private String tipoFactura;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -139,9 +149,11 @@ public Cliente(){
 
 }
 
-    public Cliente(String nombre, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
+    public Cliente(String id,String Codigo, String nombre, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
                    String lprecioa,String lprecioc,String LAT, String LONG, String G, String FormaPago, String puedoFacturar,String tipoFactura,
                    int status) {
+        this.id = id;
+        this.codigo = Codigo;
         this.nombre = nombre;
         this.descuento = descuento;
         this.status = status;
@@ -164,16 +176,18 @@ public Cliente(){
         this.descuento = descuento;
         this.status = status;
     }
-    public Cliente(int id,String nombre,String razon, String descuento,int status) {
+    public Cliente(String id,String nombre,String razon, String descuento,int status) {
         this.id = id;
         this.nombre = nombre;
         this.Razon = razon;
         this.descuento = descuento;
         this.status = status;
     }
-    public void AddCliente(String nombre, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
+    public void AddCliente(String id,String Codigo,String nombre, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
                    String lprecioa,String lprecioc,String LAT, String LONG, String G, String FormaPago, String puedoFacturar,String tipoFactura,
                    int status) {
+        this.id = id;
+        this.codigo = Codigo;
         this.nombre = nombre;
         this.descuento = descuento;
         this.status = status;

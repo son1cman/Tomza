@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + "CLIENTE"
                 + "(" + COLUMN_ID +
-                " INTEGER PRIMARY KEY AUTOINCREMENT, " + "NOMBRE" +
+                " INTEGER PRIMARY KEY AUTOINCREMENT, " + " CODIGO VARCHAR, NOMBRE" +
                 " VARCHAR, DESCUENTO VARCHAR,RUTA VARCHAR, RAZON VARCHAR,CREDITO VARCHAR," +
                 "SUB_CANAL VARCHAR,LDESCUENTO VARCHAR,LPRECIOA,LPRECIOC VARCHAR,LAT VARCHAR,LONG VARCHAR,G VARCHAR,"+
                 "FORMAPAGO VARCHAR,PUEDOFACTURAR VARCHAR,TIPOFACTURA VARCHAR," + COLUMN_STATUS +
@@ -88,7 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return true;
     }
-    public boolean addCliente(String name, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
+    public boolean addCliente(String codigo,String name, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
             String lprecioa,String lprecioc,String LAT, String LONG, String G, String FormaPago, String puedoFacturar,String tipoFactura,
                               int status) {
 
@@ -96,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put("CODIGO", codigo);
         contentValues.put("NOMBRE", name);
         contentValues.put("DESCUENTO", descuento);
         contentValues.put("RUTA", ruta);
@@ -119,12 +120,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return true;
     }
-    public boolean updateClienteStatus(int id,String name, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
+    public boolean updateClienteStatus(int id,String codigo,String name, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
                                        String lprecioa,String lprecioc,String LAT, String LONG, String G, String FormaPago, String puedoFacturar,String tipoFactura,
                                        int status) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put("CODIGO", codigo);
         contentValues.put("NOMBRE", name);
         contentValues.put("DESCUENTO", descuento);
         contentValues.put("RUTA", ruta);
