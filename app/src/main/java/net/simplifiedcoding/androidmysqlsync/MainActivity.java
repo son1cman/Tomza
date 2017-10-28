@@ -593,7 +593,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     final EditText edtchequeN = (EditText) dialogView.findViewById(R.id.edtchequeN);
                     final EditText edtchequeB = (EditText) dialogView.findViewById(R.id.edtchequeB);
                     final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
+                    final Button btnPrint = (Button) dialogView.findViewById(R.id.btnReimprimir);
 
+                    btnPrint.setVisibility(View.INVISIBLE);
 
 
                     dialogBuilder.setTitle(_actual.getRazon());
@@ -1190,6 +1192,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     final EditText edtchequeN = (EditText) dialogView.findViewById(R.id.edtchequeN);
                     final EditText edtchequeB = (EditText) dialogView.findViewById(R.id.edtchequeB);
                     final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
+                    final Button btnPrint = (Button) dialogView.findViewById(R.id.btnReimprimir);
+
+
+
+
 
 
 
@@ -1199,6 +1206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         }
                     });
+
                     dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //pass
@@ -2192,7 +2200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (myUserName.getText().toString().equals("cargar")){
             if(mTextView.getText().toString() != ""){
-                db.DeleteClients();
+                //db.DeleteClients();
                 ReadCommand(mTextView.getText().toString());
 
                 //loadClientes();
@@ -2821,6 +2829,7 @@ private int _countclie = 0;
                         progressDialog.dismiss();
                         try {
                             JSONObject obj = new JSONObject(response);
+                            db.DeleteClients();
 
                                 try {
 
