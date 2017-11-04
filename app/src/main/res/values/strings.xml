@@ -17,4 +17,10 @@
         <item>Precio y descuento</item>
         <item>No esta el jefe</item>
     </string-array>
+    <string-array name="cilza">
+        <item>Normal/GESSA</item>
+        <item>Walmart</item>
+
+
+    </string-array>
 </resources>

@@ -104,6 +104,7 @@ public class catalogo {
         calcular();
     }
 
+
     public boolean isPrecioAsignado() {
         calcular();
         return PrecioAsignado;
@@ -221,8 +222,8 @@ public void DescuentoEspecial35y45(int _presentacion){
                     total = (Qty * age);
                     qtyTotal = (Qty * age);
                     descTotal = 0d;
-                    desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(age) + "  = " + String.format("%.2f", (Qty * age) );
-                    desDESC = " " + String.valueOf(Qty) + " " + String.valueOf(descuento) + "  = " + String.format("%.2f", descTotal) + "\n"; ;
+                    desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(age) + " " + String.format("%.2f", (Qty * age) );
+                    desDESC = String.valueOf(Qty) + " " + label +" " + String.valueOf(descuento) + " " + String.format("%.2f", descTotal) + "\n"; ;
 
                 }
                 else {
@@ -234,8 +235,8 @@ public void DescuentoEspecial35y45(int _presentacion){
                     total = ((Qty * agencia)-(Qty*descuento));
                     qtyTotal = (Qty * agencia);
                     descTotal = (Qty*descuento);
-                    desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + "  = " + String.format("%.2f", (Qty * agencia) );
-                    desDESC = " " + String.valueOf(Qty) + " " + String.valueOf(descuento) + "  = " + String.format("%.2f", descTotal) + "\n"; ;
+                    desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + " " + String.format("%.2f", (Qty * agencia) );
+                    desDESC = String.valueOf(Qty) + " " + label +" " + String.valueOf(descuento) + " " + String.format("%.2f", descTotal) + "\n"; ;
 
                 }
 
@@ -248,7 +249,7 @@ public void DescuentoEspecial35y45(int _presentacion){
                 this.DescSel = 0d;
                 total = (Qty * agencia);
                 qtyTotal = (Qty * agencia);
-                desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + "  = " + String.format("%.2f", (Qty * agencia) ) + "\n";
+                desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + " " + String.format("%.2f", (Qty * agencia) ) + "\n";
                 desDESC = "null";
 
             }
@@ -259,7 +260,7 @@ public void DescuentoEspecial35y45(int _presentacion){
                 qtyTotal = (Qty * consumidor);
                 total = (Qty * consumidor);
                 descTotal = 0d;
-                desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + "  = " + String.format("%.2f", (Qty * consumidor) ) + "\n";
+                desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
                 desDESC = "null";
 
             }
@@ -272,8 +273,8 @@ public void DescuentoEspecial35y45(int _presentacion){
                 total = ((Qty * consumidor) - (Qty*descuento));
                 qtyTotal = (Qty * consumidor);
                 descTotal = (Qty*descuento);
-                desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + "  = " + String.format("%.2f", (Qty * consumidor) ) + "\n";
-                desDESC = " " + String.valueOf(Qty) + " " + String.valueOf(descuento) + "  = " + String.format("%.2f", descTotal) + "\n"; ;
+                desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
+                desDESC = String.valueOf(Qty) + " " + label +" " +String.valueOf(descuento) + " " + String.format("%.2f", descTotal) + "\n"; ;
 
             }
             //}
@@ -296,8 +297,8 @@ public void DescuentoEspecial35y45(int _presentacion){
             total = ((Qty * PrecioSel)-(Qty*DescSel));
             qtyTotal = (Qty * PrecioSel);
             descTotal = (Qty*DescSel);
-            desQTY = " " + String.valueOf(Qty) + " " + label + " "+String.valueOf(PrecioSel) + "  = " + String.format("%.2f", qtyTotal);
-            desDESC = " " + String.valueOf(Qty) + " " + String.valueOf(DescSel) + "  = " + String.format("%.2f", descTotal) + "\n"; ;
+            desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(PrecioSel) + " " + String.format("%.2f", qtyTotal);
+            desDESC = String.valueOf(Qty) + " " + label + " "+String.valueOf(DescSel) + " " + String.format("%.2f", descTotal);
 
 
         }//end if
