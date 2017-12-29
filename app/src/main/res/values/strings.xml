@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TOMZA CR - version 1.4a</string>
+    <string name="app_name">TOMZA CR - version 1.5</string>
     <string-array name="TiposDescuentos">
         <item>Normal</item>
         <item>Tienda Descuento Fijo</item>
