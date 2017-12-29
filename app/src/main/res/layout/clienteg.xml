@@ -12,7 +12,7 @@
 
         android:hint="Nombre de negocio"
         android:imeOptions="actionNext"
-        android:inputType="text"
+        android:inputType="textPersonName"
         android:maxLines="1"
         android:singleLine="true" />
 
@@ -23,7 +23,7 @@
         android:layout_below="@id/editNombre"
         android:hint="Razon Social"
         android:imeOptions="actionNext"
-        android:inputType="text"
+        android:inputType="textPersonName"
         android:maxLines="1"
         android:singleLine="true" />
 

@@ -15,6 +15,7 @@ public class catalogo {
         return desQTY;
     }
 
+
     public void setDesQTY(String desQTY) {
         this.desQTY = desQTY;
     }
@@ -65,6 +66,7 @@ public class catalogo {
     public int Qty;
     public Double agencia;
     public Double consumidor;
+    public Double planta;
     public int Tipo;
     public boolean PrecioAsignado;
     public boolean DescuentoAsignado;
@@ -74,7 +76,9 @@ public class catalogo {
     public void agregarProducto(boolean descuentoAsignado,boolean precioAsignado,int Qty){
         this.Qty = Qty;
         this.DescuentoAsignado = descuentoAsignado;
+
         this.PrecioAsignado = precioAsignado;
+        if(Tipo == 2 || Tipo == 1) this.PrecioAsignado = false; //Solamente tiendas puede facturar a precio de consumidor
 
         calcular();
     }
@@ -100,8 +104,7 @@ public class catalogo {
     public void setDescuentoAsignado(boolean descuentoAsignado) {
 
         DescuentoAsignado = descuentoAsignado;
-
-        calcular();
+        if(_actual != null) calcular();
     }
 
 
@@ -175,15 +178,18 @@ public class catalogo {
     public void setTipo(int tipo) {
         Tipo = tipo;
     }
+    private double cc;
+    private double ag;
+    public catalogo(String label, Double agencia, Double consumidor,int lbs,Double planta){
 
-    public catalogo(String label, Double agencia, Double consumidor,int lbs){
-
-        this.label = label; this.agencia = agencia; this.consumidor = consumidor;
+        this.label = label; this.agencia = agencia; this.consumidor = consumidor; this.planta = planta;
         this.lbs = lbs;
         this.Qty = 0;
         this.setTotal(0d);
         this.descTotal = 0d;
 
+        cc = this.agencia;
+        ag = planta;
 
 
     }
@@ -205,20 +211,28 @@ public void DescuentoEspecial35y45(int _presentacion){
 
 }
     private void calcular(){
+
         if (lbs != 0){//cilindro
             this.descuento = (Double.valueOf(_actual.getDescuento()) / 25) * lbs;
             this.descuento = (double)Math.round(this.descuento);
             this.Tipo = Integer.valueOf(_actual.getTipoFactura());
+            if(Tipo == 2 || Tipo == 1) this.PrecioAsignado = false; //Solamente tiendas puede facturar a precio de consumidor
+
+            if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                consumidor = cc;
+                this.agencia = ag;
+            }
 
 
             if(PrecioAsignado == true && DescuentoAsignado == true)//agencia + descuento
             {
 
-                if(Tipo == 4){
-                    double age  = agencia - descuento;
+                if(Tipo == 4 || Tipo == 5){
+
                     this.PrecioSel = agencia;
                     this.DescSel = descuento;
-
+                    DescuentoEspecial35y45(lbs);
+                    double age  = agencia - descuento;
                     total = (Qty * age);
                     qtyTotal = (Qty * age);
                     descTotal = 0d;
@@ -235,6 +249,11 @@ public void DescuentoEspecial35y45(int _presentacion){
                     total = ((Qty * agencia)-(Qty*descuento));
                     qtyTotal = (Qty * agencia);
                     descTotal = (Qty*descuento);
+                    if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                        total = ((Qty * ag)-(Qty*descuento));
+                        qtyTotal = (Qty * ag);
+                        descTotal = (Qty*descuento);
+                    }
                     desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + " " + String.format("%.2f", (Qty * agencia) );
                     desDESC = String.valueOf(Qty) + " " + label +" " + String.valueOf(descuento) + " " + String.format("%.2f", descTotal) + "\n"; ;
 
@@ -249,6 +268,12 @@ public void DescuentoEspecial35y45(int _presentacion){
                 this.DescSel = 0d;
                 total = (Qty * agencia);
                 qtyTotal = (Qty * agencia);
+                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                    total = (Qty * ag);
+                    qtyTotal = (Qty * ag);
+
+                }
+                descTotal = 0d;
                 desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(agencia) + " " + String.format("%.2f", (Qty * agencia) ) + "\n";
                 desDESC = "null";
 
@@ -259,6 +284,11 @@ public void DescuentoEspecial35y45(int _presentacion){
                 this.DescSel = 0d;
                 qtyTotal = (Qty * consumidor);
                 total = (Qty * consumidor);
+                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                    total = ((Qty * cc));
+                    qtyTotal = (Qty * cc);
+
+                }
                 descTotal = 0d;
                 desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
                 desDESC = "null";
@@ -273,6 +303,11 @@ public void DescuentoEspecial35y45(int _presentacion){
                 total = ((Qty * consumidor) - (Qty*descuento));
                 qtyTotal = (Qty * consumidor);
                 descTotal = (Qty*descuento);
+                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                    total = ((Qty * cc)  - (Qty*descuento));
+                    qtyTotal = (Qty * cc);
+
+                }
                 desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
                 desDESC = String.valueOf(Qty) + " " + label +" " +String.valueOf(descuento) + " " + String.format("%.2f", descTotal) + "\n"; ;
 

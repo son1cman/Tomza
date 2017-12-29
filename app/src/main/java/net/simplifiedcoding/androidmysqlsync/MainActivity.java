@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -73,7 +74,7 @@ import static java.lang.Math.round;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    /*
+    /*86730371
     * CILINDROSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     * */
     private boolean _FacCilindro = true;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private double TotalImpCil = 0;
     private double SubTotalCil = 0;
 
+
     private  String _sTipo = "";
     private String _printer = "BlueTooth Printer"; //cashino = PTP-III    Koolertron = BlueTooth Printer
 
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private catalogo _c25,_c25r,_c100,_wc25,_wc25r,_wc100;
     public static String URL_SAVE_NAME = "http://www.tomzacr.com/t/saveitf.php"; //Factura
     public static String URL_GET_COMM = "http://www.tomzacr.com/t/comm.php"; //Cargar
-    public static String URL_GET_COMM_PRICES = "http://www.tomzacr.com/t/commprices.php"; //Cargar
+    public static String URL_GET_COMM_PRICES = "http://www.tomzacr.com/t/commprices.php"; //Cargar0
     public static String URL_GET_CLIENTE = "http://www.tomzacr.com/t/cliente.php"; //Clientes
     public static String URL_GET_BILLETES = "http://www.tomzacr.com/t/billete.php"; //Clientes
     public static String COUNT_CLIENTES = "COUNTCLI";
@@ -114,8 +116,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String _Tcredito = "tcredito";
     public static final String _Tcontado = "tcontado";
     public static final String _Tfactura = "reimpresion";
+    public static final String _Ttramite = "reimptramite";
     public static final String _TdescuentoC = "descCredito";
     public static final String _TdescuentoCo = "descContado";
+
+    public static final String _pass = "passw";
 
     public static final String _Precioa10 = "p10";
     public static final String _billete = "billete";
@@ -139,6 +144,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String _Precioc50  = "pc50";
     public static final String _Precioc60  = "pc60";
     public static final String _Precioc100  = "pc100";
+
+    public static final String _Preciop10 = "ppc10";
+    public static final String _Preciop20 = "ppc20";
+    public static final String _Preciop25 = "ppc25";
+    public static final String _Preciop30 = "ppc30";
+    public static final String _Preciop35  = "ppc35";
+    public static final String _Preciop40  = "ppc40";
+    public static final String _Preciop45  = "ppc45";
+    public static final String _Preciop50  = "ppc50";
+    public static final String _Preciop60  = "ppc60";
+    public static final String _Preciop100  = "ppc100";
 
     public static final String _Preciolts = "lts";
     public static final String _Preciokgs = "kgs";
@@ -391,36 +407,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _supervisor = sharedpreferences.getString(MIRUTA,"0");
         _clienteC = sharedpreferences.getString(COUNT_CLIENTES,"0");
         String _tmfac = sharedpreferences.getString(URL_MAIN_2,"0");
-        _facc =Integer.valueOf(_tmfac);
-        _facz = Integer.valueOf(sharedpreferences.getString(CORRECILZA,"0"));
-        _fact = Integer.valueOf(sharedpreferences.getString(CORRETRAM,"0"));
+        try {
+            _facc =Integer.valueOf(_tmfac);
+            _facz = Integer.valueOf(sharedpreferences.getString(CORRECILZA,"0"));
+            _fact = Integer.valueOf(sharedpreferences.getString(CORRETRAM,"0"));
 
-        _10r = new catalogo("10lbRosca",Double.valueOf(sharedpreferences.getString(_Precioa10,"0")),Double.valueOf(sharedpreferences.getString(_Precioc10,"0")),10);
-        _20r = new catalogo("20lbRosca",Double.valueOf(sharedpreferences.getString(_Precioa20,"0")),Double.valueOf(sharedpreferences.getString(_Precioc20,"0")),20);
-        _20p = new catalogo("20lbPresion",Double.valueOf(sharedpreferences.getString(_Precioa20,"0")),Double.valueOf(sharedpreferences.getString(_Precioc20,"0")),20);
-        _25r = new catalogo("25lbRosca",Double.valueOf(sharedpreferences.getString(_Precioa25,"0")),Double.valueOf(sharedpreferences.getString(_Precioc25,"0")),25);
-        _25p = new catalogo("25lbPresion",Double.valueOf(sharedpreferences.getString(_Precioa25,"0")),Double.valueOf(sharedpreferences.getString(_Precioc25,"0")),25);
-        _30r = new catalogo("30lb",Double.valueOf(sharedpreferences.getString(_Precioa30,"0")),Double.valueOf(sharedpreferences.getString(_Precioc30,"0")),30);
-        _35r = new catalogo("35lb",Double.valueOf(sharedpreferences.getString(_Precioa35,"0")),Double.valueOf(sharedpreferences.getString(_Precioc35,"0")),35);
-        _40r = new catalogo("40lb",Double.valueOf(sharedpreferences.getString(_Precioa40,"0")),Double.valueOf(sharedpreferences.getString(_Precioc40,"0")),40);
-        _45r = new catalogo("45lb",Double.valueOf(sharedpreferences.getString(_Precioa45,"0")),Double.valueOf(sharedpreferences.getString(_Precioc45,"0")),45);
-        _50r = new catalogo("50lb",Double.valueOf(sharedpreferences.getString(_Precioa50,"0")),Double.valueOf(sharedpreferences.getString(_Precioc50,"0")),50);
-        _100r = new catalogo("100lb",Double.valueOf(sharedpreferences.getString(_Precioa100,"0")),Double.valueOf(sharedpreferences.getString(_Precioc100,"0")),100);
+        }catch (Exception e){
+            _facc = 0;
+            _facz = 0;
+            _fact = 0;
+        }
 
-        _c25 = new catalogo("Cil25Presion",Double.valueOf(355),Double.valueOf(355),25);
-        _c25r = new catalogo("Cil25Rosca",Double.valueOf(355),Double.valueOf(355),25);
-        _c100 = new catalogo("Cil100Rosca",Double.valueOf(355),Double.valueOf(355),100);
+        _10r = new catalogo("10lbRosca",Double.valueOf(sharedpreferences.getString(_Precioa10,"0")),Double.valueOf(sharedpreferences.getString(_Precioc10,"0")),10,Double.valueOf(sharedpreferences.getString(_Preciop10,"0")));
+        _20r = new catalogo("20lbRosca",Double.valueOf(sharedpreferences.getString(_Precioa20,"0")),Double.valueOf(sharedpreferences.getString(_Precioc20,"0")),20,Double.valueOf(sharedpreferences.getString(_Preciop20,"0")));
+        _20p = new catalogo("20lbPresion",Double.valueOf(sharedpreferences.getString(_Precioa20,"0")),Double.valueOf(sharedpreferences.getString(_Precioc20,"0")),20,Double.valueOf(sharedpreferences.getString(_Preciop20,"0")));
+        _25r = new catalogo("25lbRosca",Double.valueOf(sharedpreferences.getString(_Precioa25,"0")),Double.valueOf(sharedpreferences.getString(_Precioc25,"0")),25,Double.valueOf(sharedpreferences.getString(_Preciop25,"0")));
+        _25p = new catalogo("25lbPresion",Double.valueOf(sharedpreferences.getString(_Precioa25,"0")),Double.valueOf(sharedpreferences.getString(_Precioc25,"0")),25,Double.valueOf(sharedpreferences.getString(_Preciop25,"0")));
+        _30r = new catalogo("30lb",Double.valueOf(sharedpreferences.getString(_Precioa30,"0")),Double.valueOf(sharedpreferences.getString(_Precioc30,"0")),30,Double.valueOf(sharedpreferences.getString(_Preciop30,"0")));
+        _35r = new catalogo("35lb",Double.valueOf(sharedpreferences.getString(_Precioa35,"0")),Double.valueOf(sharedpreferences.getString(_Precioc35,"0")),35,Double.valueOf(sharedpreferences.getString(_Preciop35,"0")));
+        _40r = new catalogo("40lb",Double.valueOf(sharedpreferences.getString(_Precioa40,"0")),Double.valueOf(sharedpreferences.getString(_Precioc40,"0")),40,Double.valueOf(sharedpreferences.getString(_Preciop40,"0")));
+        _45r = new catalogo("45lb",Double.valueOf(sharedpreferences.getString(_Precioa45,"0")),Double.valueOf(sharedpreferences.getString(_Precioc45,"0")),45,Double.valueOf(sharedpreferences.getString(_Preciop45,"0")));
+        _50r = new catalogo("50lb",Double.valueOf(sharedpreferences.getString(_Precioa50,"0")),Double.valueOf(sharedpreferences.getString(_Precioc50,"0")),50,Double.valueOf(sharedpreferences.getString(_Preciop50,"0")));
+        _100r = new catalogo("100lb",Double.valueOf(sharedpreferences.getString(_Precioa100,"0")),Double.valueOf(sharedpreferences.getString(_Precioc100,"0")),100,Double.valueOf(sharedpreferences.getString(_Preciop100,"0")));
 
-        _wc25 = new catalogo("Cil25Presion",Double.valueOf(355),Double.valueOf(355),25);
-        _wc25r = new catalogo("Cil25Rosca",Double.valueOf(355),Double.valueOf(355),25);
-        _wc100 = new catalogo("Cil100Rosca",Double.valueOf(355),Double.valueOf(355),100);
+        _c25 = new catalogo("Cil25Presion",Double.valueOf(355),Double.valueOf(355),25,Double.valueOf(355));
+        _c25r = new catalogo("Cil25Rosca",Double.valueOf(355),Double.valueOf(355),25,Double.valueOf(355));
+        _c100 = new catalogo("Cil100Rosca",Double.valueOf(355),Double.valueOf(355),100,Double.valueOf(355));
+
+        _wc25 = new catalogo("Cil25Presion",Double.valueOf(355),Double.valueOf(355),25,Double.valueOf(355));
+        _wc25r = new catalogo("Cil25Rosca",Double.valueOf(355),Double.valueOf(355),25,Double.valueOf(355));
+        _wc100 = new catalogo("Cil100Rosca",Double.valueOf(355),Double.valueOf(355),100,Double.valueOf(355));
 
 
 
-        _60r = new catalogo("60 lbs",Double.valueOf(sharedpreferences.getString(_Precioa60,"0")),Double.valueOf(sharedpreferences.getString(_Precioc60,"0")),60);
+        _60r = new catalogo("60 lbs",Double.valueOf(sharedpreferences.getString(_Precioa60,"0")),Double.valueOf(sharedpreferences.getString(_Precioc60,"0")),60,Double.valueOf(sharedpreferences.getString(_Preciop60,"0")));
 
-        _lts = new catalogo("Litros GLP",Double.parseDouble(sharedpreferences.getString(_Preciolts,"0")),Double.parseDouble(sharedpreferences.getString(_Preciolts,"0")),0);
-        _kgs = new catalogo("Kilogramos GLP",Double.parseDouble(sharedpreferences.getString(_Preciokgs,"0")),Double.parseDouble(sharedpreferences.getString(_Preciokgs,"0")),0);
+        _lts = new catalogo("Litros GLP",Double.parseDouble(sharedpreferences.getString(_Preciolts,"0")),Double.parseDouble(sharedpreferences.getString(_Preciolts,"0")),0,Double.valueOf(355));
+        _kgs = new catalogo("Kilogramos GLP",Double.parseDouble(sharedpreferences.getString(_Preciokgs,"0")),Double.parseDouble(sharedpreferences.getString(_Preciokgs,"0")),0,Double.valueOf(355));
 
         LAT = "-10000";
 
@@ -648,9 +671,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             }else{//GRANEL
 
-                                _totalfac = _lts.getTotal() + _kgs.getTotal();
+                                _totalfac = _lts.getQtyTotal() + _kgs.getQtyTotal();
                                 _totaldesc = _lts.getDescTotal() + _kgs.getDescTotal();
-                                saveNameToServer(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
+                                saveNameToServerg(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
                                         +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(Q20)
                                         + "," + String.valueOf(_lts.getQty())+ "," + String.valueOf(Q35)+ "," + String.valueOf(Q40r)+ "," + String.valueOf(Q50)
                                         + "," + String.valueOf(Q100r)
@@ -665,6 +688,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     sendDataCilza(fac_detail,"");
                                     else*/
                                         sendData(String.valueOf(_tt),String.valueOf(_totaldesc));
+                                    resetUI();
 
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
@@ -806,6 +830,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if(conso >= 60)
                                 _descCilindro25 = 1933;
 
+                            _actual.setDescuento(String.valueOf(_descCilindro25));
+
                             _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
                                     _35r.getQtyTotal() + _40r.getQtyTotal() + _45r.getQtyTotal() + _50r.getQtyTotal() + _60r.getQtyTotal() + _100r.getQtyTotal();
 
@@ -860,31 +886,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                         if(Integer.valueOf(_actual.getTipoFactura()) == 0){
-                            //Precio Agencia
-                            //No es tienda
-                            /*if (_10r.getDesQTY() != null) fac_detail += "    " +_10r.getDesQTY() + "\n";
-                            if (_20p.getDesQTY() != null) fac_detail += "    " +_20p.getDesQTY() + "\n";if (_20r.getDesQTY() != null) fac_detail += "    " +_20r.getDesQTY() + "\n";
-                            if (_25p.getDesQTY() != null) fac_detail += "    " +_25p.getDesQTY() + "\n";if (_25r.getDesQTY() != null) fac_detail += "    " +_25r.getDesQTY() + "\n";
-                            if (_30r.getDesQTY() != null) fac_detail += "    " +_30r.getDesQTY() + "\n";if (_35r.getDesQTY() != null) fac_detail += "    " +_35r.getDesQTY() + "\n";
-                            if (_40r.getDesQTY() != null) fac_detail += "    " +_40r.getDesQTY()+ "\n";if (_45r.getDesQTY() != null) fac_detail += "    " +_45r.getDesQTY()+ "\n";
-                            if (_50r.getDesQTY() != null) fac_detail += "    " +_50r.getDesQTY()+ "\n";if (_60r.getDesQTY() != null) fac_detail += "    " +_60r.getDesQTY()+ "\n";
-                            if (_100r.getDesQTY() != null) fac_detail += "    " +_100r.getDesQTY()+ "\n";*/
-/*
-                            if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" + "(-)" +_10r.getDesDESC() + "\n";
-                            if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" + "(-)"+ _20p.getDesDESC()+ "\n"; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" + "(-)"+ _20r.getDesDESC()+ "\n";
-                            if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n" + "(-)"+ _25p.getDesDESC()+ "\n"; if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" + "(-)"+ _25r.getDesDESC()+ "\n";
-                            if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n" + "(-)"+ _30r.getDesDESC()+ "\n"; if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n" + "(-)"+ _35r.getDesDESC()+ "\n";
-                            if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n" + "(-)"+ _40r.getDesDESC()+ "\n";  if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n" + "(-)"+ _45r.getDesDESC()+ "\n";
-                            if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n" + "(-)"+  _50r.getDesDESC()+ "\n";  if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n" + "(-)"+ _60r.getDesDESC()+ "\n";
-                            if (_100r.getDesQTY() != null)fac_detail += _100r.getDesQTY()+ "\n" + "(-)"+ _100r.getDesDESC()+ "\n";
-*/
-                            if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" + ((_10r.getDescTotal() != 0)?"(-)" + _10r.getDesDESC() : "") + "\n";
-                            if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" + ((_20p.getDescTotal() != 0)?"(-)" + _20p.getDesDESC() : "")+ "\n"; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" + ((_20r.getDescTotal() != 0)?"(-)" + _20r.getDesDESC() : "")+ "\n";
-                            if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n" + ((_25p.getDescTotal() != 0)?"(-)" + _25p.getDesDESC() : "")+ "\n"; if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" + ((_25r.getDescTotal() != 0)?"(-)" + _25r.getDesDESC() : "")+ "\n";
-                            if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n" + ((_30r.getDescTotal() != 0)?"(-)" + _30r.getDesDESC() : "")+ "\n"; if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n" + ((_35r.getDescTotal() != 0)?"(-)" + _35r.getDesDESC() : "")+ "\n";
-                            if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n" + ((_40r.getDescTotal() != 0)?"(-)" + _40r.getDesDESC() : "")+ "\n";  if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n" + ((_45r.getDescTotal() != 0)?"(-)" + _45r.getDesDESC() : "")+ "\n";
-                            if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n" + ((_50r.getDescTotal() != 0)?"(-)" + _50r.getDesDESC() : "")+ "\n";  if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n" + ((_60r.getDescTotal() != 0)?"(-)" + _60r.getDesDESC() : "")+ "\n";
-                            if (_100r.getDesQTY() != null)fac_detail += _100r.getDesQTY()+ "\n" + ((_100r.getDescTotal() != 0)?"(-)" + _100r.getDesDESC() : "")+ "\n";
+
+                            double conso = (_25p.getQty() + _25r.getQty()) + ( _100r.getQty()*4) +
+                                    ((_20p.getQty() * 0.8f) + (_20r.getQty() *0.8f)) + (_10r.getQty() *0.4f) +  (_35r.getQty() *1.4f) +
+                                    (_40r.getQty() *1.6f) + (_45r.getQty() *1.8f) + (_50r.getQty() *2f) + (_60r.getQty() *2.4f) + (_30r.getQty() *1.2f) ;
+
+                            if((conso) < 3) {
+
+                                _10r.setDescuentoAsignado(false);  _20p.setDescuentoAsignado(false);  _20r.setDescuentoAsignado(false);  _25r.setDescuentoAsignado(false); _25p.setDescuentoAsignado(false);  _30r.setDescuentoAsignado(false);
+                                        _35r.setDescuentoAsignado(false);  _40r.setDescuentoAsignado(false);  _45r.setDescuentoAsignado(false);  _50r.setDescuentoAsignado(false);  _60r.setDescuentoAsignado(false);  _100r.setDescuentoAsignado(false);
+                            }
+                            if(_actual.getCredito().equals("0") ) {
+                                if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" ;
+                                if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" ; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" ;
+                                if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n" ; if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" ;
+                                if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n" ; if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n" ;
+                                if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n" ;  if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n" ;
+                                if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n" ;  if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n" ;
+                                if (_100r.getDesQTY() != null)fac_detail += _100r.getDesQTY()+ "\n" ;
+                            }else{
+                                if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" + ((_10r.getDescTotal() != 0)?"(-)" + _10r.getDesDESC() : "") + "\n";
+                                if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" + ((_20p.getDescTotal() != 0)?"(-)" + _20p.getDesDESC() : "")+ "\n"; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" + ((_20r.getDescTotal() != 0)?"(-)" + _20r.getDesDESC() : "")+ "\n";
+                                if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n" + ((_25p.getDescTotal() != 0)?"(-)" + _25p.getDesDESC() : "")+ "\n"; if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" + ((_25r.getDescTotal() != 0)?"(-)" + _25r.getDesDESC() : "")+ "\n";
+                                if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n" + ((_30r.getDescTotal() != 0)?"(-)" + _30r.getDesDESC() : "")+ "\n"; if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n" + ((_35r.getDescTotal() != 0)?"(-)" + _35r.getDesDESC() : "")+ "\n";
+                                if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n" + ((_40r.getDescTotal() != 0)?"(-)" + _40r.getDesDESC() : "")+ "\n";  if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n" + ((_45r.getDescTotal() != 0)?"(-)" + _45r.getDesDESC() : "")+ "\n";
+                                if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n" + ((_50r.getDescTotal() != 0)?"(-)" + _50r.getDesDESC() : "")+ "\n";  if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n" + ((_60r.getDescTotal() != 0)?"(-)" + _60r.getDesDESC() : "")+ "\n";
+                                if (_100r.getDesQTY() != null)fac_detail += _100r.getDesQTY()+ "\n" + ((_100r.getDescTotal() != 0)?"(-)" + _100r.getDesDESC() : "")+ "\n";
+                            }
+
 
                             if (_10r.getDesDESC() != null) desc_detail += "    " +_10r.getDesDESC() + "\n";
                             if (_20p.getDesDESC() != null) desc_detail += "    " +_20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += "    " +_20r.getDesDESC()+ "\n";
@@ -897,6 +926,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
                                     _35r.getQtyTotal() + _40r.getQtyTotal() + _45r.getQtyTotal() + _50r.getQtyTotal() + _60r.getQtyTotal() + _100r.getQtyTotal();
+
                             _totaldesc = _10r.getDescTotal() + _20p.getDescTotal() + _20r.getDescTotal() + _25r.getDescTotal() + _25p.getDescTotal() + _30r.getDescTotal() +
                                     _35r.getDescTotal() + _40r.getDescTotal() + _45r.getDescTotal() + _50r.getDescTotal() + _60r.getDescTotal() + _100r.getDescTotal();
                                /*     builder.setMessage("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac - _totaldesc) )
@@ -981,7 +1011,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }else{
                         if(_lts.getQty() > 0){
                             //edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
-                            fac_detail = _lts.getDesQTY(); desc_detail = _lts.getDesDESC();
+                            //Credito imprimira boleta de descuento, Contado lo traera como renglon
+                            if(_actual.getCredito().equals("0") ) fac_detail = _lts.getDesQTY() + "\n";
+                            else
+                                fac_detail = _lts.getDesQTY() + "\n(-)" + _lts.getDesDESC();
+
+                            desc_detail = _lts.getDesDESC();
                             _totalfac = _lts.getQtyTotal();_totaldesc = _lts.getDescTotal();
                             edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc));
                             txvDesglose.setText("Desglose de factura: " + "\n" + _lts.getDesQTY() +  "\n Desglose Descuento:" + "\n" + _lts.getDesDESC() +  "\n TOTAL A FACTURAR:" + "\n" +  _lts.getTotal().toString() );
@@ -990,7 +1025,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         if(_kgs.getQty() > 0){
                             //edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
-                            fac_detail =  _kgs.getDesQTY(); desc_detail = _kgs.getDesDESC();
+                            if(_actual.getCredito().equals("0") )fac_detail =  _kgs.getDesQTY() + "\n";
+                            else
+                            fac_detail =  _kgs.getDesQTY() + "\n(-)" + _kgs.getDesDESC();
+
+                            desc_detail = _kgs.getDesDESC();
                             _totalfac = _kgs.getQtyTotal();_totaldesc = _kgs.getDescTotal();
                             edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc));
                             txvDesglose.setText("Desglose de factura: " + "\n"  + _kgs.getDesQTY()  +  "\n Desglose Descuento:" + "\n"  + _kgs.getDesDESC() +  "\n TOTAL A FACTURAR:" + "\n" +  _kgs.getTotal().toString());
@@ -1241,7 +1280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String selectedFromList =(listViewNames.getItemAtPosition(position).toString());
                 Name data =  (Name) parent.getItemAtPosition(position);
                 final String[] tokens = data.getName().split(",");
-
+                if (!tokens[1].toString().equals("mecanico"))
                 if(_FacCilindro){
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
                     LayoutInflater inflater = MainActivity.this.getLayoutInflater();
@@ -1516,43 +1555,163 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // the text typed by the user
             String msg = "\n";// myTextbox.getText().toString();
-            if(_tipodoc == 2) {
-                msg += "   Gas Tomza de Costa Rica S.A.";
+            String tram = "\n";
+
+            if(_actual.getCredito().equals("0")) {//2 //TRAMITE DE PAGO!!!
+                tram += "   Gas Tomza de Costa Rica S.A.";
+                tram += "\n";
+                tram += "    Ced. Jur. 3-101-349880  ";
+                tram += "\n";
+                tram += "  La lima de Cartago, Costa Rica";
+                tram += "\n";
+                tram += "  Telefono:(506)2201-6000";
+                tram += "\n";
+                tram += "    www.tomzacr.com ";
+                tram += "\n";
+                tram += " servicioalcliente.cr@tomza.com ";
+
+                /*tram += "\n";
+                tram += "Tramite de Pago: " + _actual.getRuta() + String.valueOf(_facc);*/
+                tram += "\n";
+                tram += "Rutero: "+_actual.getRuta();
+                tram += "\n";
+                tram += "Fecha:" + _date;
+                tram += "\n";
+                tram += "Senores: " + _actual.getRazon();
+                tram += "\n\n\n";
+                tram += "Con fecha de hoy recibido en calidad de deposito y para tramite de pago las siguientes facturas originales de Gas Tomza de Costa Rica.\n";
+                tram += "\n";
+                tram += "Factura No      VALOR";
+                tram += "\n";
+                tram +=  _actual.getRuta() + String.valueOf(_facc) + "   " + String.format("%.2f", _totalfac);
+                //msg += fac_detail;
+                tram += "\n\n\n";
+                tram += "Este documento sustituye a las facturas recibidas en el caso de que los originales de las mismas se extravien, mientras se encuentren en nuestro poder y como factura misma constituye Titulo Ejecutivo, en caso de eventual Cobro Judicial se regira por los Articulos 460 y siguientes del Codigo de Comercio. La posesion de los originales no significa la cancelacion de las mismas. Exija el respectivo recibo de pago.\n";
+                tram += "\n";
+                tram += "RECIBIDO NOMBRE:\n\n_____________________"+"\n";
+                tram += "FIRMA RESPONSABLE:\n\n______________________"+"\n";
+                tram += "# DE CEDULA:\n\n______________________"+"\n";
+
+
+            }
+                if(_tipodoc == 0) {
+                    msg += "   Gas Tomza de Costa Rica S.A.";
+                    msg += "\n";
+                    msg += "    Ced. Jur. 3-101-349880  ";
+                    msg += "\n";
+                    msg += "  La lima de Cartago, Costa Rica";
+                    msg += "\n";
+                    msg += "  Telefono:(506)2201-6000";
+                    msg += "\n";
+                    msg += "    www.tomzacr.com ";
+                    msg += "\n";
+                    msg += " servicioalcliente.cr@tomza.com ";
+                    msg += "\n";
+                    msg += "\n";
+
+                    if(_FacCilindro)
+                        msg += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
+                    else
+                        msg += "Factura: " + _supervisor + String.valueOf(_facc);
+                }
+                if(_tipodoc == 1)
+                {
+                    msg += "   Cilindros Zaragoza S.A.";
+                    msg += "\n";
+                    msg += "    Ced. Jur. 3-101-387254  ";
+                    msg += "\n";
+                    msg += "  La lima de Cartago, Costa Rica";
+                    msg += "\n";
+                    msg += "  Telefono:(506)2573-7789";
+                    msg += "\n";
+                    msg += "    www.tomzacr.com ";
+                    msg += "\n";
+                    msg += "\n";
+                    msg += "Factura: " + _actual.getRuta() + String.valueOf(_facz);
+                }
+                //
+
+
                 msg += "\n";
-                msg += "    Ced. Jur. 3-101-349880  ";
-                msg += "\n";
-                msg += "  La lima de Cartago, Costa Rica";
-                msg += "\n";
-                msg += "  Telefono:(506)2201-6000";
-                msg += "\n";
-                msg += "    www.tomzacr.com ";
-                msg += "\n";
-                msg += " servicioalcliente.cr@tomza.com ";
-                msg += "\n";
-                msg += "\n";
-                msg += "Tramite de Pago: " + _actual.getRuta() + String.valueOf(_fact);
-                msg += "\n";
-                msg += "Rutero: "+_actual.getRuta();
+                if(_FacCilindro)
+                    msg += "Rutero: "+_actual.getRuta();
+                else
+                    msg += "Rutero: "+ _supervisor;
                 msg += "\n";
                 msg += "Fecha:"+ _date;
                 msg += "\n";
-                msg += "Señores: " + _actual.getRazon();
+                if(_actual.getCredito().equals("0"))
+                    msg += "FORMA PAGO: CREDITO ";
+                else
+                    msg += "FORMA PAGO: CONTADO ";
                 msg += "\n";
-                msg += "Con fecha de hoy recibido en calidad de deposito y para tramite de pago las siguientes facturas originales de Gas Tomza de Costa Rica.\n";
+                msg += "Razon Social:"+ _actual.getRazon();
                 msg += "\n";
-                msg += "Factura No   FECHA    VALOR";
+                msg += "Nombre:"+ _actual.getNombre();
+                msg += "\nDireccion:____________________";
+                //msg += "\n";
+                //msg += "Codigo Cliente:" +  _codigocliente;
                 msg += "\n";
-                msg += fac_detail;
                 msg += "\n";
-                msg += "Este documento sustituye a las facturas recibidas en el caso de que los originales de las mismas se extravien, mientras se encuentren en nuestro poder y como factura misma constituye Titulo Ejecutivo, en caso de eventual Cobro Judicial se regira por los Articulos 460 y siguientes del Codigo de Comercio. La posesion de los originales no significa la cancelacion de las mismas. Exija el respectivo recibo de pago.\n";
+                msg += "CANT.  ART.   P.UNIT    TOTAL";
                 msg += "\n";
-                msg += "RECIBIDO NOMBRE:\n\n_____________________"+"\n";
-                msg += "FIRMA RESPONSABLE:\n\n______________________"+"\n";
-                msg += "# DE CEDULA:\n\n______________________"+"\n";
+                msg += "   -------------------------";
+                msg += "\n";
+
+                if(fac_detail != "" )
+                    msg += fac_detail;
+                //msg += "\n";
+                //msg += "     275                Granel GLP      61050   ";
+
+                msg += "\n---------------------- ";
+                msg += "\n";
+                msg += "\n";
+
+                if(_tipodoc == 0){
+
+                    if(!d.equals("0.0")) msg += "TOTAL A PAGAR(CRC):" + t;
+                    else msg += "TOTAL(CRC):"+String.format("%.2f", _totalfac)+"   ";
+
+                }else{
+                    msg += "SUB TOTAL:"+String.format("%.2f", SubTotalCil)+"\n";
+                    msg += "IMPUESTO:"+String.format("%.2f", TotalImpCil)+"\n";
+                    msg += "TOTAL(CRC):"+String.format("%.2f", TotalCil)+"\n";
+                    msg += "\n";
+                    msg += "\n";
+                    msg += "NOMBRE:________________"+"\n";
+                    msg += "CEDULA:________________"+"\n";
+                    msg += "RECIBIDO CONFORME:\n\n___________________"+"\n";
 
 
-            }else {
-                if(_tipodoc == 0) {
+                }
+//separador de miles
+
+
+                msg += "\n";
+                msg += "\n";
+                if(_FacCilindro) {
+                    msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
+
+                    msg += "11-97 D.G.T.D del 12 de agosto 1997";
+                }else{
+                    msg += "RECIBIDO NOMBRE:\n\n_____________________" + "\n\n";
+                    msg += "FIRMA RESPONSABLE:\n\n______________________" + "\n\n";
+                    msg += "# DE CEDULA:\n\n______________________" + "\n\n";
+                    msg += "Sellos:\n\n" + "\n";
+                    msg += "\n\n\n\n\n\n\n\n\n\n\n\n";
+                    msg += "______________________";
+                    msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
+
+                    msg += "11-97 D.G.T.D del 12 de agosto 1997";
+                }
+                msg += "\n";
+                msg += "\n";
+                msg += "\n";
+            if(_actual.getCredito().equals("0") && _tipodoc == 1 && !d.equals("0")){
+
+                msg += "   BOLETA DE DESCUENTO  ";
+                msg += "\n";
+                msg += "\n";
                 msg += "   Gas Tomza de Costa Rica S.A.";
                 msg += "\n";
                 msg += "    Ced. Jur. 3-101-349880  ";
@@ -1566,97 +1725,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg += " servicioalcliente.cr@tomza.com ";
                 msg += "\n";
                 msg += "\n";
-                msg += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
-            }
-            if(_tipodoc == 1)
-            {
-                msg += "   Cilindros Zaragoza S.A.";
+                if(_FacCilindro)
+                    msg += "Descuento a Factura: " + _actual.getRuta() + String.valueOf(_facc);
+                else
+                    msg += "Descuento a Factura: " + _supervisor + String.valueOf(_facc);
                 msg += "\n";
-                msg += "    Ced. Jur. 3-101-387254  ";
+                msg += "Fecha:"+ _date;
                 msg += "\n";
-                msg += "  La lima de Cartago, Costa Rica";
+                if(_actual.getCredito().equals("0"))
+                    msg += "FORMA PAGO: CREDITO ";
+                else
+                    msg += "FORMA PAGO: CONTADO ";
                 msg += "\n";
-                msg += "  Telefono:(506)2573-7789";
+                msg += "Razon Social:"+ _actual.getRazon();
                 msg += "\n";
-                msg += "    www.tomzacr.com ";
+                msg += "Nombre:"+ _actual.getNombre();
+                msg += "\nDireccion:____________________";
+                //msg += "\n";
+                //msg += "Codigo Cliente:" +  _codigocliente;
                 msg += "\n";
                 msg += "\n";
-                msg += "Factura: " + _actual.getRuta() + String.valueOf(_facz);
-            }
-            //
+                msg += "CANT.  ART.   P.UNIT    TOTAL";
+                msg += "\n";
+                msg += "   -------------------------";
+                msg += "\n";
 
 
-            msg += "\n";
-            msg += "Rutero: "+_actual.getRuta();
-            msg += "\n";
-            msg += "Fecha:"+ _date;
-            msg += "\n";
-            if(_actual.getCredito().equals("0"))
-                msg += "FORMA PAGO: CREDITO ";
-            else
-                msg += "FORMA PAGO: CONTADO ";
-            msg += "\n";
-            msg += "Razon Social:"+ _actual.getRazon();
-            msg += "\n";
-            msg += "Nombre:"+ _actual.getNombre();
-            msg += "\nDireccion:____________________";
-            //msg += "\n";
-            //msg += "Codigo Cliente:" +  _codigocliente;
-            msg += "\n";
-            msg += "\n";
-            msg += "CANT.  ART.   P.UNIT    TOTAL";
-            msg += "\n";
-            msg += "   -------------------------";
-            msg += "\n";
+                    msg += desc_detail;
+                //msg += "\n";
+                //msg += "     275                Granel GLP      61050   ";
 
-            if(fac_detail != "" )
-                msg += fac_detail;
-            //msg += "\n";
-            //msg += "     275                Granel GLP      61050   ";
-
-            msg += "   ---------------------- ";
-            msg += "\n";
-            msg += "\n";
-
-            if(_tipodoc == 0){
-
-                if(!d.equals("0.0")) msg += "TOTAL A PAGAR(CRC):" + t;
-                else msg += "TOTAL(CRC):"+String.format("%.2f", _totalfac)+"   ";
-            }else{
-                msg += "SUB TOTAL:"+String.format("%.2f", SubTotalCil)+"\n";
-                msg += "IMPUESTO:"+String.format("%.2f", TotalImpCil)+"\n";
-                msg += "TOTAL(CRC):"+String.format("%.2f", TotalCil)+"\n";
+                msg += "\n---------------------- ";
                 msg += "\n";
                 msg += "\n";
-                msg += "NOMBRE:________________"+"\n";
-                msg += "CEDULA:________________"+"\n";
-                msg += "RECIBIDO CONFORME:\n\n___________________"+"\n";
-
 
             }
 
 
 
-            msg += "\n";
-            msg += "\n";
-
-            msg += "AUTORIZADO MEDIANTE EL OFICIO NUMERO";
-
-            msg += "03-0001-2003 del 6 de feb de D.G.T.D";
-            msg += "\n";
-            msg += "\n";
-            msg += "\n";
-            msg += "\n";
-            msg += "\n";
 
 
 
-
-
-            }
             SharedPreferences.Editor editor = sharedpreferences.edit();
 
             editor.putString(_Tfactura ,msg);
+            editor.putString(_Ttramite,tram);
 
 
             editor.commit();
@@ -1666,6 +1779,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // tell the user data were sent
             myLabel.setText("Data sent."); _facok = true;
+
 
 
         } catch (Exception e) {
@@ -1964,11 +2078,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         editor.commit();
 
                     if(_FacCilindro)//clien te cilindros
-                        saveClienteToServer(_supervisor + _clienteC,edt.getText().toString(), edt3.getText().toString(), _supervisor,edt2.getText().toString() , "1",
-                                _tiposub,edt3.getText().toString(),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
+                        saveClienteToServer(_supervisor + _clienteC,edt.getText().toString().replace(",", " "), edt3.getText().toString().replace(",", " "), _supervisor,edt2.getText().toString().replace(",", " ") , "1",
+                                _tiposub,edt3.getText().toString().replace(",", " "),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
                                 "0","1",String.valueOf(spiTipo.getSelectedItemPosition()));
                         else //granel
-                        saveClienteToServer(_supervisor +  _clienteC,edt.getText().toString(), edt3.getText().toString(), _supervisor,edt2.getText().toString() , String.valueOf(spiTipo.getSelectedItemPosition()),
+                        saveClienteToServer(_supervisor +  _clienteC,edt.getText().toString().replace(",", " "), edt3.getText().toString().replace(",", " "), _supervisor,edt2.getText().toString().replace(",", " ") , String.valueOf(spiTipo.getSelectedItemPosition()),
                                 _tiposub,edt3.getText().toString(),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
                                 "0","1","0");
 
@@ -2218,6 +2332,102 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         b.show();
 
     }
+    public void customrep(){
+
+
+
+
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.mecan , null);
+        dialogBuilder.setView(dialogView);
+       /* final EditText edt50k = (EditText) dialogView.findViewById(R.id.edt50k);
+        final EditText edt20k = (EditText) dialogView.findViewById(R.id.edt20k);
+        final EditText edt10k = (EditText) dialogView.findViewById(R.id.edt10k);
+        final EditText edt5k = (EditText) dialogView.findViewById(R.id.edt5k);
+        final EditText edt2k = (EditText) dialogView.findViewById(R.id.edt2k);
+        final EditText edt1k = (EditText) dialogView.findViewById(R.id.edt1k);
+        final EditText edt500 = (EditText) dialogView.findViewById(R.id.edt500);
+        final EditText edt100 = (EditText) dialogView.findViewById(R.id.edt100);
+        final EditText edt50 = (EditText) dialogView.findViewById(R.id.edt50);
+        final EditText edt25 = (EditText) dialogView.findViewById(R.id.edt25);
+        final EditText edt10 = (EditText) dialogView.findViewById(R.id.edt10);
+        final EditText edt5 = (EditText) dialogView.findViewById(R.id.edt5);
+        final EditText edtdol = (EditText) dialogView.findViewById(R.id.edtDol );
+        final EditText edtvale = (EditText) dialogView.findViewById(R.id.edtVale);*/
+        final EditText edt = (EditText) dialogView.findViewById(R.id.editText);
+        final CheckBox cool = (CheckBox) dialogView.findViewById(R.id.coolant);
+        final CheckBox acei = (CheckBox) dialogView.findViewById(R.id.aceite);
+        final CheckBox luce = (CheckBox) dialogView.findViewById(R.id.luces);
+        final CheckBox llan = (CheckBox) dialogView.findViewById(R.id.llantas);
+
+/*
+        final EditText edt = (EditText) dialogView.findViewById(R.id.editNombre);
+        final EditText edt2 = (EditText) dialogView.findViewById(R.id.editRazon);
+        final EditText edt3 = (EditText) dialogView.findViewById(R.id.editDescuento);
+        //final EditText edt7 = (EditText) dialogView.findViewById(R.id.editFormadepago);
+        final Spinner spiTipo = (Spinner) dialogView.findViewById(R.id.spinner);
+*/
+        // final Button pic = (Button) dialogView.findViewById(R.id.buttonFoto);
+
+        //_img = (ImageView) dialogView.findViewById(R.id.img);
+/*
+
+        pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //   Toast.makeText(getApplicationContext(),"Hi",Toast.LENGTH_LONG).show();
+                //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                //startActivityForResult(intent,0);
+
+                //_comodato += edt.getText().toString() + "," + edt2.getText().toString() + "," + edt3.getText().toString()+",";
+
+            }
+
+
+        });*/
+
+
+
+
+
+        dialogBuilder.setTitle("Mecanico");
+        dialogBuilder.setMessage("Reporte diario");
+        dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if(edt.getText().toString().equals("tomza2018") || edt.getText().toString().equals(sharedpreferences.getString(_pass,"0"))){
+                    String _c = (cool.isChecked() == true?"si":"no");
+                    String _a = (acei.isChecked() == true?"si":"no");
+                    String _l = (luce.isChecked() == true?"si":"no");
+                    String _ll = (llan.isChecked() == true?"si":"no");
+                    //edt.setTextColor(0);
+                    saveMecanToServer(_supervisor + ",mecanico,"  +_c+ "," +_a+ "," +_l+ "," +_ll);
+
+                    //salvar
+                }else {
+                    customrep();
+                }
+              /*  saveBilletesToServer(edt50k.getText().toString(),edt20k.getText().toString(),edt10k.getText().toString(),edt5k.getText().toString(),edt2k.getText().toString(),edt1k.getText().toString(),edt500.getText().toString(),
+                        edt100.getText().toString(),edt50.getText().toString(),edt25.getText().toString(),edt10.getText().toString(),edt5.getText().toString(),
+                        edtdol.getText().toString(),edtvale.getText().toString());*/
+                //Toast.makeText(getApplicationContext(),"El desglose agregado con exito",Toast.LENGTH_LONG).show();
+
+
+
+                //do something with edt.getText().toString();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if(!edt.getText().toString().equals("hola")){ customrep(); }
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+
+    }
     public void custommotivos(){
 
 
@@ -2375,6 +2585,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             custombilletes();
             return -1;
         }
+        if(myUserName.getText().toString().equals("rep")){
+            customrep();
+            return -1;
+        }
         if(myUserName.getText().toString().equals("tramite")){
             tramite();
             return -1;
@@ -2382,7 +2596,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(myUserName.getText().toString().equals("imp")){
             try {
                 final String _sd = sharedpreferences.getString(_Tfactura,"Error - Contactar soporte");
-                sendData3("     *COPIA TRAMITE* \n" + _sd);
+                sendData3("     *COPIA* \n" + _sd);
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -2390,6 +2604,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return -1;
         }
 
+        if(myUserName.getText().toString().equals("tra")){
+            try {
+                final String _sd = sharedpreferences.getString(_Ttramite,"Error - Contactar soporte");
+                sendData3("     *COPIA TRAMITE* \n" + _sd);
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            return -1;
+        }
 
         if(myUserName.getText().toString().equals("cierre")){
             PrintCierre();
@@ -2410,6 +2634,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 editor.commit();
 
                                 Toast.makeText(getApplicationContext(),"Cierre Hecho con exito",Toast.LENGTH_SHORT).show();
+                                customrep();
                                 db.Delete();
                             }
                             else
@@ -2464,8 +2689,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        if (myUserName.getText().toString().equals("cargar")){
-            if(mTextView.getText().toString() != ""){
+        if (myUserName.getText().toString().equals("cargar") ){
+            if(!mTextView.getText().toString().equals("")){
                 //db.DeleteClients();
                 ReadCommand(mTextView.getText().toString());
 
@@ -2553,6 +2778,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 String[] tokens = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)).split(",");
+                if(!tokens[1].equals("mecanico"))
                 if (!tokens[6].equals("0")){
                 _dat += "-------------\n";
 
@@ -2617,16 +2843,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }*/
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},10);
-            return;
-        }else{
 
-
-            locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
-
-
-        }
         if(_bt != false)
         if(mmDevice == null) {
             try {
@@ -2636,6 +2853,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ex.printStackTrace();
             }
         }
+
+
 
 
     }
@@ -2771,6 +2990,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             editor.putString(_Precioc50, xx.getString("c50"));
                                             editor.putString(_Precioc60, xx.getString("c60"));
                                             editor.putString(_Precioc100, xx.getString("c100"));
+
+                                            editor.putString(_pass, xx.getString("pass"));
+
+                                            editor.putString(_Preciop10, xx.getString("p10"));
+                                            editor.putString(_Preciop20, xx.getString("p20"));
+                                            editor.putString(_Preciop25, xx.getString("p25"));
+                                            editor.putString(_Preciop30, xx.getString("p30"));
+                                            editor.putString(_Preciop35, xx.getString("p35"));
+                                            editor.putString(_Preciop40, xx.getString("p40"));
+                                            editor.putString(_Preciop45, xx.getString("p45"));
+                                            editor.putString(_Preciop50, xx.getString("p50"));
+                                            editor.putString(_Preciop60, xx.getString("p60"));
+                                            editor.putString(_Preciop100, xx.getString("p100"));
 
                                             editor.putString(_Preciolts,xx.getString("lts"));
                                             editor.putString(_Preciokgs,xx.getString("kgs"));
@@ -2940,6 +3172,7 @@ private int _countclie = 0;
                             e.printStackTrace();
                         }
                         _supervisor = sharedpreferences.getString(MIRUTA,"0");
+                        _facc = Integer.valueOf(sharedpreferences.getString(URL_MAIN_2,"0"));
                         _clienteC = sharedpreferences.getString(COUNT_CLIENTES,"0");
                         Toast.makeText(getApplicationContext(),_countclie + "Clientes cargados corrrectamente",Toast.LENGTH_LONG).show();
                     }
@@ -2972,20 +3205,21 @@ private int _countclie = 0;
 
     }
     private String name2 = "";
-    private void saveNameToServer(String _data) {
+    private void saveMecanToServer(String _data) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         String format = simpleDateFormat.format(new Date());
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Factura creada correctamente");
         progressDialog.show();
-        if (transC.equals("") ) transC = "0"; if (transNum.equals("")) transNum = "0"; if (chknum.equals("")) chknum = "0";
-        if (chkbank.equals("")) chkbank = "0";if (chkmont.equals("")) chkmont = "0";
-        name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+_actual.getTipoFactura()+ ","+/*_actual.getRuta() +*/ String.valueOf(_facc)+ ","+_actual.getNombre();
-        if (_tipodoc == 1) name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+"100"+ ","+/*_actual.getRuta() +*/String.valueOf(_facz)+ ","+_actual.getNombre()+ ","+_cQ25+ ","+_cQ25r+ ","+_cQ100r;
-        if (_tipodoc == 2) name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+"101"+ ","+/*_actual.getRuta() +*/String.valueOf(_fact)+ ","+_actual.getNombre()+ ","+_cQ25+ ","+_cQ25r+ ","+_cQ100r;
+
+        name2 = _data + ","+ format;
+
         final String name = name2;
 
+
+            saveMecanToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(0),Double.valueOf(0));
+        //resetUI();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
                 new Response.Listener<String>() {
 
@@ -2997,21 +3231,22 @@ private int _countclie = 0;
                             if (!obj.getBoolean("error")) {
                                 //if there is a success
                                 //storing the name to sqlite with status synced
-                                if(_actual.getCredito().equals("1"))
+                               /* if(_actual.getCredito().equals("1"))
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
                                 else
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
-                                resetUI();
+                                resetUI();*/
+
 
 
                             } else {
                                 //if there is some error
                                 //saving the name to sqlite with status unsynced
-                                if(_actual.getCredito().equals("1"))
+                               /* if(_actual.getCredito().equals("1"))
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
                                 else
                                     saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
-                                resetUI();
+                               */ resetUI();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -3029,11 +3264,176 @@ private int _countclie = 0;
                         //Log.e("okas:", Log.getStackTraceString(error) );
 
                         //on error storing the name to sqlite with status unsynced
+                        /*
                         if(_actual.getCredito().equals("1"))
                             saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
                         else
                             saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
-                        resetUI();
+                        resetUI();*/
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", name);
+                params.put("tipo", "f");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+
+
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+    }
+    private void saveNameToServerg(String _data) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        String format = simpleDateFormat.format(new Date());
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Factura creada correctamente");
+        progressDialog.show();
+        if (transC.equals("") ) transC = "0"; if (transNum.equals("")) transNum = "0"; if (chknum.equals("")) chknum = "0";
+        if (chkbank.equals("")) chkbank = "0";if (chkmont.equals("")) chkmont = "0";
+        name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+ String.valueOf(_facc)+ ","+_actual.getNombre();
+
+        final String name = name2;
+        if(_actual.getCredito().equals("1"))
+            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
+        else
+            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+        //resetUI();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+                                //if there is a success
+                                //storing the name to sqlite with status synced
+
+
+
+                            } else {
+                                //if there is some error
+                                //saving the name to sqlite with status unsynced
+                               /* if(_actual.getCredito().equals("1"))
+                                    saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
+                                else
+                                    saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                                resetUI();*/
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            resetUI();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        //Toast.makeText(getApplicationContext(), ,Toast.LENGTH_SHORT);
+                        error.printStackTrace();
+                        //Log.e("okas:", Log.getStackTraceString(error) );
+
+                        //on error storing the name to sqlite with status unsynced
+                       /* if(_actual.getCredito().equals("1"))
+                            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
+                        else
+                            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                        resetUI();*/
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", name);
+                params.put("tipo", "f");
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+
+
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+    }
+    private void saveNameToServer(String _data) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        String format = simpleDateFormat.format(new Date());
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Factura creada correctamente");
+        progressDialog.show();
+        if (transC.equals("") ) transC = "0"; if (transNum.equals("")) transNum = "0"; if (chknum.equals("")) chknum = "0";
+        if (chkbank.equals("")) chkbank = "0";if (chkmont.equals("")) chkmont = "0";
+        name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+_actual.getTipoFactura()+ ","+/*_actual.getRuta() +*/ String.valueOf(_facc)+ ","+_actual.getNombre()+","+_actual.getSub_canal();
+        if (_tipodoc == 1) name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+"100"+ ","+/*_actual.getRuta() +*/String.valueOf(_facz)+ ","+_actual.getNombre()+ ","+_cQ25+ ","+_cQ25r+ ","+_cQ100r;
+        if (_tipodoc == 2) name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+"101"+ ","+/*_actual.getRuta() +*/String.valueOf(_fact)+ ","+_actual.getNombre()+ ","+_cQ25+ ","+_cQ25r+ ","+_cQ100r;
+        final String name = name2;
+
+        if(_actual.getCredito().equals("1"))
+            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
+        else
+            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+        //resetUI();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+                                //if there is a success
+                                //storing the name to sqlite with status synced
+                               /* if(_actual.getCredito().equals("1"))
+                                    saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
+                                else
+                                    saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                                resetUI();*/
+
+
+
+                            } else {
+                                //if there is some error
+                                //saving the name to sqlite with status unsynced
+                               /* if(_actual.getCredito().equals("1"))
+                                    saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
+                                else
+                                    saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                               */ resetUI();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            resetUI();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        //Toast.makeText(getApplicationContext(), ,Toast.LENGTH_SHORT);
+                        error.printStackTrace();
+                        //Log.e("okas:", Log.getStackTraceString(error) );
+
+                        //on error storing the name to sqlite with status unsynced
+                        /*
+                        if(_actual.getCredito().equals("1"))
+                            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcontado,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoCo,"0")));
+                        else
+                            saveNameToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(sharedpreferences.getString(_Tcredito,"0")),Double.valueOf(sharedpreferences.getString(_TdescuentoC,"0")));
+                        resetUI();*/
                     }
                 }) {
             @Override
@@ -3276,6 +3676,15 @@ private int _countclie = 0;
 
 
         editor.commit();
+        db.addName(name, status);
+        //Name n = new Name(name, status);
+        //names.add(n);
+        loadNames();
+        refreshList();
+    }
+    private void saveMecanToLocalStorage(String name, int status,double _acum,double _acumD) {
+
+
         db.addName(name, status);
         //Name n = new Name(name, status);
         //names.add(n);
