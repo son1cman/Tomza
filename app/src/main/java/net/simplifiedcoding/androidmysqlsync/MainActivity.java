@@ -213,20 +213,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     int usardos;
 
-    String[] _ruta1 = {"Jonathan  Villalobos","Carlos Silva","Centro Comercial Guacimo S.A.","Maria Elsa Gonzalez","Jorge Rojas","Erik Ardon","Inverciones Ching Chu y Asociados S.A","Xiao Mei Cen","Maria Solis Henrriques","Heriberto Fonseca","Enrrique Esquivel","Jose Vasquez","Jetty Maisi ","Centro Comercial Guacimo S.A.","Jun Feng","Juan Gonzalez","Miguel Fallas","Marielos  Lopez","Francini Chavarria","Rigoberto Brenes","Jorge Rojas","CSU SRL Pali Guacimo S.A.","Jian Zen","Michael Olivares","Shirley lopez","Feng lin","Mauren Parra","Vanesa Urena","Gerardo Castro","Eduardo Artavia","Zaida Urena","Juan Hui","Jose Esmith","Miguel Jimenez","Roberth Duran","Eduardo Artavia","Juan Hui","Zaida Urena","Jose Esmith","Miguel Jimenez","Roberth Duran","Recargas Chavarria","Juan Daniel Gonzalez Rodriguez","Cen Jian Sheng","Dagoberto Vargas Ulloa","Huang Chaowen","Ricardo Faith","Guisell Delgado","Jimmy Bonilla","Miguel  Jimenez","Rosa Castillo","Ingri Acevedo","Lincon Montes","Rosa Mora","Elizeth Zuniga","Doris Sanchez","Margarita Villegas","Aida Mendoza","Maria Salazar Mora","Bryan Arce","Huang Chaowen","Maria Salazar Mora","Jimmy Bonilla","Ricardo Faith","Bryan Arce","Miguel  Jimenez","Guisell Delgado","Rosa Castillo","Ingri Acevedo","Lincon Montes","Rosa Mora","Elizeth Zuniga","Doris Sanchez","Margarita Villegas","Aida Mendoza","Juan Zuniga","Yulieth Soto","Jose Luis Araya","Edwin Argin","Heidy Esquivel","Lorenzo Lizano","Jorge Saenz","Maira Najera","Gabriela Nunez","Jose Camacho","Carlos Najera","Jorge Nunez","Andrea Gonzalez","Neily Salguero","Yaneiry Rojas","Jordi Douglas","Raquel Fernandez","Raquel Fernandez","Centro Comercial Guacimo S.A."};
-    String[] _nombre = {"Tienda Milano","Tienda Silva","Centro Comercial Guacimo","Abastecedor la casita","Super Hermanos Rojas","Industrias ferreteras Ardon del caribe","Super Pocora","Super el Amigo","Soda Pinales del Caribe","Pulperia la Victoria","Abastecedor la Puriscalena","Super san Ramon","Soda las Delicias","Centro Comercial Guacimo Rio Jimenez","Super Dragon de Oro","Super el Uno","Super Alegre","Soda Rosita","Recargas Chavarria","Super Hermanos Brenes"," Super Hermanos Rojas Guacimo","Pali Guacimo","Mini super Guayacan","Pulp Olifal","Pulperia Angel","Super 99"," Pulpeia Mau Mau","Pulperia Paola","Panaderia la parada","Panaderia la delicia","Pulperia el trailero","Super don Carlos","Comercial Smith","Super la Central","Pizza Movil","Panaderia la delicia","Super don Carlos","Pulperia el trailero","Comercial Smith","Super la central","Pizza Movil","Recargas Chavarria","Abastecedor el Uno","Mini Super Guayacan","Abastecedor Cruce de Cartagena","Super la selva"," Comercial Lumory","Abastecedor Geminis"," Esquineros del caribe","Pulperia la Hormiguita","Pulperia Quito","Abastecedor Kemlly","Panaderia Deylin","Abastecedor Bermudez y Mora","Soda Flor de Liz","Patronato Escolar","Pulperia la plaza","Pulperia Silvia","Escuela Irocois","Finmao CR","Super la selva","Escuela Irocois"," Esquineros del caribe"," Comercial Lumory","Finmao CR","Pulperia la Hormiguita","Abastecedor Geminis","Pulperia Quito","Abastecedor Kemlly","Panaderia Deylin","Abastecedor Bermudez y Mora","Soda Flor de Liz","Patronato Escolar","Pulperia la plaza","Pulperia Silvia","Mini super el Economico"," Mini super Parismina","Mini super san Lorenzo"," Mini super Arjin","American Pizza","Abastecedor Guayacan","Restaurante Apache","Abastecedor santa Marta","Pulperia Gaby","Abastecedor los angeles","Abastecedor el Ceibo","Restaurante Tres Equis"," Abastecedor Jimenez","Bar restaurante el cruce"," Pulperia Yaneiry","Comidas rapidas Joamy","Super el economico","Super el economico","Centro comercial Guacimo Pocora"};
-    String[] _descuentos = {"0","0","700","500","450","0","0","0","0","0","150","600","0","700","600","0","0","0","250","700","450","240","700","0","0","792","0","0","0","0","0","400","0","0","0","0","400","0","0","0","0","250","0","700","500","700","350","300","0","0","0","250","0","0","0","0","0","400","0","0","700","0","0","350","0","0","300","0","250","0","0","0","0","0","400","500","300","0","0","0","0","0","0","0","250","200","0","250","0","0","0","400","400","700"};
-    String[] _MSGR = {"17PKM1727","17PKM0630","17PKM0629","17PKM1524","17PKM1425","17PKM2119","17PKM1425","17PKM1433","17PKM1534","17PKM2238","17PKM1337","17PKM1337","17PKM1434","17PKM1434","17PKM0833","17PKM0833","17PKM0734","17PKM0630","17PKM0731","17PKM0630","17PKM0630","17PKM0529","17PKM0529","17PKM0329","17PKM0329","17PKM2119","17PKM0229","17PKM2119","17PKM2119","17PKM2120","17PKM1816","17PKM1717","17PKM1617","17PKM1416","17PKM1920","17PKM2120","17PKM1717","17PKM1816","17PKM1617","17PKM1416","17PKM1920","17PKM0731","17PKM0833","17PKM0529","17PKM0934","17PKM0329","17PKM2021","17PKM1921","17PKM0628","17PKM1519","17PKM1621","17PKM1822","17PKM1425","17PKM1426","17PKM1426","17PKM1121","17PKM1121","17PKM1121","17PKM1226","17PKM0628","17PKM0329","17PKM1226","17PKM0628","17PKM2021","17PKM0628","17PKM1519","17PKM1921","17PKM1621","17PKM1822","17PKM1425","17PKM1426","17PKM1426","17PKM1121","17PKM1121","17PKM1121","17PKM1438","17PKM0928","17PKM2011","17PKM2116","17PKM1425","17PKM2010","17PKM1909","17PKM1808","17PKM1807","17PKM1805","17PKM1701","17PKM1801","17PKL1699","17PKM1700","17PKL1799","17PKM1425","17PKM1424","17PKM1424","17PKM1425"};
-    String[] _LAT = {"10.187048729300217","10.21393621738316","10.208713168834592","10.165762289794909","10.172638804014527","10.114725683775404","10.172290335582593","10.247539124484325","10.252099418238233","10.285873702765572","10.284008885421526","10.280364535138807","10.250030251383283","10.249057188433047","10.244689369259318","10.243939103596201","10.250061974042406","10.215542496061248","10.220710882038679","10.215930359033152","10.212713314975279","10.210746190055813","10.209649523812539","10.209964286958375","10.210155709999746","10.1193288283654","10.208474089083769","10.115719558231707","10.12082491632475","10.125965959053076","10.093602449003502","10.097402937408122","10.100719273345543","10.089875972300906","10.125444223183532","10.125965959053076","10.097402937408122","10.093602449003502","10.100719273345543","10.089875972300906","10.125444223183532","10.220705867897195","10.24378913569332","10.209603877537162","10.249901130057461","10.209550620052454","10.13452665993997","10.133176134351254","10.202286804929383","10.11660156841359","10.13136462444256","10.145548043900957","10.171812194733608","10.177927525864442","10.176420266562523","10.139177661625554","10.139423700308985","10.138067393262741","10.182434528021405","10.202286804929383","10.209550620052454","10.182434528021405","10.202286804929383","10.13452665993997","10.202286804929383","10.11660156841359","10.133176134351254","10.13136462444256","10.145548043900957","10.171812194733608","10.177927525864442","10.176420266562523","10.139177661625554","10.139423700308985","10.138067393262741","10.287598961557338","10.197177856833653","10.043461545901826","10.093342141877478","10.172382353681968","10.039508650874371","10.024601290312217","10.014446314787422","10.0126174126491","9.987812856701254","9.958874285711286","9.957152725821105","9.934918000854022","9.944377668164838","9.932659807331524","10.17142117414584","10.164150794720548","10.164150794720548","10.171709666742098"};
-    String[] _LONG = {"-83.57802146243188","-83.67964415752877","-83.68114276317642","-83.59932935843274","-83.60535709695068","-83.54168009143335","-83.60575615577339","-83.60290089373332","-83.59888140679023","-83.53795150183339","-83.61934068994535","-83.61539233141687","-83.6018050186196","-83.60235733639759","-83.66106002486897","-83.66404173968658","-83.6695065886594","-83.67563785148936","-83.67287885511367","-83.67944587746904","-83.68292289793519","-83.68394149755085","-83.69154830192292","-83.70930284765137","-83.71073998564523","-83.53870777904072","-83.71128968730886","-83.54139076726811","-83.53769875022935","-83.54382038542923","-83.57019324173335","-83.57473319190126","-83.58415295604482","-83.60170481111167","-83.56383634080366","-83.54382038542923","-83.57473319190126","-83.57019324173335","-83.58415295604482","-83.60170481111167","-83.56383634080366","-83.67292625085081","-83.66381703877074","-83.6915447640191","-83.65213275749095","-83.71020534191248","-83.55471179428936","-83.5562654141202","-83.67667284969428","-83.60007085514776","-83.58369653253479","-83.5721782672163","-83.6048955349366","-83.601209186961","-83.60289157448041","-83.63344835103156","-83.63415709005207","-83.63486580688225","-83.62275251213109","-83.67667284969428","-83.71020534191248","-83.62275251213109","-83.67667284969428","-83.55471179428936","-83.67667284969428","-83.60007085514776","-83.5562654141202","-83.58369653253479","-83.5721782672163","-83.6048955349366","-83.601209186961","-83.60289157448041","-83.63344835103156","-83.63415709005207","-83.63486580688225","-83.60680633146018","-83.64846005434286","-83.54888817959721","-83.5387759874306","-83.60472536769716","-83.54599912974543","-83.55794355303524","-83.56426293194883","-83.56562836422601","-83.56890313494226","-83.57288164748131","-83.5692605156218","-83.58813899769396","-83.57452353266676","-83.57215612241936","-83.60526083535314","-83.60336196828595","-83.60336196828595","-83.60586083275784"};
-    String[] _CREDITO = {"0","0","1","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1"};
-    String[] _SUB_CANAL = {"4","4","0","6","0","14","1","5","11","7","6","1","11","0","5","1","1","11","6","1","0","0","5","7","7","5","7","7","12","12","7","5","14","1","11","12","5","7","14","1","11","7","6","5","6","5","5","6","14","7","7","6","12","6","11","11","7","7","11","14","5","11","14","5","14","7","6","7","6","12","6","11","11","7","7","1","1","1","1","11","6","9","6","7","6","6","9","6","9","7","11","1","1","0"};
-    String[] _FORMAPAGO = {"0","0","1","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1"};
-    String[] _PUEDOFACTURAR = {"0","0","1","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1"};
-    String[] _TIPOFACTURA = {"0","0","1","0","0","0","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","1","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","1"};
 
 
-    String[] _ruta1_2 = {" "};
+
+
 
 
     private List<CharSequence> charSequences = new ArrayList<>();
@@ -907,21 +897,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }else{
                                 if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" + ((_10r.getDescTotal() != 0)?"(-)" + _10r.getDesDESC() : "") + "\n";
                                 if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" + ((_20p.getDescTotal() != 0)?"(-)" + _20p.getDesDESC() : "")+ "\n"; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" + ((_20r.getDescTotal() != 0)?"(-)" + _20r.getDesDESC() : "")+ "\n";
-                                if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n" + ((_25p.getDescTotal() != 0)?"(-)" + _25p.getDesDESC() : "")+ "\n"; if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" + ((_25r.getDescTotal() != 0)?"(-)" + _25r.getDesDESC() : "")+ "\n";
+                                if (_25p.getDesQTY() != null)
+                                    fac_detail += _25p.getDesQTY() + "\n" + ((_25p.getDescTotal() != 0)?"(-)" + _25p.getDesDESC() : "")+ "\n";
+                                if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" + ((_25r.getDescTotal() != 0)?"(-)" + _25r.getDesDESC() : "")+ "\n";
                                 if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n" + ((_30r.getDescTotal() != 0)?"(-)" + _30r.getDesDESC() : "")+ "\n"; if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n" + ((_35r.getDescTotal() != 0)?"(-)" + _35r.getDesDESC() : "")+ "\n";
                                 if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n" + ((_40r.getDescTotal() != 0)?"(-)" + _40r.getDesDESC() : "")+ "\n";  if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n" + ((_45r.getDescTotal() != 0)?"(-)" + _45r.getDesDESC() : "")+ "\n";
                                 if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n" + ((_50r.getDescTotal() != 0)?"(-)" + _50r.getDesDESC() : "")+ "\n";  if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n" + ((_60r.getDescTotal() != 0)?"(-)" + _60r.getDesDESC() : "")+ "\n";
                                 if (_100r.getDesQTY() != null)fac_detail += _100r.getDesQTY()+ "\n" + ((_100r.getDescTotal() != 0)?"(-)" + _100r.getDesDESC() : "")+ "\n";
                             }
+/*
+                            if (_10r.getDesQTY() != null) desc_detail +=  ((_10r.getDescTotal() != 0)?"(-)" + _10r.getDesDESC() : "") + "\n";
+                            if (_20p.getDesQTY() != null) desc_detail +=   ((_20p.getDescTotal() != 0)?"(-)" + _20p.getDesDESC() : "")+ "\n"; if (_20r.getDesQTY() != null) desc_detail +=  ((_20r.getDescTotal() != 0)?"(-)" + _20r.getDesDESC() : "")+ "\n";
+                            if (_25p.getDesQTY() != null) desc_detail +=  ((_25p.getDescTotal() != 0)?"(-)" + _25p.getDesDESC() : "")+ "\n"; if (_25r.getDesQTY() != null) desc_detail += ((_25r.getDescTotal() != 0)?"(-)" + _25r.getDesDESC() : "")+ "\n";
+                            if (_30r.getDesQTY() != null) desc_detail += ((_30r.getDescTotal() != 0)?"(-)" + _30r.getDesDESC() : "")+ "\n"; if (_35r.getDesQTY() != null) desc_detail += ((_35r.getDescTotal() != 0)?"(-)" + _35r.getDesDESC() : "")+ "\n";
+                            if (_40r.getDesQTY() != null) desc_detail += ((_40r.getDescTotal() != 0)?"(-)" + _40r.getDesDESC() : "")+ "\n";  if (_45r.getDesQTY() != null) desc_detail += ((_45r.getDescTotal() != 0)?"(-)" + _45r.getDesDESC() : "")+ "\n";
+                            if (_50r.getDesQTY() != null) desc_detail += ((_50r.getDescTotal() != 0)?"(-)" + _50r.getDesDESC() : "")+ "\n";  if (_60r.getDesQTY() != null) desc_detail += ((_60r.getDescTotal() != 0)?"(-)" + _60r.getDesDESC() : "")+ "\n";
+                            if (_100r.getDesQTY() != null)desc_detail +=  ((_100r.getDescTotal() != 0)?"(-)" + _100r.getDesDESC() : "")+ "\n";*/
 
-
-                            if (_10r.getDesDESC() != null) desc_detail += "    " +_10r.getDesDESC() + "\n";
-                            if (_20p.getDesDESC() != null) desc_detail += "    " +_20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += "    " +_20r.getDesDESC()+ "\n";
-                            if (_25p.getDesDESC() != null) desc_detail += "    " +_25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += "    " +_25r.getDesDESC()+ "\n";
-                            if (_30r.getDesDESC() != null) desc_detail += "    " +_30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += "    " +_35r.getDesDESC()+ "\n";
-                            if (_40r.getDesDESC() != null) desc_detail += "    " +_40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += "    " +_45r.getDesDESC()+ "\n";
-                            if (_50r.getDesDESC() != null) desc_detail += "    " +_50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += "    " +_60r.getDesDESC()+ "\n";
-                            if (_100r.getDesDESC() != null) desc_detail += "    " +_100r.getDesDESC()+ "\n";
+                            if (_10r.getDesDESC() != null) desc_detail += _10r.getDesDESC() + "\n";
+                            if (_20p.getDesDESC() != null) desc_detail += _20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += "    " +_20r.getDesDESC()+ "\n";
+                            if (_25p.getDesDESC() != null) desc_detail += _25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += "    " +_25r.getDesDESC()+ "\n";
+                            if (_30r.getDesDESC() != null) desc_detail += _30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += "    " +_35r.getDesDESC()+ "\n";
+                            if (_40r.getDesDESC() != null) desc_detail += _40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += "    " +_45r.getDesDESC()+ "\n";
+                            if (_50r.getDesDESC() != null) desc_detail += _50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += "    " +_60r.getDesDESC()+ "\n";
+                            if (_100r.getDesDESC() != null) desc_detail += _100r.getDesDESC()+ "\n";
                             _descCilindro25 = 0;
 
                             _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
@@ -1575,22 +1574,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tram += "\n";
                 tram += "Rutero: "+_actual.getRuta();
                 tram += "\n";
-                tram += "Fecha:" + _date;
-                tram += "\n";
+
                 tram += "Senores: " + _actual.getRazon();
-                tram += "\n\n\n";
+                tram += "\n\n";
                 tram += "Con fecha de hoy recibido en calidad de deposito y para tramite de pago las siguientes facturas originales de Gas Tomza de Costa Rica.\n";
                 tram += "\n";
-                tram += "Factura No      VALOR";
+                if(_FacCilindro)
+                    tram += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
+                else
+                    tram += "Factura: " + _supervisor + String.valueOf(_facc);
+                tram += "\n";
+                tram += "Fecha: " + _date;
+                tram += "\n";
+
+                if(_tipodoc == 0){
+
+                    tram += "Valor: " + t;
+
+
+                }else{
+
+                    tram += "Valor: "+String.format("%.2f", TotalCil)+"\n";
+
+                }
+                tram += "\n";
+                tram += "   -------------------------";
+               tram += "\n";
+
+                //if(fac_detail != "" )
+                 //   tram += fac_detail;
+
+
+               /* if(_actual.getCredito().equals("0") && _tipodoc != 1 && !d.equals("0.0")){
+                    tram += "   BOLETA DE DESCUENTO  ";
+                    tram += "\n";
+
+                    if(_FacCilindro)
+                        tram += "Descuento a Factura: " + _actual.getRuta() + String.valueOf(_facc);
+                    else
+                        tram += "Descuento a Factura: " + _supervisor + String.valueOf(_facc);
+
+
+
+                    tram += "\n";
+                    tram += "\n";
+                    tram += "CANT.  ART.   P.UNIT    TOTAL";
+                    tram += "\n";
+                    tram += "   -------------------------";
+                    tram += "\n";
+
+
+                    tram += desc_detail;
+                    //msg += "\n";
+                    //msg += "     275                Granel GLP      61050   ";
+
+                    tram += "\n   ---------------------- ";
+                    tram += "\n";
+                    tram += "\n";
+                }*/
+
+                /*tram += "Factura No      VALOR";
                 tram += "\n";
                 tram +=  _actual.getRuta() + String.valueOf(_facc) + "   " + String.format("%.2f", _totalfac);
-                //msg += fac_detail;
+                //msg += fac_detail;*/
                 tram += "\n\n\n";
                 tram += "Este documento sustituye a las facturas recibidas en el caso de que los originales de las mismas se extravien, mientras se encuentren en nuestro poder y como factura misma constituye Titulo Ejecutivo, en caso de eventual Cobro Judicial se regira por los Articulos 460 y siguientes del Codigo de Comercio. La posesion de los originales no significa la cancelacion de las mismas. Exija el respectivo recibo de pago.\n";
                 tram += "\n";
                 tram += "RECIBIDO NOMBRE:\n\n_____________________"+"\n";
                 tram += "FIRMA RESPONSABLE:\n\n______________________"+"\n";
                 tram += "# DE CEDULA:\n\n______________________"+"\n";
+                tram += "Sellos:\n\n" + "\n";
+                tram += "\n\n\n\n\n\n\n\n\n\n\n\n";
+                tram += "______________________\n";
 
 
             }
@@ -1663,14 +1718,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //msg += "\n";
                 //msg += "     275                Granel GLP      61050   ";
 
-                msg += "\n---------------------- ";
+                msg += "  ---------------------- ";
                 msg += "\n";
                 msg += "\n";
 
                 if(_tipodoc == 0){
 
-                    if(!d.equals("0.0")) msg += "TOTAL A PAGAR(CRC):" + t;
-                    else msg += "TOTAL(CRC):"+String.format("%.2f", _totalfac)+"   ";
+                    if(!d.equals("0.0") && !_actual.getCredito().equals("0")) msg += "TOTAL A PAGAR(CRC):" + t; // Total con descuento
+                    else msg += "TOTAL(CRC):"+String.format("%.2f", _totalfac)+"   "; //Total sin descuento
 
                 }else{
                     msg += "SUB TOTAL:"+String.format("%.2f", SubTotalCil)+"\n";
@@ -1689,7 +1744,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 msg += "\n";
                 msg += "\n";
-                if(_FacCilindro) {
+                if(_actual.getCredito().equals("1")) {
                     msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
 
                     msg += "11-97 D.G.T.D del 12 de agosto 1997";
@@ -1699,7 +1754,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     msg += "# DE CEDULA:\n\n______________________" + "\n\n";
                     msg += "Sellos:\n\n" + "\n";
                     msg += "\n\n\n\n\n\n\n\n\n\n\n\n";
-                    msg += "______________________";
+                    msg += "______________________\n";
                     msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
 
                     msg += "11-97 D.G.T.D del 12 de agosto 1997";
@@ -1707,7 +1762,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg += "\n";
                 msg += "\n";
                 msg += "\n";
-            if(_actual.getCredito().equals("0") && _tipodoc == 1 && !d.equals("0")){
+            if(_actual.getCredito().equals("0") && _tipodoc != 1 && !d.equals("0.0")){
 
                 msg += "   BOLETA DE DESCUENTO  ";
                 msg += "\n";
@@ -1755,7 +1810,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //msg += "\n";
                 //msg += "     275                Granel GLP      61050   ";
 
-                msg += "\n---------------------- ";
+                msg += "   ---------------------- ";
+                msg += "\n";
+                msg += "TOTAL DESCUENTO(CRC):" + d;
+                msg += "\nTOTAL A PAGAR(CRC):" + t;
+
+                msg += "\n";
+                msg += "RECIBIDO NOMBRE:\n\n_____________________" + "\n\n";
+                msg += "FIRMA RESPONSABLE:\n\n______________________" + "\n\n";
+                msg += "# DE CEDULA:\n\n______________________" + "\n\n";
+                msg += "Sellos:\n\n" + "\n";
+                msg += "\n\n\n\n\n\n\n\n\n\n\n\n";
+                msg += "______________________";
+
                 msg += "\n";
                 msg += "\n";
 
@@ -2852,6 +2919,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},10);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},10);
+            Toast.makeText(getApplicationContext(),"Acepte y reinicie la aplicacion",Toast.LENGTH_LONG).show();
+            return;
+        }else{
+
+            Toast.makeText(getApplicationContext(),"Todos los sistemas activados",Toast.LENGTH_LONG).show();
+            locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+
+
         }
 
 

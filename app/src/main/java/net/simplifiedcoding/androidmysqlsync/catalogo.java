@@ -300,15 +300,27 @@ public void DescuentoEspecial35y45(int _presentacion){
                 this.PrecioSel = consumidor;
                 this.DescSel = descuento;
                 DescuentoEspecial35y45(lbs);
-                total = ((Qty * consumidor) - (Qty*descuento));
-                qtyTotal = (Qty * consumidor);
-                descTotal = (Qty*descuento);
+                if(Tipo == 5){
+                    double consu  = consumidor - descuento;
+                    total = (Qty * consu);
+                    qtyTotal = (Qty * consu);
+                    descTotal = 0d;
+                    desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consu) + " " + String.format("%.2f", (Qty * consu) ) + "\n";
+
+                }else{
+                    total = ((Qty * consumidor) - (Qty*descuento));
+                    qtyTotal = (Qty * consumidor);
+                    descTotal = (Qty*descuento);
+                    desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
+                    }
+
                 if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
                     total = ((Qty * cc)  - (Qty*descuento));
                     qtyTotal = (Qty * cc);
+                    desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
 
                 }
-                desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
+
                 desDESC = String.valueOf(Qty) + " " + label +" " +String.valueOf(descuento) + " " + String.format("%.2f", descTotal) + "\n"; ;
 
             }
