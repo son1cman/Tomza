@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/desglose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="dda"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/zeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Zeta" />
+        <CheckBox
+            android:id="@+id/bf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BlueFlame" />
+        <CheckBox
+            android:id="@+id/epetro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Petro" />
+        <CheckBox
+            android:id="@+id/otros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Otros" />
+
+        <EditText
+            android:id="@+id/Capacidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Capacidad"
+            android:inputType="number" />
+        <EditText
+            android:id="@+id/Negocio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="negocio"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/actividad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="actividad de negocio"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/contacto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="contacto"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/consumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="consumo"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/condiciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="condiciones"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/telefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="telefono"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/tanque"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Estado tanque"
+            android:inputType="text" />
+
+
+
+    </LinearLayout>
+</ScrollView>
