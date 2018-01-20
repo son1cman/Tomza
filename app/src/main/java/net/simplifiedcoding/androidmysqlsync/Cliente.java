@@ -29,6 +29,17 @@ public class Cliente {
     private String FormaPago,puedoFacturar;
     private String tipoFactura;
 
+    public String getEspecial() {
+        return especial;
+    }
+
+    public void setEspecial(String especial) {
+        this.especial = especial;
+    }
+
+    private String especial;
+
+
     public String getId() {
         return id;
     }
@@ -170,6 +181,7 @@ public Cliente(){
         this.FormaPago = FormaPago;
         this.puedoFacturar = puedoFacturar;
         this.tipoFactura = tipoFactura;
+
     }
     public Cliente(String nombre,String descuento,int status) {
         this.nombre = nombre;
@@ -186,6 +198,7 @@ public Cliente(){
     public void AddCliente(String id,String Codigo,String nombre, String descuento, String ruta, String Razon,String credito,String sub_canal,String ldescuento,
                    String lprecioa,String lprecioc,String LAT, String LONG, String G, String FormaPago, String puedoFacturar,String tipoFactura,
                    int status) {
+
         this.id = id;
         this.codigo = Codigo;
         this.nombre = nombre;

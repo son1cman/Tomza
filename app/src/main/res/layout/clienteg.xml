@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/editNombre"
-        android:hint="Razon Social"
+        android:hint="Datos Relevantes"
         android:imeOptions="actionNext"
         android:inputType="textPersonName"
         android:maxLines="1"
@@ -32,14 +32,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:hint="Descuento"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editRazon"
+        android:hint="SubCanal"
         android:imeOptions="actionDone"
         android:inputType="number"
         android:maxLines="1"
-        android:singleLine="true"
-        android:layout_below="@+id/editRazon"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/textView"

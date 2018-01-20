@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ToggleButton
+        android:id="@+id/tglprecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:checked="true"
+        android:text="ToggleButton"
+        android:textOff="Metros"
+        android:textOn="Pies" />
+
+    <TextView
+        android:id="@+id/lblPresentacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tglprecio"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:text="25 LBS Mejorado"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/txtInicial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblPresentacion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:hint="Inicial"
+        android:inputType="number|numberDecimal" />
+
+    <EditText
+        android:id="@+id/txtFinal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtInicial"
+        android:layout_alignStart="@+id/txtInicial"
+        android:layout_below="@+id/txtInicial"
+        android:ems="10"
+        android:hint="final"
+        android:inputType="number|numberDecimal" />
+
+    <EditText
+        android:id="@+id/txtFcorre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtFinal"
+        android:layout_alignStart="@+id/txtFinal"
+        android:layout_below="@+id/txtFinal"
+        android:ems="10"
+        android:hint="F correccion"
+        android:inputType="number|numberDecimal" />
+
+    <EditText
+        android:id="@+id/txtQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtFcorre"
+        android:layout_alignStart="@+id/txtFcorre"
+        android:layout_below="@+id/txtFcorre"
+        android:ems="10"
+        android:hint="Litros"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/lblPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio: "
+        android:textSize="18sp"
+        android:layout_below="@+id/txtQuantity"
+        android:layout_alignLeft="@+id/txtQuantity"
+        android:layout_alignStart="@+id/txtQuantity" />
+
+    <TextView
+        android:id="@+id/lblDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblPrice"
+        android:layout_alignStart="@+id/lblPrice"
+        android:layout_below="@+id/lblPrice"
+        android:text="Descuento:"
+        android:textSize="18sp" />
+
+    <ToggleButton
+        android:id="@+id/tglDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="ToggleButton"
+        android:textOff="Sin Descuento"
+        android:textOn="Con Descuento"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/lbltotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblDesc"
+        android:layout_alignStart="@+id/lblDesc"
+        android:layout_below="@+id/lblDesc"
+        android:text="Resultado:"
+        android:textSize="24sp" />
+</RelativeLayout>

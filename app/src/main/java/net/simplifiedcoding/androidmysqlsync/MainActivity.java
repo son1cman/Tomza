@@ -79,10 +79,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * */
     private boolean _FacCilindro = true;
     private boolean _bt = true;
-    private  String _sDescuento = "";
+    private  int _hasDescuento = 0;
     private int _facc = 0;
     public int _tipodoc = 0; //0 = tomza, 1 = cilza, 2= tramite
     private int _facz = 0;
+    private int _facd = 0;
     private int _fact = 0;
     private String _cQ25 = "";
     private String _cQ25r,_cQ100r,_cwQ25,_cwQ25r,_cwQ100r;
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private  String _sTipo = "";
     private String _printer = "BlueTooth Printer"; //cashino = PTP-III    Koolertron = BlueTooth Printer
-
+    //private String _printer = "PTP-III";
 
 
     private String efectivo,transC,transNum,chknum,chkmont,chkbank;
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private catalogo _c25,_c25r,_c100,_wc25,_wc25r,_wc100;
     public static String URL_SAVE_NAME = "http://www.tomzacr.com/t/saveitf.php"; //Factura
     public static String URL_GET_COMM = "http://www.tomzacr.com/t/comm.php"; //Cargar
-    public static String URL_GET_COMM_PRICES = "http://www.tomzacr.com/t/commprices.php"; //Cargar0
+    public static String URL_GET_COMM_PRICES = "http://www.tomzacr.com/t/commprices.php"; //Cargar
     public static String URL_GET_CLIENTE = "http://www.tomzacr.com/t/cliente.php"; //Clientes
     public static String URL_GET_BILLETES = "http://www.tomzacr.com/t/billete.php"; //Clientes
     public static String COUNT_CLIENTES = "COUNTCLI";
@@ -121,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String _TdescuentoCo = "descContado";
 
     public static final String _pass = "passw";
+    public static final String _bloqueados = "bloqueado";
+
 
     public static final String _Precioa10 = "p10";
     public static final String _billete = "billete";
@@ -153,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String _Preciop40  = "ppc40";
     public static final String _Preciop45  = "ppc45";
     public static final String _Preciop50  = "ppc50";
-    public static final String _Preciop60  = "ppc60";
+    public static final String _Preciop60  = "ppc60";3
+
     public static final String _Preciop100  = "ppc100";
 
     public static final String _Preciolts = "lts";
@@ -166,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String URL_MAIN_2 = "URL_MAIN_2";
     public static final String CORRECILZA = "CORRECILZA";
     public static final String CORRETRAM = "CORRETRAM";
+    public static final String CORREDESC = "CORREDESC";
     public static final String URL_COMM = "URL_COMM";
     public static final String URL_CLIENTES = "URL_CLIENTES";
     public static final String MIRUTA = "MI_RUTA";
@@ -401,11 +406,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             _facc =Integer.valueOf(_tmfac);
             _facz = Integer.valueOf(sharedpreferences.getString(CORRECILZA,"0"));
             _fact = Integer.valueOf(sharedpreferences.getString(CORRETRAM,"0"));
+            _facd = Integer.valueOf(sharedpreferences.getString(CORREDESC,"0"));
 
         }catch (Exception e){
             _facc = 0;
             _facz = 0;
             _fact = 0;
+            _facd = 0;
         }
 
         _10r = new catalogo("10lbRosca",Double.valueOf(sharedpreferences.getString(_Precioa10,"0")),Double.valueOf(sharedpreferences.getString(_Precioc10,"0")),10,Double.valueOf(sharedpreferences.getString(_Preciop10,"0")));
@@ -623,8 +630,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             chknum = edtchequeN.getText().toString();
                             chkbank = edtchequeB.getText().toString();
                             if (_tipodoc == 0) _facc++;
+
                             if (_tipodoc == 1) _facz++;
                             if (_tipodoc == 2) _fact++;
+
                             SharedPreferences.Editor editor = sharedpreferences.edit();
 
 
@@ -640,6 +649,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if(_FacCilindro){
 
                                 if (_tipodoc == 0)
+                                    if(_actual.getTipoFactura().equals("7"))
+                                        saveNameToServer(_supervisor+","+ _actual.getCodigo() +","+myUserName.getText()+"," +(_totalfac) + ","+_totaldesc
+                                                +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(_20p.getQty())
+                                                + "," + String.valueOf(_25p.getQty())+ "," + String.valueOf(_30r.getQty())+ "," + String.valueOf(_40r.getQty())+ "," + String.valueOf(_50r.getQty())
+                                                + "," + String.valueOf(_100r.getQty())
+                                                + "," + String.valueOf(_10r.getQty()) + "," + String.valueOf(_20r.getQty())+
+                                                "," + String.valueOf(_25r.getQty())+ "," + String.valueOf(_35r.getQty())+ "," + String.valueOf(_45r.getQty())+ "," + String.valueOf(_60r.getQty())
+                                                + "," + LAT + "," + LONG +","+_CurrentGPS);
+                                        else
                                     saveNameToServer(_supervisor+","+ _actual.getCodigo() +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
                                             +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(_20p.getQty())
                                             + "," + String.valueOf(_25p.getQty())+ "," + String.valueOf(_30r.getQty())+ "," + String.valueOf(_40r.getQty())+ "," + String.valueOf(_50r.getQty())
@@ -674,9 +692,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             try {
                                 try {
                                     double _tt = _totalfac-_totaldesc; //Bug granel
+                                    if(_actual.getTipoFactura().equals("7")) _tt = _totalfac;
                                     /*if(_tipodoc == 1)
                                     sendDataCilza(fac_detail,"");
                                     else*/
+                                    if(_actual.getCredito().equals("0") && _tipodoc != 1 && _totaldesc != 0){
+                                        _facd++;
+                                    }
                                         sendData(String.valueOf(_tt),String.valueOf(_totaldesc));
                                     resetUI();
 
@@ -717,7 +739,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         desc_detail = "";
                         _descCilindro25 = 0;
 
-                        if(Integer.valueOf(_actual.getTipoFactura()) == 3){
+                        if(Integer.valueOf(_actual.getTipoFactura()) == 6  || Integer.valueOf(_actual.getTipoFactura()) == 7 ){
+                            if(_actual.getCredito().equals("0") ) {
+                                if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" ;
+                                if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" ; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" ;
+                                if (_25p.getDesQTY() != null) fac_detail += _25p.getDesQTY() + "\n" ; if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" ;
+                                if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n" ; if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n" ;
+                                if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n" ;  if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n" ;
+                                if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n" ;  if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n" ;
+                                if (_100r.getDesQTY() != null)fac_detail += _100r.getDesQTY()+ "\n" ;
+                            }else{
+                                if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" + ((_10r.getDescTotal() != 0)?"(-)" + _10r.getDesDESC() : "") + "\n";
+                                if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" + ((_20p.getDescTotal() != 0)?"(-)" + _20p.getDesDESC() : "")+ "\n"; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" + ((_20r.getDescTotal() != 0)?"(-)" + _20r.getDesDESC() : "")+ "\n";
+                                if (_25p.getDesQTY() != null)
+                                    fac_detail += _25p.getDesQTY() + "\n" + ((_25p.getDescTotal() != 0)?"(-)" + _25p.getDesDESC() : "")+ "\n";
+                                if (_25r.getDesQTY() != null) fac_detail += _25r.getDesQTY() + "\n" + ((_25r.getDescTotal() != 0)?"(-)" + _25r.getDesDESC() : "")+ "\n";
+                                if (_30r.getDesQTY() != null) fac_detail += _30r.getDesQTY() + "\n" + ((_30r.getDescTotal() != 0)?"(-)" + _30r.getDesDESC() : "")+ "\n"; if (_35r.getDesQTY() != null) fac_detail += _35r.getDesQTY() + "\n" + ((_35r.getDescTotal() != 0)?"(-)" + _35r.getDesDESC() : "")+ "\n";
+                                if (_40r.getDesQTY() != null) fac_detail += _40r.getDesQTY()+ "\n" + ((_40r.getDescTotal() != 0)?"(-)" + _40r.getDesDESC() : "")+ "\n";  if (_45r.getDesQTY() != null) fac_detail += _45r.getDesQTY()+ "\n" + ((_45r.getDescTotal() != 0)?"(-)" + _45r.getDesDESC() : "")+ "\n";
+                                if (_50r.getDesQTY() != null) fac_detail += _50r.getDesQTY()+ "\n" + ((_50r.getDescTotal() != 0)?"(-)" + _50r.getDesDESC() : "")+ "\n";  if (_60r.getDesQTY() != null) fac_detail += _60r.getDesQTY()+ "\n" + ((_60r.getDescTotal() != 0)?"(-)" + _60r.getDesDESC() : "")+ "\n";
+                                if (_100r.getDesQTY() != null)fac_detail += _100r.getDesQTY()+ "\n" + ((_100r.getDescTotal() != 0)?"(-)" + _100r.getDesDESC() : "")+ "\n";
+                            }
+                            if (_10r.getDesDESC() != null) desc_detail += _10r.getDesDESC() + "\n";
+                            if (_20p.getDesDESC() != null) desc_detail += _20p.getDesDESC()+ "\n";if (_20r.getDesDESC() != null) desc_detail += "    " +_20r.getDesDESC()+ "\n";
+                            if (_25p.getDesDESC() != null) desc_detail += _25p.getDesDESC()+ "\n";if (_25r.getDesDESC() != null) desc_detail += "    " +_25r.getDesDESC()+ "\n";
+                            if (_30r.getDesDESC() != null) desc_detail += _30r.getDesDESC()+ "\n";if (_35r.getDesDESC() != null) desc_detail += "    " +_35r.getDesDESC()+ "\n";
+                            if (_40r.getDesDESC() != null) desc_detail += _40r.getDesDESC()+ "\n";if (_45r.getDesDESC() != null) desc_detail += "    " +_45r.getDesDESC()+ "\n";
+                            if (_50r.getDesDESC() != null) desc_detail += _50r.getDesDESC()+ "\n";if (_60r.getDesDESC() != null) desc_detail += "    " +_60r.getDesDESC()+ "\n";
+                            if (_100r.getDesDESC() != null) desc_detail += _100r.getDesDESC()+ "\n";
+                            _descCilindro25 = 0;
+
+                            _totalfac = _10r.getQtyTotal() + _20p.getQtyTotal() + _20r.getQtyTotal() + _25r.getQtyTotal() + _25p.getQtyTotal() + _30r.getQtyTotal() +
+                                    _35r.getQtyTotal() + _40r.getQtyTotal() + _45r.getQtyTotal() + _50r.getQtyTotal() + _60r.getQtyTotal() + _100r.getQtyTotal();
+
+                            _totaldesc = _10r.getDescTotal() + _20p.getDescTotal() + _20r.getDescTotal() + _25r.getDescTotal() + _25p.getDescTotal() + _30r.getDescTotal() +
+                                    _35r.getDescTotal() + _40r.getDescTotal() + _45r.getDescTotal() + _50r.getDescTotal() + _60r.getDescTotal() + _100r.getDescTotal();
+
+
+                            /*
                             //Tienda escala + descuento fijo
                             if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" + "(-)" +_10r.getDesDESC() + "\n";
                             if (_20p.getDesQTY() != null) fac_detail += _20p.getDesQTY() + "\n" + "(-)"+ _20p.getDesDESC()+ "\n"; if (_20r.getDesQTY() != null) fac_detail += _20r.getDesQTY() + "\n" + "(-)"+ _20r.getDesDESC()+ "\n";
@@ -755,11 +813,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             _totaldesc = Math.round(_totaldesc*100.0)/100.0;
                             _totalfac = Math.round(_totalfac *100.0)/100.0;
+*/
 
 
-                                    /*builder.setMessage("Desglose de factura: " + "\n" + fac_detail + "\n Total Descuento" + String.format("%.2f", _totaldesc) +  "\n TOTAL A FACTURAR:" + "\n" +  String.format("%.2f", _totalfac - _totaldesc) )
-                                            .setPositiveButton("Imprimir", dialogClickListener)
-                                            .setNegativeButton("Cancelar", dialogClickListener).show();*/
 
                         }
                         //DESCUENTOS Y PRECIO SEGUN FACTOR NO OLVIDARRRR
@@ -881,7 +937,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     ((_20p.getQty() * 0.8f) + (_20r.getQty() *0.8f)) + (_10r.getQty() *0.4f) +  (_35r.getQty() *1.4f) +
                                     (_40r.getQty() *1.6f) + (_45r.getQty() *1.8f) + (_50r.getQty() *2f) + (_60r.getQty() *2.4f) + (_30r.getQty() *1.2f) ;
 
-                            if((conso) < 3) {
+                            if((conso) < 3 && _actual.getCredito().equals("1")) { // solo aplica para contado quitar descuento abajo de 2 cilindros
 
                                 _10r.setDescuentoAsignado(false);  _20p.setDescuentoAsignado(false);  _20r.setDescuentoAsignado(false);  _25r.setDescuentoAsignado(false); _25p.setDescuentoAsignado(false);  _30r.setDescuentoAsignado(false);
                                         _35r.setDescuentoAsignado(false);  _40r.setDescuentoAsignado(false);  _45r.setDescuentoAsignado(false);  _50r.setDescuentoAsignado(false);  _60r.setDescuentoAsignado(false);  _100r.setDescuentoAsignado(false);
@@ -1000,8 +1056,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(TotalCil));
                             b.show();
                         }else{
-                            edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
-                            txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + "\n" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac-_totaldesc));
+                            if(_actual.getTipoFactura().equals("7")){
+                                edtEfeQ.setText(String.valueOf(_totalfac) );
+                                txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + "\n" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac));
+                            }
+
+                            else{
+                                edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
+                                txvDesglose.setText("Desglose de factura: " + "\n" + fac_detail + "\n Desglose Descuento" + "\n" + desc_detail +  "\n TOTAL A FACTURAR:" + "\n" +  String.valueOf(_totalfac-_totaldesc));
+                            }
+
                             b.show();
                         }
 
@@ -1244,6 +1308,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
                 m_i35r.setChecked(false);m_i45r.setChecked(false);m_i100r.setChecked(false);
                 m_i10r.setChecked(false);m_i40r.setChecked(false);
+                if (_supervisor.equals("9001")) {
+                    addQuantityEspecial(_lts,m_lts);
+                }else
                 addQuantity(_lts,m_lts);
             }
         });
@@ -1557,9 +1624,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String tram = "\n";
 
             if(_actual.getCredito().equals("0")) {//2 //TRAMITE DE PAGO!!!
-                tram += "   Gas Tomza de Costa Rica S.A.";
-                tram += "\n";
-                tram += "    Ced. Jur. 3-101-349880  ";
+                if(_tipodoc == 1) {
+                    tram += "   Cilindros Zaragoza S.A.";
+                    tram += "\n";
+                    tram += "    Ced. Jur. 3-101-387254  ";
+                }else {
+                    tram += "   Gas Tomza de Costa Rica S.A.";
+                    tram += "\n";
+                    tram += "    Ced. Jur. 3-101-349880  ";
+                }
                 tram += "\n";
                 tram += "  La lima de Cartago, Costa Rica";
                 tram += "\n";
@@ -1569,20 +1642,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tram += "\n";
                 tram += " servicioalcliente.cr@tomza.com ";
 
+
                 /*tram += "\n";
                 tram += "Tramite de Pago: " + _actual.getRuta() + String.valueOf(_facc);*/
+                tram += "\n\n";
+                tram += "Tramite No: TRA" + String.valueOf(_facc);
                 tram += "\n";
                 tram += "Rutero: "+_actual.getRuta();
                 tram += "\n";
-
-                tram += "Senores: " + _actual.getRazon();
-                tram += "\n\n";
-                tram += "Con fecha de hoy recibido en calidad de deposito y para tramite de pago las siguientes facturas originales de Gas Tomza de Costa Rica.\n";
+                tram += "Nombre: " + _actual.getRazon();
                 tram += "\n";
                 if(_FacCilindro)
                     tram += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
                 else
                     tram += "Factura: " + _supervisor + String.valueOf(_facc);
+
                 tram += "\n";
                 tram += "Fecha: " + _date;
                 tram += "\n";
@@ -1597,9 +1671,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tram += "Valor: "+String.format("%.2f", TotalCil)+"\n";
 
                 }
+
+
+                tram += "\n\n";
+                tram += "Con fecha de hoy recibido en calidad de deposito y para tramite de pago las siguientes facturas originales de Gas Tomza de Costa Rica.\n";
                 tram += "\n";
-                tram += "   -------------------------";
-               tram += "\n";
+
+
+
 
                 //if(fac_detail != "" )
                  //   tram += fac_detail;
@@ -1637,7 +1716,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tram += "\n";
                 tram +=  _actual.getRuta() + String.valueOf(_facc) + "   " + String.format("%.2f", _totalfac);
                 //msg += fac_detail;*/
-                tram += "\n\n\n";
+                tram += "\n";
                 tram += "Este documento sustituye a las facturas recibidas en el caso de que los originales de las mismas se extravien, mientras se encuentren en nuestro poder y como factura misma constituye Titulo Ejecutivo, en caso de eventual Cobro Judicial se regira por los Articulos 460 y siguientes del Codigo de Comercio. La posesion de los originales no significa la cancelacion de las mismas. Exija el respectivo recibo de pago.\n";
                 tram += "\n";
                 tram += "RECIBIDO NOMBRE:\n\n_____________________"+"\n";
@@ -1668,6 +1747,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         msg += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
                     else
                         msg += "Factura: " + _supervisor + String.valueOf(_facc);
+
+                   // msg += "Factura: 2001626" ;
                 }
                 if(_tipodoc == 1)
                 {
@@ -1733,9 +1814,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     msg += "TOTAL(CRC):"+String.format("%.2f", TotalCil)+"\n";
                     msg += "\n";
                     msg += "\n";
-                    msg += "NOMBRE:________________"+"\n";
-                    msg += "CEDULA:________________"+"\n";
-                    msg += "RECIBIDO CONFORME:\n\n___________________"+"\n";
+                    if(!_actual.getCredito().equals("0")) {
+                        msg += "NOMBRE:________________" + "\n";
+                        msg += "CEDULA:________________" + "\n";
+                        msg += "RECIBIDO CONFORME:\n\n___________________" + "\n";
+                    }
 
 
                 }
@@ -1780,13 +1863,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg += " servicioalcliente.cr@tomza.com ";
                 msg += "\n";
                 msg += "\n";
+                msg += "Descuento No: DES" + String.valueOf(_facc) + _supervisor;
+                msg += "\n";
+                msg += "Fecha:"+ _date;
+                msg += "\n";
                 if(_FacCilindro)
                     msg += "Descuento a Factura: " + _actual.getRuta() + String.valueOf(_facc);
                 else
                     msg += "Descuento a Factura: " + _supervisor + String.valueOf(_facc);
                 msg += "\n";
-                msg += "Fecha:"+ _date;
-                msg += "\n";
+
                 if(_actual.getCredito().equals("0"))
                     msg += "FORMA PAGO: CREDITO ";
                 else
@@ -1813,6 +1899,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg += "   ---------------------- ";
                 msg += "\n";
                 msg += "TOTAL DESCUENTO(CRC):" + d;
+                if(_actual.getTipoFactura().equals("7"))
+                    msg += "\nTOTAL A PAGAR(CRC):" + _totalfac;
+                    else
                 msg += "\nTOTAL A PAGAR(CRC):" + t;
 
                 msg += "\n";
@@ -2054,6 +2143,183 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(DialogInterface dialog, int whichButton) {
 
             _sd.setText(String.valueOf(_zPre.lbs) +"x"+ String.valueOf(_zPre.getQty()) );
+                if (_qt.getText().length() > 0){
+                    _zPre.set_actual(_actual);
+                    _zPre.agregarProducto(_tgldesc.isChecked(),_tglprecio.isChecked(),Integer.valueOf(_qt.getText().toString()));
+                }
+
+
+
+
+
+                //do something with edt.getText().toString();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+        _qt.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+    }
+    public void addQuantityEspecial(final catalogo _zPre,final RadioButton _sd){
+
+
+        if (codigocliente == -1){
+            Toast.makeText(getApplicationContext(),"Selecciona un cliente antes de facturar",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.cargar2, null);
+        dialogBuilder.setView(dialogView);
+
+        final ToggleButton _tglprecio = (ToggleButton) dialogView.findViewById(R.id.tglprecio);
+        final ToggleButton _tgldesc = (ToggleButton) dialogView.findViewById(R.id.tglDesc);
+        final TextView _presentacion = (TextView)  dialogView.findViewById(R.id.lblPresentacion);
+        final TextView _lblprice = (TextView)  dialogView.findViewById(R.id.lblPrice);
+        final TextView _lbldesc = (TextView)  dialogView.findViewById(R.id.lblDesc);
+        final TextView _lbltotal = (TextView)  dialogView.findViewById(R.id.lbltotal);
+        final EditText _qt = (EditText) dialogView.findViewById(R.id.txtQuantity);
+
+        final EditText i = (EditText) dialogView.findViewById(R.id.txtInicial);
+        final EditText f = (EditText) dialogView.findViewById(R.id.txtFinal);
+        final EditText c = (EditText) dialogView.findViewById(R.id.txtFcorre);
+
+        _presentacion.setText(_zPre.getLabel());
+        if(_zPre.get_actual() != null){
+            _lblprice.setText("Precio: " + _zPre.getPrecioSel().toString());
+            _lbldesc.setText("Descuento: " + _zPre.getDescuentoSel().toString());
+            _lbltotal.setText("Resultado: " +  String.format("%.2f", _zPre.getTotal()));
+        }
+        i.setText(_actual.getLprecioA()); // Agregar medidor inicial
+        c.setText(_actual.getLprecioC()); // Agregar medidor inicial
+        if(_actual.getPuedoFacturar().equals("1"))
+            _tglprecio.setChecked(true);//pies
+        else
+            _tglprecio.setChecked(false);
+
+
+
+
+        _qt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+
+                if (actionId == EditorInfo.IME_ACTION_DONE) { //IME_ACTION_DONE para cerrar editor teclado
+
+
+                    if (c.getText().length() > 0 && i.getText().length() > 0 && f.getText().length() > 0){
+                        Double litros;
+                        if(_tglprecio.isChecked()){
+
+                            litros = (Double.valueOf(i.getText().toString()) - Double.valueOf(f.getText().toString()));
+                            litros = (litros * 100) * 0.0283168;
+                            litros = litros *  Double.valueOf(c.getText().toString()) * 3.921;
+                        }
+
+                         else {
+
+                            litros = (Double.valueOf(i.getText().toString()) -  Double.valueOf(f.getText().toString())) * Double.valueOf(c.getText().toString()) *3.921;
+                        }
+                        _qt.setText(String.valueOf(litros.intValue()));
+
+
+
+                        _zPre.set_actual(_actual);
+                        _zPre.agregarProducto(_tgldesc.isChecked(),true,litros.intValue());
+                        _lblprice.setText("Precio: " + _zPre.getPrecioSel().toString());
+                        _lbldesc.setText("Descuento: " + _zPre.getDescuentoSel().toString());
+                        _lbltotal.setText("Resultado: " +  String.format("%.2f", _zPre.getTotal()));
+
+
+
+                    }
+                    if (_qt.getText().length() > 0){
+                        _zPre.set_actual(_actual);
+                        _zPre.agregarProducto(_tgldesc.isChecked(),true,Integer.valueOf(_qt.getText().toString()));
+                        _lblprice.setText("Precio: " + _zPre.getPrecioSel().toString());
+                        _lbldesc.setText("Descuento: " + _zPre.getDescuentoSel().toString());
+                        _lbltotal.setText("Resultado: " +  String.format("%.2f", _zPre.getTotal()));
+
+
+
+                    }
+
+                    InputMethodManager inputManager = (InputMethodManager)
+                            getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.toggleSoftInput(0, 0);
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        _tgldesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (_qt.getText().length() > 0){
+                    _zPre.set_actual(_actual);
+                    _zPre.agregarProducto(_tgldesc.isChecked(),_tglprecio.isChecked(),Integer.valueOf(_qt.getText().toString()));
+                    _lblprice.setText("Precio: " + _zPre.getPrecioSel().toString());
+                    _lbldesc.setText("Descuento: " + _zPre.getDescuentoSel().toString());
+                    _lbltotal.setText("Resultado: " + _zPre.getTotal().toString());
+                }
+            }
+        });
+        _tglprecio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (c.getText().length() > 0 && i.getText().length() > 0 && f.getText().length() > 0){
+                    Double litros;
+                    if(_tglprecio.isChecked()){
+
+                        litros = (Double.valueOf(i.getText().toString()) - Double.valueOf(f.getText().toString()));
+                        litros = (litros * 100) * 0.0283168;
+                        litros = litros *  Double.valueOf(c.getText().toString()) * 3.921;
+                    }
+
+                    else {
+
+                        litros = (Double.valueOf(i.getText().toString()) -  Double.valueOf(f.getText().toString())) * Double.valueOf(c.getText().toString()) *3.921;
+                    }
+                    _qt.setText(String.valueOf(litros.intValue()));
+
+
+
+                    _zPre.set_actual(_actual);
+                    _zPre.agregarProducto(_tgldesc.isChecked(),true,litros.intValue());
+                    _lblprice.setText("Precio: " + _zPre.getPrecioSel().toString());
+                    _lbldesc.setText("Descuento: " + _zPre.getDescuentoSel().toString());
+                    _lbltotal.setText("Resultado: " +  String.format("%.2f", _zPre.getTotal()));
+
+
+
+                }
+            }
+        });
+
+
+
+
+
+
+        //dialogBuilder.setTitle("Cargar Cantidad");
+        //dialogBuilder.setMessage("Introduce la cantidad a facturar");
+        dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                _sd.setText(String.valueOf(_zPre.lbs) +"x"+ String.valueOf(_zPre.getQty()) );
                 if (_qt.getText().length() > 0){
                     _zPre.set_actual(_actual);
                     _zPre.agregarProducto(_tgldesc.isChecked(),_tglprecio.isChecked(),Integer.valueOf(_qt.getText().toString()));
@@ -2409,51 +2675,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.mecan , null);
         dialogBuilder.setView(dialogView);
-       /* final EditText edt50k = (EditText) dialogView.findViewById(R.id.edt50k);
-        final EditText edt20k = (EditText) dialogView.findViewById(R.id.edt20k);
-        final EditText edt10k = (EditText) dialogView.findViewById(R.id.edt10k);
-        final EditText edt5k = (EditText) dialogView.findViewById(R.id.edt5k);
-        final EditText edt2k = (EditText) dialogView.findViewById(R.id.edt2k);
-        final EditText edt1k = (EditText) dialogView.findViewById(R.id.edt1k);
-        final EditText edt500 = (EditText) dialogView.findViewById(R.id.edt500);
-        final EditText edt100 = (EditText) dialogView.findViewById(R.id.edt100);
-        final EditText edt50 = (EditText) dialogView.findViewById(R.id.edt50);
-        final EditText edt25 = (EditText) dialogView.findViewById(R.id.edt25);
-        final EditText edt10 = (EditText) dialogView.findViewById(R.id.edt10);
-        final EditText edt5 = (EditText) dialogView.findViewById(R.id.edt5);
-        final EditText edtdol = (EditText) dialogView.findViewById(R.id.edtDol );
-        final EditText edtvale = (EditText) dialogView.findViewById(R.id.edtVale);*/
+
         final EditText edt = (EditText) dialogView.findViewById(R.id.editText);
         final CheckBox cool = (CheckBox) dialogView.findViewById(R.id.coolant);
         final CheckBox acei = (CheckBox) dialogView.findViewById(R.id.aceite);
         final CheckBox luce = (CheckBox) dialogView.findViewById(R.id.luces);
         final CheckBox llan = (CheckBox) dialogView.findViewById(R.id.llantas);
 
-/*
-        final EditText edt = (EditText) dialogView.findViewById(R.id.editNombre);
-        final EditText edt2 = (EditText) dialogView.findViewById(R.id.editRazon);
-        final EditText edt3 = (EditText) dialogView.findViewById(R.id.editDescuento);
-        //final EditText edt7 = (EditText) dialogView.findViewById(R.id.editFormadepago);
-        final Spinner spiTipo = (Spinner) dialogView.findViewById(R.id.spinner);
-*/
-        // final Button pic = (Button) dialogView.findViewById(R.id.buttonFoto);
 
-        //_img = (ImageView) dialogView.findViewById(R.id.img);
-/*
-
-        pic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //   Toast.makeText(getApplicationContext(),"Hi",Toast.LENGTH_LONG).show();
-                //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                //startActivityForResult(intent,0);
-
-                //_comodato += edt.getText().toString() + "," + edt2.getText().toString() + "," + edt3.getText().toString()+",";
-
-            }
-
-
-        });*/
 
 
 
@@ -2464,6 +2693,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 if(edt.getText().toString().equals("tomza2018") || edt.getText().toString().equals(sharedpreferences.getString(_pass,"0"))){
+
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+
+
+                    editor.putString(_bloqueados,String.valueOf(0));
+
+                    editor.commit();
+
                     String _c = (cool.isChecked() == true?"si":"no");
                     String _a = (acei.isChecked() == true?"si":"no");
                     String _l = (luce.isChecked() == true?"si":"no");
@@ -2697,10 +2934,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 editor.putString(_TdescuentoC ,String.valueOf(0));
                                 editor.putString(_TdescuentoCo ,String.valueOf(0));
                                 editor.putString(_Tcredito,String.valueOf(0));
+                                editor.putString(_bloqueados,String.valueOf(1));
 
                                 editor.commit();
 
                                 Toast.makeText(getApplicationContext(),"Cierre Hecho con exito",Toast.LENGTH_SHORT).show();
+
                                 customrep();
                                 db.Delete();
                             }
@@ -2845,8 +3084,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 String[] tokens = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)).split(",");
-                if(!tokens[1].equals("mecanico"))
-                if (!tokens[6].equals("0")){
+                if(!tokens[1].equals("mecanico")){
+                //if (!tokens[6].equals("0")){
                 _dat += "-------------\n";
 
 
@@ -2933,6 +3172,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         }
+
+        if(sharedpreferences.getString(_bloqueados,"0").equals("1")) customrep();
 
 
 
@@ -3376,7 +3617,7 @@ private int _countclie = 0;
         progressDialog.show();
         if (transC.equals("") ) transC = "0"; if (transNum.equals("")) transNum = "0"; if (chknum.equals("")) chknum = "0";
         if (chkbank.equals("")) chkbank = "0";if (chkmont.equals("")) chkmont = "0";
-        name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+ String.valueOf(_facc)+ ","+_actual.getNombre();
+        name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+ String.valueOf(_facc)+ ","+_actual.getNombre()+ ","+_actual.getSub_canal();
 
         final String name = name2;
         if(_actual.getCredito().equals("1"))

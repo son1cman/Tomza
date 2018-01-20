@@ -194,15 +194,21 @@ public class catalogo {
 
     }
 public void DescuentoEspecial35y45(int _presentacion){
-    if(Tipo == 5 && _presentacion == 35){ //Litros Precio Especial
+    if((Tipo == 5 || Tipo == 6 || Tipo == 7) && _presentacion == 35){ //Litros Precio Especial
         this.DescSel = Double.parseDouble(_actual.getLprecioA());
         this.descuento = Double.parseDouble(_actual.getLprecioA());
         //this.PrecioSel = Double.parseDouble(_actual.getLprecioC());
 
     }
-    if(Tipo == 5 && _presentacion == 45){ //Litros Precio Especial
+    if((Tipo == 5 || Tipo == 6 || Tipo == 7) && _presentacion == 45){ //Litros Precio Especial
         this.DescSel = Double.parseDouble(_actual.getLprecioC());
         this.descuento = Double.parseDouble(_actual.getLprecioC());
+        //this.PrecioSel = Double.parseDouble(_actual.getLprecioC());
+
+    }
+    if((Tipo == 6 || Tipo == 7)&& _presentacion == 100){ //Litros Precio Especial
+        this.DescSel = Double.parseDouble(_actual.getLdescuento());
+        this.descuento = Double.parseDouble(_actual.getLdescuento());
         //this.PrecioSel = Double.parseDouble(_actual.getLprecioC());
 
     }
@@ -218,7 +224,7 @@ public void DescuentoEspecial35y45(int _presentacion){
             this.Tipo = Integer.valueOf(_actual.getTipoFactura());
             if(Tipo == 2 || Tipo == 1) this.PrecioAsignado = false; //Solamente tiendas puede facturar a precio de consumidor
 
-            if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+            if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601") || _actual.getRuta().equals("602") || _actual.getRuta().equals("603")) {
                 consumidor = cc;
                 this.agencia = ag;
             }
@@ -249,7 +255,7 @@ public void DescuentoEspecial35y45(int _presentacion){
                     total = ((Qty * agencia)-(Qty*descuento));
                     qtyTotal = (Qty * agencia);
                     descTotal = (Qty*descuento);
-                    if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                    if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601") || _actual.getRuta().equals("602") || _actual.getRuta().equals("603")) {
                         total = ((Qty * ag)-(Qty*descuento));
                         qtyTotal = (Qty * ag);
                         descTotal = (Qty*descuento);
@@ -268,7 +274,7 @@ public void DescuentoEspecial35y45(int _presentacion){
                 this.DescSel = 0d;
                 total = (Qty * agencia);
                 qtyTotal = (Qty * agencia);
-                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601") || _actual.getRuta().equals("602") || _actual.getRuta().equals("603")) {
                     total = (Qty * ag);
                     qtyTotal = (Qty * ag);
 
@@ -284,7 +290,7 @@ public void DescuentoEspecial35y45(int _presentacion){
                 this.DescSel = 0d;
                 qtyTotal = (Qty * consumidor);
                 total = (Qty * consumidor);
-                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601") || _actual.getRuta().equals("602") || _actual.getRuta().equals("603")) {
                     total = ((Qty * cc));
                     qtyTotal = (Qty * cc);
 
@@ -314,7 +320,17 @@ public void DescuentoEspecial35y45(int _presentacion){
                     desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
                     }
 
-                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601")) {
+                if(Tipo == 7){
+                    double consu  = consumidor - descuento;
+                    total = (Qty * consu);
+                    qtyTotal = (Qty * consu);
+                    descTotal = (Qty*descuento);
+                    desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consu) + " " + String.format("%.2f", (Qty * consu) ) + "\n";
+
+                }
+
+
+                if(_actual.getRuta().equals("600") || _actual.getRuta().equals("601") || _actual.getRuta().equals("602") || _actual.getRuta().equals("603")) {
                     total = ((Qty * cc)  - (Qty*descuento));
                     qtyTotal = (Qty * cc);
                     desQTY = String.valueOf(Qty) + " " + label + " "+String.valueOf(consumidor) + " " + String.format("%.2f", (Qty * consumidor) ) + "\n";
