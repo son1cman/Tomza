@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*86730371
     * CILINDROSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     * */
-    private boolean _FacCilindro = true;
+    private boolean _FacCilindro = false;
     private boolean _bt = true;
     private  int _hasDescuento = 0;
     private int _facc = 0;
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String URL_GET_BILLETES = "http://www.tomzacr.com/t/billete.php"; //Clientes
     public static String COUNT_CLIENTES = "COUNTCLI";
 
-//JULIO 6
+    //JULIO 6
     //OSCAR 7
     // JORGE 8
     public static final String MyPREFERENCES = "SystemSettings";
@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String _Tcredito = "tcredito";
     public static final String _Tcontado = "tcontado";
     public static final String _Tfactura = "reimpresion";
+    public static final String _Tfacturaruta = "rutaf";
+    public static final String _Tfacturanumero = "rutan";
+    public static final String _Tfacturafecha = "rutaff";
     public static final String _Ttramite = "reimptramite";
     public static final String _TdescuentoC = "descCredito";
     public static final String _TdescuentoCo = "descContado";
@@ -156,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String _Preciop40  = "ppc40";
     public static final String _Preciop45  = "ppc45";
     public static final String _Preciop50  = "ppc50";
-    public static final String _Preciop60  = "ppc60";3
+    public static final String _Preciop60  = "ppc60";
 
     public static final String _Preciop100  = "ppc100";
 
@@ -197,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-//1 luis
+    //1 luis
     //2 andres
     //valerin
     String _supervisor = "0";
@@ -398,10 +401,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             URL_GET_COMM_PRICES = "http://www.tomzacr.com/t/commprices.php"; //Cargar
             URL_GET_CLIENTE = "http://www.tomzacr.com/t/clienteg.php"; //Clientes
         }
+
+
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         _supervisor = sharedpreferences.getString(MIRUTA,"0");
         _clienteC = sharedpreferences.getString(COUNT_CLIENTES,"0");
-        String _tmfac = sharedpreferences.getString(URL_MAIN_2,"0");
+        String _tmfac = sharedpreferences.getString(URL_MAIN_2,"1500");
         try {
             _facc =Integer.valueOf(_tmfac);
             _facz = Integer.valueOf(sharedpreferences.getString(CORRECILZA,"0"));
@@ -585,13 +590,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         cilzaButton = (Button) findViewById(R.id.btnCil);
         cilzaButton.setOnClickListener(new View.OnClickListener() {
-           public void onClick(View v) {
-               if(codigocliente != -1)
-                cilza();
-               else
-                   Toast.makeText(getApplicationContext(),"Seleccionar cliente primero",Toast.LENGTH_LONG).show();
-           }
-       });
+            public void onClick(View v) {
+                if(codigocliente != -1)
+                    cilza();
+                else
+                    Toast.makeText(getApplicationContext(),"Seleccionar cliente primero",Toast.LENGTH_LONG).show();
+            }
+        });
+
         sendButton = (Button) findViewById(R.id.send);
         sendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -613,6 +619,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
                     final Button btnPrint = (Button) dialogView.findViewById(R.id.btnReimprimir);
 
+
                     btnPrint.setVisibility(View.INVISIBLE);
 
 
@@ -629,7 +636,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             chkmont = edtchequeQ.getText().toString();
                             chknum = edtchequeN.getText().toString();
                             chkbank = edtchequeB.getText().toString();
-                            if (_tipodoc == 0) _facc++;
+
+                            if (_tipodoc == 0 ||_FacCilindro == false) _facc++;
 
                             if (_tipodoc == 1) _facz++;
                             if (_tipodoc == 2) _fact++;
@@ -637,7 +645,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             SharedPreferences.Editor editor = sharedpreferences.edit();
 
 
-                            if (_tipodoc == 0) editor.putString(URL_MAIN_2, String.valueOf(_facc));
+                            if (_tipodoc == 0 ||_FacCilindro == false)
+                                editor.putString(URL_MAIN_2, String.valueOf(_facc));
                             if (_tipodoc == 1) editor.putString(CORRECILZA, String.valueOf(_facz));
                             if (_tipodoc == 2) editor.putString(CORRETRAM, String.valueOf(_fact));
 
@@ -657,14 +666,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 + "," + String.valueOf(_10r.getQty()) + "," + String.valueOf(_20r.getQty())+
                                                 "," + String.valueOf(_25r.getQty())+ "," + String.valueOf(_35r.getQty())+ "," + String.valueOf(_45r.getQty())+ "," + String.valueOf(_60r.getQty())
                                                 + "," + LAT + "," + LONG +","+_CurrentGPS);
-                                        else
-                                    saveNameToServer(_supervisor+","+ _actual.getCodigo() +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
-                                            +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(_20p.getQty())
-                                            + "," + String.valueOf(_25p.getQty())+ "," + String.valueOf(_30r.getQty())+ "," + String.valueOf(_40r.getQty())+ "," + String.valueOf(_50r.getQty())
-                                            + "," + String.valueOf(_100r.getQty())
-                                            + "," + String.valueOf(_10r.getQty()) + "," + String.valueOf(_20r.getQty())+
-                                            "," + String.valueOf(_25r.getQty())+ "," + String.valueOf(_35r.getQty())+ "," + String.valueOf(_45r.getQty())+ "," + String.valueOf(_60r.getQty())
-                                            + "," + LAT + "," + LONG +","+_CurrentGPS);
+                                    else
+                                        saveNameToServer(_supervisor+","+ _actual.getCodigo() +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
+                                                +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(_20p.getQty())
+                                                + "," + String.valueOf(_25p.getQty())+ "," + String.valueOf(_30r.getQty())+ "," + String.valueOf(_40r.getQty())+ "," + String.valueOf(_50r.getQty())
+                                                + "," + String.valueOf(_100r.getQty())
+                                                + "," + String.valueOf(_10r.getQty()) + "," + String.valueOf(_20r.getQty())+
+                                                "," + String.valueOf(_25r.getQty())+ "," + String.valueOf(_35r.getQty())+ "," + String.valueOf(_45r.getQty())+ "," + String.valueOf(_60r.getQty())
+                                                + "," + LAT + "," + LONG +","+_CurrentGPS);
                                 if (_tipodoc == 1 || _tipodoc == 2)
                                     saveNameToServer(_supervisor+","+ _actual.getCodigo() +","+myUserName.getText()+"," +String.valueOf(TotalCil) + ","+"0"
                                             +","+ "0"+","+_actual.getCredito() +"," + "0" + "," + "0"
@@ -699,7 +708,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     if(_actual.getCredito().equals("0") && _tipodoc != 1 && _totaldesc != 0){
                                         _facd++;
                                     }
-                                        sendData(String.valueOf(_tt),String.valueOf(_totaldesc));
+                                    sendData(String.valueOf(_tt),String.valueOf(_totaldesc));
                                     resetUI();
 
                                 } catch (IOException ex) {
@@ -940,7 +949,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if((conso) < 3 && _actual.getCredito().equals("1")) { // solo aplica para contado quitar descuento abajo de 2 cilindros
 
                                 _10r.setDescuentoAsignado(false);  _20p.setDescuentoAsignado(false);  _20r.setDescuentoAsignado(false);  _25r.setDescuentoAsignado(false); _25p.setDescuentoAsignado(false);  _30r.setDescuentoAsignado(false);
-                                        _35r.setDescuentoAsignado(false);  _40r.setDescuentoAsignado(false);  _45r.setDescuentoAsignado(false);  _50r.setDescuentoAsignado(false);  _60r.setDescuentoAsignado(false);  _100r.setDescuentoAsignado(false);
+                                _35r.setDescuentoAsignado(false);  _40r.setDescuentoAsignado(false);  _45r.setDescuentoAsignado(false);  _50r.setDescuentoAsignado(false);  _60r.setDescuentoAsignado(false);  _100r.setDescuentoAsignado(false);
                             }
                             if(_actual.getCredito().equals("0") ) {
                                 if (_10r.getDesQTY() != null) fac_detail += _10r.getDesQTY() + "\n" ;
@@ -1090,7 +1099,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //edtEfeQ.setText(String.valueOf(_totalfac-_totaldesc) );
                             if(_actual.getCredito().equals("0") )fac_detail =  _kgs.getDesQTY() + "\n";
                             else
-                            fac_detail =  _kgs.getDesQTY() + "\n(-)" + _kgs.getDesDESC();
+                                fac_detail =  _kgs.getDesQTY() + "\n(-)" + _kgs.getDesDESC();
 
                             desc_detail = _kgs.getDesDESC();
                             _totalfac = _kgs.getQtyTotal();_totaldesc = _kgs.getDescTotal();
@@ -1110,7 +1119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-                }
+            }
 
 
 
@@ -1129,8 +1138,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _SelectedOption = 250;
                 mTextView.setText("");
                 m_i20.setChecked(false);m_i25.setChecked(false);
-               m_lts.setChecked(false);m_kgs.setChecked(false);
-                 m_i50.setChecked(true); m_i30r.setChecked(false);
+                m_lts.setChecked(false);m_kgs.setChecked(false);
+                m_i50.setChecked(true); m_i30r.setChecked(false);
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
                 m_i35r.setChecked(false);m_i45r.setChecked(false);m_i100r.setChecked(false);
                 m_i10r.setChecked(false);m_i40r.setChecked(false);
@@ -1142,9 +1151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _SelectedOption = 230;
                 mTextView.setText("");
                 m_i20.setChecked(false);m_i25.setChecked(false);
-               m_lts.setChecked(false);
+                m_lts.setChecked(false);
                 m_kgs.setChecked(false);
-                 m_i50.setChecked(false); m_i30r.setChecked(true);
+                m_i50.setChecked(false); m_i30r.setChecked(true);
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
                 m_i35r.setChecked(false);m_i45r.setChecked(false);m_i100r.setChecked(false);
                 m_i10r.setChecked(false);m_i40r.setChecked(false);
@@ -1156,7 +1165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _SelectedOption = 70;
                 mTextView.setText("");
                 m_i20.setChecked(false);m_i25.setChecked(false);
-               m_lts.setChecked(false);
+                m_lts.setChecked(false);
                 m_kgs.setChecked(false);
 
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
@@ -1171,7 +1180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _SelectedOption = 80;
                 mTextView.setText("");
                 m_i20.setChecked(false);m_i25.setChecked(false);
-               m_lts.setChecked(false);
+                m_lts.setChecked(false);
                 m_kgs.setChecked(false);
 
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
@@ -1201,7 +1210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _SelectedOption = 1;
                 mTextView.setText("");
                 m_i20.setChecked(true);m_i25.setChecked(false);
-               m_lts.setChecked(false);
+                m_lts.setChecked(false);
                 m_kgs.setChecked(false);
 
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
@@ -1288,9 +1297,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _SelectedOption = 40;
                 mTextView.setText("");
                 m_i20.setChecked(false);m_i25.setChecked(false);
-               m_lts.setChecked(false);
+                m_lts.setChecked(false);
                 m_kgs.setChecked(false);
-               m_i50.setChecked(false); m_i30r.setChecked(false);
+                m_i50.setChecked(false); m_i30r.setChecked(false);
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
                 m_i35r.setChecked(false);m_i45r.setChecked(false);m_i100r.setChecked(true);
                 m_i10r.setChecked(false);
@@ -1302,16 +1311,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 _SelectedOption = 5;
                 mTextView.setText("");
                 m_i20.setChecked(false);m_i25.setChecked(false);
-               m_lts.setChecked(true);
+                m_lts.setChecked(true);
                 m_kgs.setChecked(false);
-              m_i50.setChecked(false); m_i30r.setChecked(false);
+                m_i50.setChecked(false); m_i30r.setChecked(false);
                 m_i20r.setChecked(false);m_i25r.setChecked(false);m_i60r.setChecked(false);
                 m_i35r.setChecked(false);m_i45r.setChecked(false);m_i100r.setChecked(false);
                 m_i10r.setChecked(false);m_i40r.setChecked(false);
                 if (_supervisor.equals("9001")) {
                     addQuantityEspecial(_lts,m_lts);
                 }else
-                addQuantity(_lts,m_lts);
+                    addQuantity(_lts,m_lts);
             }
         });
         m_kgs.setOnClickListener(new View.OnClickListener() {
@@ -1347,125 +1356,163 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Name data =  (Name) parent.getItemAtPosition(position);
                 final String[] tokens = data.getName().split(",");
                 if (!tokens[1].toString().equals("mecanico"))
-                if(_FacCilindro){
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                    LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-                    final View dialogView = inflater.inflate(R.layout.tipopago, null);
-                    dialogBuilder.setView(dialogView);
+                    if(_FacCilindro){
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+                        final View dialogView = inflater.inflate(R.layout.tipopago, null);
+                        dialogBuilder.setView(dialogView);
 
-                    final EditText edtEfeQ = (EditText) dialogView.findViewById(R.id.edtEfeQ);
-                    final EditText edttransQ = (EditText) dialogView.findViewById(R.id.edttransQ);
-                    final EditText edtNumeroCuenta = (EditText) dialogView.findViewById(R.id.edtNumeroCuenta);
-                    final EditText edtchequeQ = (EditText) dialogView.findViewById(R.id.edtchequeQ);
-                    final EditText edtchequeN = (EditText) dialogView.findViewById(R.id.edtchequeN);
-                    final EditText edtchequeB = (EditText) dialogView.findViewById(R.id.edtchequeB);
-                    final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
-                    final Button btnPrint = (Button) dialogView.findViewById(R.id.btnReimprimir);
-                    btnPrint.setVisibility(View.INVISIBLE);
-
-
-
-
-
-
-
-
-
-
+                        final EditText edtEfeQ = (EditText) dialogView.findViewById(R.id.edtEfeQ);
+                        final EditText edttransQ = (EditText) dialogView.findViewById(R.id.edttransQ);
+                        final EditText edtNumeroCuenta = (EditText) dialogView.findViewById(R.id.edtNumeroCuenta);
+                        final EditText edtchequeQ = (EditText) dialogView.findViewById(R.id.edtchequeQ);
+                        final EditText edtchequeN = (EditText) dialogView.findViewById(R.id.edtchequeN);
+                        final EditText edtchequeB = (EditText) dialogView.findViewById(R.id.edtchequeB);
+                        final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
+                        final Button btnPrint = (Button) dialogView.findViewById(R.id.btnReimprimir);
+                        final Button btnAnular = (Button) dialogView.findViewById(R.id.anular);
+                        btnPrint.setVisibility(View.INVISIBLE);
+                        btnAnular.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int choice) {
+                                        switch (choice) {
+                                            case DialogInterface.BUTTON_POSITIVE:
 
 
-                    dialogBuilder.setTitle(tokens[2]);
-                    dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
+                                                    Toast.makeText(getApplicationContext(),"Anulacion hecha con exito",Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
 
-                    dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            //pass
-                        }
-                    });
-                    AlertDialog b = dialogBuilder.create();
 
-                    String _dat = "Total factura: " + "\n" + tokens[3] + "\n Total Descuento:" + tokens[4]  + "\n" ;
+                                                //saveNameToServer("0,"+editTextName.getText().toString()+","+LAT+","+LONG+","+_supervisor);
+                                                break;
 
-                    if (!tokens[6].equals("0")) _dat += "Contado"  + "\n"; else _dat += "Credito" + "\n";
-                    //if (tokens[7] != "0") _dat += "30 Lbs :" + "\n"; //Libre recarga
-                    if (!tokens[8].equals("0"))  _dat += "20 Lbs :" + tokens[8] +"\n";
-                    if (!tokens[9].equals("0"))  _dat += "25 Lbs Presion :" +tokens[9] + "\n";
-                    if (!tokens[10].equals("0")) _dat += "30 Lbs Rosca :" +tokens[10] + "\n";
-                    if (!tokens[11].equals("0")) _dat += "40 Lbs Rosca :" +tokens[11] + "\n";
-                    if (!tokens[12].equals("0")) _dat += "50 Lbs Rosca :" +tokens[12] + "\n";
-                    if (!tokens[13].equals("0")) _dat += "100 Lbs Rosca :" +tokens[13] + "\n";
-                    if (!tokens[14].equals("0")) _dat += "10 Lbs Rosca :" +tokens[14] + "\n";
-                    if (!tokens[15].equals("0")) _dat += "20 Lbs Rosca :" +tokens[15] + "\n";
-                    if (!tokens[16].equals("0")) _dat += "25 Lbs Rosca :" +tokens[16] + "\n";
-                    if (!tokens[17].equals("0")) _dat += "35 Lbs Rosca :" +tokens[17] + "\n";
-                    if (!tokens[18].equals("0")) _dat += "45 Lbs Rosca :" +tokens[18] + "\n";
-                    if (!tokens[19].equals("0")) _dat += "60 Lbs Rosca :" +tokens[19] + "\n";
-                    if (!tokens[24].equals("0")) edtEfeQ.setText(tokens[24]);
-                    if (!tokens[25].equals("0")) edttransQ.setText(tokens[25]);
-                    if (!tokens[26].equals("0")) edtNumeroCuenta .setText(tokens[26]);
-                    if (!tokens[27].equals("0")) edtchequeN.setText(tokens[27]);
-                    if (!tokens[28].equals("0")) edtchequeB.setText(tokens[28]);
-                    if (!tokens[29].equals("0")) edtchequeQ.setText(tokens[29]);
+                                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                                break;
+                                        }
+                                    }
+                                };
+                                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+                                builder.setTitle("Deseas anular esta factura?");
+
+                                builder.setMessage("Numero de factura: "+tokens[31].toString() +" \n" +
+                                        "Fecha: "+tokens[23].toString() +" \n" +
+                                        "Ruta: "+tokens[0].toString() +" \n" +
+                                        "Razon Social: "+tokens[2].toString() +" \n" +
+                                        "Monto: "+tokens[24].toString() +" \n")
+                                        .setPositiveButton("Pura Vida", dialogClickListener)
+                                        .setNegativeButton("Cancelar", dialogClickListener).show();
+
+
+                            }
+                        });
 
 
 
 
-                    txvDesglose.setText(_dat);
-
-                    b.show();
 
 
 
-                }else{//GRANEL
-
-                    _totalfac = _lts.getTotal() + _kgs.getTotal();
-                    _totaldesc = _lts.getDescTotal() + _kgs.getDescTotal();
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                    LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-                    final View dialogView = inflater.inflate(R.layout.tipopago, null);
-                    dialogBuilder.setView(dialogView);
-
-                    final EditText edtEfeQ = (EditText) dialogView.findViewById(R.id.edtEfeQ);
-                    final EditText edttransQ = (EditText) dialogView.findViewById(R.id.edttransQ);
-                    final EditText edtNumeroCuenta = (EditText) dialogView.findViewById(R.id.edtNumeroCuenta);
-                    final EditText edtchequeQ = (EditText) dialogView.findViewById(R.id.edtchequeQ);
-                    final EditText edtchequeN = (EditText) dialogView.findViewById(R.id.edtchequeN);
-                    final EditText edtchequeB = (EditText) dialogView.findViewById(R.id.edtchequeB);
-                    final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
 
 
 
-                    dialogBuilder.setTitle(tokens[2]);
-                    dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
 
-                        }
-                    });
-                    dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            //pass
-                        }
-                    });
-                    AlertDialog b = dialogBuilder.create();
 
-                    String _dat = "Total factura: " + "\n" + tokens[3] + "\n Total Descuento:" + tokens[4]  + "\n" ;
+                        dialogBuilder.setTitle(tokens[2]);
+                        dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
 
-                    if (!tokens[6].equals("0")) _dat += "Contado"  + "\n"; else _dat += "Credito" + "\n";
-                    //if (tokens[7] != "0") _dat += "30 Lbs :" + "\n"; //Libre recarga
-                    if (!tokens[9].equals("0"))  _dat += "Litros :" + tokens[9] +"\n";
-                    if (!tokens[16].equals("0"))  _dat += "Kilogramos :" +tokens[16] + "\n";
-                    if (!tokens[17].equals("0")) _dat += "Litros Consignacion :" +tokens[17] + "\n";
+                            }
+                        });
 
-                    if (!tokens[24].equals("0")) edtEfeQ.setText(tokens[24]);
-                    if (!tokens[25].equals("0")) edttransQ.setText(tokens[25]);
-                    if (!tokens[26].equals("0")) edtNumeroCuenta .setText(tokens[26]);
-                    if (!tokens[27].equals("0")) edtchequeN.setText(tokens[27]);
-                    if (!tokens[28].equals("0")) edtchequeB.setText(tokens[28]);
-                    if (!tokens[29].equals("0")) edtchequeQ.setText(tokens[29]);
+                        dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                //pass
+                            }
+                        });
+                        AlertDialog b = dialogBuilder.create();
+
+                        String _dat = "Total factura: " + "\n" + tokens[3] + "\n Total Descuento:" + tokens[4]  + "\n" ;
+
+                        if (!tokens[6].equals("0")) _dat += "Contado"  + "\n"; else _dat += "Credito" + "\n";
+                        //if (tokens[7] != "0") _dat += "30 Lbs :" + "\n"; //Libre recarga
+                        if (!tokens[8].equals("0"))  _dat += "20 Lbs :" + tokens[8] +"\n";
+                        if (!tokens[9].equals("0"))  _dat += "25 Lbs Presion :" +tokens[9] + "\n";
+                        if (!tokens[10].equals("0")) _dat += "30 Lbs Rosca :" +tokens[10] + "\n";
+                        if (!tokens[11].equals("0")) _dat += "40 Lbs Rosca :" +tokens[11] + "\n";
+                        if (!tokens[12].equals("0")) _dat += "50 Lbs Rosca :" +tokens[12] + "\n";
+                        if (!tokens[13].equals("0")) _dat += "100 Lbs Rosca :" +tokens[13] + "\n";
+                        if (!tokens[14].equals("0")) _dat += "10 Lbs Rosca :" +tokens[14] + "\n";
+                        if (!tokens[15].equals("0")) _dat += "20 Lbs Rosca :" +tokens[15] + "\n";
+                        if (!tokens[16].equals("0")) _dat += "25 Lbs Rosca :" +tokens[16] + "\n";
+                        if (!tokens[17].equals("0")) _dat += "35 Lbs Rosca :" +tokens[17] + "\n";
+                        if (!tokens[18].equals("0")) _dat += "45 Lbs Rosca :" +tokens[18] + "\n";
+                        if (!tokens[19].equals("0")) _dat += "60 Lbs Rosca :" +tokens[19] + "\n";
+                        if (!tokens[24].equals("0")) edtEfeQ.setText(tokens[24]);
+                        if (!tokens[25].equals("0")) edttransQ.setText(tokens[25]);
+                        if (!tokens[26].equals("0")) edtNumeroCuenta .setText(tokens[26]);
+                        if (!tokens[27].equals("0")) edtchequeN.setText(tokens[27]);
+                        if (!tokens[28].equals("0")) edtchequeB.setText(tokens[28]);
+                        if (!tokens[29].equals("0")) edtchequeQ.setText(tokens[29]);
+
+
+
+
+                        txvDesglose.setText(_dat);
+
+                        b.show();
+
+
+
+                    }else{//GRANEL
+
+                        _totalfac = _lts.getTotal() + _kgs.getTotal();
+                        _totaldesc = _lts.getDescTotal() + _kgs.getDescTotal();
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+                        final View dialogView = inflater.inflate(R.layout.tipopago, null);
+                        dialogBuilder.setView(dialogView);
+
+                        final EditText edtEfeQ = (EditText) dialogView.findViewById(R.id.edtEfeQ);
+                        final EditText edttransQ = (EditText) dialogView.findViewById(R.id.edttransQ);
+                        final EditText edtNumeroCuenta = (EditText) dialogView.findViewById(R.id.edtNumeroCuenta);
+                        final EditText edtchequeQ = (EditText) dialogView.findViewById(R.id.edtchequeQ);
+                        final EditText edtchequeN = (EditText) dialogView.findViewById(R.id.edtchequeN);
+                        final EditText edtchequeB = (EditText) dialogView.findViewById(R.id.edtchequeB);
+                        final TextView txvDesglose = (TextView) dialogView.findViewById(R.id.desglose);
+                        final Button btnAnular = (Button) dialogView.findViewById(R.id.anular);
+
+
+
+                        dialogBuilder.setTitle(tokens[2]);
+                        dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                            }
+                        });
+                        dialogBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                //pass
+                            }
+                        });
+                        AlertDialog b = dialogBuilder.create();
+
+                        String _dat = "Total factura: " + "\n" + tokens[3] + "\n Total Descuento:" + tokens[4]  + "\n" ;
+
+                        if (!tokens[6].equals("0")) _dat += "Contado"  + "\n"; else _dat += "Credito" + "\n";
+                        //if (tokens[7] != "0") _dat += "30 Lbs :" + "\n"; //Libre recarga
+                        if (!tokens[9].equals("0"))  _dat += "Litros :" + tokens[9] +"\n";
+                        if (!tokens[16].equals("0"))  _dat += "Kilogramos :" +tokens[16] + "\n";
+                        if (!tokens[17].equals("0")) _dat += "Litros Consignacion :" +tokens[17] + "\n";
+
+                        if (!tokens[24].equals("0")) edtEfeQ.setText(tokens[24]);
+                        if (!tokens[25].equals("0")) edttransQ.setText(tokens[25]);
+                        if (!tokens[26].equals("0")) edtNumeroCuenta .setText(tokens[26]);
+                        if (!tokens[27].equals("0")) edtchequeN.setText(tokens[27]);
+                        if (!tokens[28].equals("0")) edtchequeB.setText(tokens[28]);
+                        if (!tokens[29].equals("0")) edtchequeQ.setText(tokens[29]);
 
                    /* saveNameToServer(_supervisor+","+ codigocliente +","+myUserName.getText()+"," +(_totalfac-_totaldesc) + ","+_totaldesc
                             +","+ _actual.getDescuento()+","+_actual.getCredito() +"," + String.valueOf(Q30) + "," + String.valueOf(Q20)
@@ -1476,12 +1523,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             + "," + LAT + "," + LONG +","+_CurrentGPS);*/
 
 
-                    txvDesglose.setText(_dat);
+                        txvDesglose.setText(_dat);
 
-                    b.show();
+                        b.show();
 
 
-                }
+                    }
 
 
 
@@ -1513,44 +1560,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-                clienteFromdb.clear();
+                    clienteFromdb.clear();
 
-                //CharSequence options[] = new CharSequence[] {"Call", "SMS", "Email"};
+                    //CharSequence options[] = new CharSequence[] {"Call", "SMS", "Email"};
 
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
-                //builder.setCancelable(false);
-                builder.setTitle(_supervisor.toString() + " Seleccione un cliente:");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String[] index = indexes.toArray(new String[indexes.size()]);
-                        //String[] index2 = indexes2.toArray(new String[indexes2.size()]);
-                        String _sel = String.valueOf(options[which]);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+                    //builder.setCancelable(false);
+                    builder.setTitle(_supervisor.toString() + " Seleccione un cliente:");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String[] index = indexes.toArray(new String[indexes.size()]);
+                            //String[] index2 = indexes2.toArray(new String[indexes2.size()]);
+                            String _sel = String.valueOf(options[which]);
 
                             codigocliente = Integer.parseInt(index[which]);
                             loadCliente(codigocliente);
 
 
 
-                        myUserName.setText(_actual.getRazon());
-                        indexes.clear();
+                            myUserName.setText(_actual.getRazon());
+                            indexes.clear();
 
 
 
 
 
 
-                        // the user clicked on options[which]
-                    }
-                });
-                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            // the user clicked on options[which]
+                        }
+                    });
+                    builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                        //the user clicked on Cancel
-                    }
-                });
-                builder.show();
+                            //the user clicked on Cancel
+                        }
+                    });
+                    builder.show();
                 }else{
                     Toast.makeText(getApplicationContext(), _CurrentGPS + "No se han detectado clientes",Toast.LENGTH_SHORT).show();
 
@@ -1653,12 +1700,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tram += "Nombre: " + _actual.getRazon();
                 tram += "\n";
                 if(_FacCilindro)
-                    tram += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
+                    if(_tipodoc == 1)
+                        tram += "Factura: " + _actual.getRuta() + String.valueOf(_facz);
+                    else
+                        tram += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
                 else
                     tram += "Factura: " + _supervisor + String.valueOf(_facc);
 
                 tram += "\n";
-                tram += "Fecha: " + _date;
+                tram += "Fecha:" + _date;
                 tram += "\n";
 
                 if(_tipodoc == 0){
@@ -1681,7 +1731,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //if(fac_detail != "" )
-                 //   tram += fac_detail;
+                //   tram += fac_detail;
 
 
                /* if(_actual.getCredito().equals("0") && _tipodoc != 1 && !d.equals("0.0")){
@@ -1728,123 +1778,123 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             }
-                if(_tipodoc == 0) {
-                    msg += "   Gas Tomza de Costa Rica S.A.";
-                    msg += "\n";
-                    msg += "    Ced. Jur. 3-101-349880  ";
-                    msg += "\n";
-                    msg += "  La lima de Cartago, Costa Rica";
-                    msg += "\n";
-                    msg += "  Telefono:(506)2201-6000";
-                    msg += "\n";
-                    msg += "    www.tomzacr.com ";
-                    msg += "\n";
-                    msg += " servicioalcliente.cr@tomza.com ";
-                    msg += "\n";
-                    msg += "\n";
-
-                    if(_FacCilindro)
-                        msg += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
-                    else
-                        msg += "Factura: " + _supervisor + String.valueOf(_facc);
-
-                   // msg += "Factura: 2001626" ;
-                }
-                if(_tipodoc == 1)
-                {
-                    msg += "   Cilindros Zaragoza S.A.";
-                    msg += "\n";
-                    msg += "    Ced. Jur. 3-101-387254  ";
-                    msg += "\n";
-                    msg += "  La lima de Cartago, Costa Rica";
-                    msg += "\n";
-                    msg += "  Telefono:(506)2573-7789";
-                    msg += "\n";
-                    msg += "    www.tomzacr.com ";
-                    msg += "\n";
-                    msg += "\n";
-                    msg += "Factura: " + _actual.getRuta() + String.valueOf(_facz);
-                }
-                //
-
-
+            if(_tipodoc == 0) {
+                msg += "   Gas Tomza de Costa Rica S.A.";
                 msg += "\n";
+                msg += "    Ced. Jur. 3-101-349880  ";
+                msg += "\n";
+                msg += "  La lima de Cartago, Costa Rica";
+                msg += "\n";
+                msg += "  Telefono:(506)2201-6000";
+                msg += "\n";
+                msg += "    www.tomzacr.com ";
+                msg += "\n";
+                msg += " servicioalcliente.cr@tomza.com ";
+                msg += "\n";
+                msg += "\n";
+
                 if(_FacCilindro)
-                    msg += "Rutero: "+_actual.getRuta();
+                    msg += "Factura: " + _actual.getRuta() + String.valueOf(_facc);
                 else
-                    msg += "Rutero: "+ _supervisor;
-                msg += "\n";
-                msg += "Fecha:"+ _date;
-                msg += "\n";
-                if(_actual.getCredito().equals("0"))
-                    msg += "FORMA PAGO: CREDITO ";
-                else
-                    msg += "FORMA PAGO: CONTADO ";
-                msg += "\n";
-                msg += "Razon Social:"+ _actual.getRazon();
-                msg += "\n";
-                msg += "Nombre:"+ _actual.getNombre();
-                msg += "\nDireccion:____________________";
-                //msg += "\n";
-                //msg += "Codigo Cliente:" +  _codigocliente;
-                msg += "\n";
-                msg += "\n";
-                msg += "CANT.  ART.   P.UNIT    TOTAL";
-                msg += "\n";
-                msg += "   -------------------------";
-                msg += "\n";
+                    msg += "Factura: " + _supervisor + String.valueOf(_facc);
 
-                if(fac_detail != "" )
-                    msg += fac_detail;
-                //msg += "\n";
-                //msg += "     275                Granel GLP      61050   ";
-
-                msg += "  ---------------------- ";
+                // msg += "Factura: 2001626" ;
+            }
+            if(_tipodoc == 1)
+            {
+                msg += "   Cilindros Zaragoza S.A.";
+                msg += "\n";
+                msg += "    Ced. Jur. 3-101-387254  ";
+                msg += "\n";
+                msg += "  La lima de Cartago, Costa Rica";
+                msg += "\n";
+                msg += "  Telefono:(506)2573-7789";
+                msg += "\n";
+                msg += "    www.tomzacr.com ";
                 msg += "\n";
                 msg += "\n";
-
-                if(_tipodoc == 0){
-
-                    if(!d.equals("0.0") && !_actual.getCredito().equals("0")) msg += "TOTAL A PAGAR(CRC):" + t; // Total con descuento
-                    else msg += "TOTAL(CRC):"+String.format("%.2f", _totalfac)+"   "; //Total sin descuento
-
-                }else{
-                    msg += "SUB TOTAL:"+String.format("%.2f", SubTotalCil)+"\n";
-                    msg += "IMPUESTO:"+String.format("%.2f", TotalImpCil)+"\n";
-                    msg += "TOTAL(CRC):"+String.format("%.2f", TotalCil)+"\n";
-                    msg += "\n";
-                    msg += "\n";
-                    if(!_actual.getCredito().equals("0")) {
-                        msg += "NOMBRE:________________" + "\n";
-                        msg += "CEDULA:________________" + "\n";
-                        msg += "RECIBIDO CONFORME:\n\n___________________" + "\n";
-                    }
+                msg += "Factura: " + _actual.getRuta() + String.valueOf(_facz);
+            }
+            //
 
 
+            msg += "\n";
+            if(_FacCilindro)
+                msg += "Rutero: "+_actual.getRuta();
+            else
+                msg += "Rutero: "+ _supervisor;
+            msg += "\n";
+            msg += "Fecha: " + _date;
+            msg += "\n";
+            if(_actual.getCredito().equals("0"))
+                msg += "FORMA PAGO: CREDITO ";
+            else
+                msg += "FORMA PAGO: CONTADO ";
+            msg += "\n";
+            msg += "Razon Social:"+ _actual.getRazon();
+            msg += "\n";
+            msg += "Nombre:"+ _actual.getNombre();
+            msg += "\nDireccion:____________________";
+            //msg += "\n";
+            //msg += "Codigo Cliente:" +  _codigocliente;
+            msg += "\n";
+            msg += "\n";
+            msg += "CANT.  ART.   P.UNIT    TOTAL";
+            msg += "\n";
+            msg += "   -------------------------";
+            msg += "\n";
+
+            if(fac_detail != "" )
+                msg += fac_detail;
+            //msg += "\n";
+            //msg += "     275                Granel GLP      61050   ";
+
+            msg += "  ---------------------- ";
+            msg += "\n";
+            msg += "\n";
+
+            if(_tipodoc == 0){
+
+                if(!d.equals("0.0") && !_actual.getCredito().equals("0")) msg += "TOTAL A PAGAR(CRC):" + t; // Total con descuento
+                else msg += "TOTAL(CRC):"+String.format("%.2f", _totalfac)+"   "; //Total sin descuento
+
+            }else{
+                msg += "SUB TOTAL:"+String.format("%.2f", SubTotalCil)+"\n";
+                msg += "IMPUESTO:"+String.format("%.2f", TotalImpCil)+"\n";
+                msg += "TOTAL(CRC):"+String.format("%.2f", TotalCil)+"\n";
+                msg += "\n";
+                msg += "\n";
+                if(!_actual.getCredito().equals("0")) {
+                    msg += "NOMBRE:________________" + "\n";
+                    msg += "CEDULA:________________" + "\n";
+                    msg += "RECIBIDO CONFORME:\n\n___________________" + "\n";
                 }
+
+
+            }
 //separador de miles
 
 
-                msg += "\n";
-                msg += "\n";
-                if(_actual.getCredito().equals("1")) {
-                    msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
+            msg += "\n";
+            msg += "\n";
+            if(_actual.getCredito().equals("1")) {
+                msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
 
-                    msg += "11-97 D.G.T.D del 12 de agosto 1997";
-                }else{
-                    msg += "RECIBIDO NOMBRE:\n\n_____________________" + "\n\n";
-                    msg += "FIRMA RESPONSABLE:\n\n______________________" + "\n\n";
-                    msg += "# DE CEDULA:\n\n______________________" + "\n\n";
-                    msg += "Sellos:\n\n" + "\n";
-                    msg += "\n\n\n\n\n\n\n\n\n\n\n\n";
-                    msg += "______________________\n";
-                    msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
+                msg += "11-97 D.G.T.D del 12 de agosto 1997";
+            }else{
+                msg += "RECIBIDO NOMBRE:\n\n_____________________" + "\n\n";
+                msg += "FIRMA RESPONSABLE:\n\n______________________" + "\n\n";
+                msg += "# DE CEDULA:\n\n______________________" + "\n\n";
+                msg += "Sellos:\n\n" + "\n";
+                msg += "\n\n\n\n\n\n\n\n\n\n\n\n";
+                msg += "______________________\n";
+                msg += "AUTORIZADO MEDIANTE RESOLUCION NUMERO";
 
-                    msg += "11-97 D.G.T.D del 12 de agosto 1997";
-                }
-                msg += "\n";
-                msg += "\n";
-                msg += "\n";
+                msg += "11-97 D.G.T.D del 12 de agosto 1997";
+            }
+            msg += "\n";
+            msg += "\n";
+            msg += "\n";
             if(_actual.getCredito().equals("0") && _tipodoc != 1 && !d.equals("0.0")){
 
                 msg += "   BOLETA DE DESCUENTO  ";
@@ -1892,7 +1942,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg += "\n";
 
 
-                    msg += desc_detail;
+                msg += desc_detail;
                 //msg += "\n";
                 //msg += "     275                Granel GLP      61050   ";
 
@@ -1901,8 +1951,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 msg += "TOTAL DESCUENTO(CRC):" + d;
                 if(_actual.getTipoFactura().equals("7"))
                     msg += "\nTOTAL A PAGAR(CRC):" + _totalfac;
-                    else
-                msg += "\nTOTAL A PAGAR(CRC):" + t;
+                else
+                    msg += "\nTOTAL A PAGAR(CRC):" + t;
 
                 msg += "\n";
                 msg += "RECIBIDO NOMBRE:\n\n_____________________" + "\n\n";
@@ -1922,9 +1972,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
             SharedPreferences.Editor editor = sharedpreferences.edit();
 
             editor.putString(_Tfactura ,msg);
+            editor.putString(_Tfacturaruta ,_supervisor);
+            if(_tipodoc == 1)
+                editor.putString(_Tfacturanumero ,_actual.getRuta() + String.valueOf(_facz));
+            else
+                editor.putString(_Tfacturanumero ,_actual.getRuta() + String.valueOf(_facc));
+            editor.putString(_Tfacturafecha ,_date);
             editor.putString(_Ttramite,tram);
 
 
@@ -1969,7 +2026,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             msg += "Fecha: 30/09/2017 06:30:42";
             msg += "\n";
 
-                msg += "CONTADO ";
+            msg += "CONTADO ";
             msg += "\n";
             msg += "Razon Social: GAS TOMZA DE COSTA RICA";
             msg += "\n";
@@ -2049,10 +2106,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void addQuantity(final catalogo _zPre,final RadioButton _sd){
 
 
-    if (codigocliente == -1){
-        Toast.makeText(getApplicationContext(),"Selecciona un cliente antes de facturar",Toast.LENGTH_LONG).show();
-        return;
-    }
+        if (codigocliente == -1){
+            Toast.makeText(getApplicationContext(),"Selecciona un cliente antes de facturar",Toast.LENGTH_LONG).show();
+            return;
+        }
 
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -2086,16 +2143,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (actionId == EditorInfo.IME_ACTION_DONE) { //IME_ACTION_DONE para cerrar editor
 
-                   if (_qt.getText().length() > 0){
-                       _zPre.set_actual(_actual);
-                       _zPre.agregarProducto(_tgldesc.isChecked(),_tglprecio.isChecked(),Integer.valueOf(_qt.getText().toString()));
-                       _lblprice.setText("Precio: " + _zPre.getPrecioSel().toString());
-                       _lbldesc.setText("Descuento: " + _zPre.getDescuentoSel().toString());
-                       _lbltotal.setText("Resultado: " +  String.format("%.2f", _zPre.getTotal()));
+                    if (_qt.getText().length() > 0){
+                        _zPre.set_actual(_actual);
+                        _zPre.agregarProducto(_tgldesc.isChecked(),_tglprecio.isChecked(),Integer.valueOf(_qt.getText().toString()));
+                        _lblprice.setText("Precio: " + _zPre.getPrecioSel().toString());
+                        _lbldesc.setText("Descuento: " + _zPre.getDescuentoSel().toString());
+                        _lbltotal.setText("Resultado: " +  String.format("%.2f", _zPre.getTotal()));
 
 
 
-                   }
+                    }
 
                     InputMethodManager inputManager = (InputMethodManager)
                             getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -2118,7 +2175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     _lbltotal.setText("Resultado: " + _zPre.getTotal().toString());
                 }
             }
-                            });
+        });
         _tglprecio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2142,7 +2199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-            _sd.setText(String.valueOf(_zPre.lbs) +"x"+ String.valueOf(_zPre.getQty()) );
+                _sd.setText(String.valueOf(_zPre.lbs) +"x"+ String.valueOf(_zPre.getQty()) );
                 if (_qt.getText().length() > 0){
                     _zPre.set_actual(_actual);
                     _zPre.agregarProducto(_tgldesc.isChecked(),_tglprecio.isChecked(),Integer.valueOf(_qt.getText().toString()));
@@ -2227,7 +2284,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             litros = litros *  Double.valueOf(c.getText().toString()) * 3.921;
                         }
 
-                         else {
+                        else {
 
                             litros = (Double.valueOf(i.getText().toString()) -  Double.valueOf(f.getText().toString())) * Double.valueOf(c.getText().toString()) *3.921;
                         }
@@ -2354,7 +2411,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView;
         if(_FacCilindro)
-        dialogView = inflater.inflate(R.layout.comodato, null);
+            dialogView = inflater.inflate(R.layout.comodato, null);
         else
             dialogView = inflater.inflate(R.layout.clienteg , null);
         dialogBuilder.setView(dialogView);
@@ -2365,7 +2422,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //final EditText edt7 = (EditText) dialogView.findViewById(R.id.editFormadepago);
         final Spinner spiTipo = (Spinner) dialogView.findViewById(R.id.spinner);
 
-       // final Button pic = (Button) dialogView.findViewById(R.id.buttonFoto);
+        // final Button pic = (Button) dialogView.findViewById(R.id.buttonFoto);
 
         //_img = (ImageView) dialogView.findViewById(R.id.img);
 /*
@@ -2410,14 +2467,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         editor.putString(COUNT_CLIENTES,_clienteC);
                         editor.commit();
 
-                    if(_FacCilindro)//clien te cilindros
-                        saveClienteToServer(_supervisor + _clienteC,edt.getText().toString().replace(",", " "), edt3.getText().toString().replace(",", " "), _supervisor,edt2.getText().toString().replace(",", " ") , "1",
-                                _tiposub,edt3.getText().toString().replace(",", " "),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
-                                "0","1",String.valueOf(spiTipo.getSelectedItemPosition()));
+                        if(_FacCilindro)//clien te cilindros
+                            saveClienteToServer(_supervisor + _clienteC,edt.getText().toString().replace(",", " "), edt3.getText().toString().replace(",", " "), _supervisor,edt2.getText().toString().replace(",", " ") , "1",
+                                    _tiposub,edt3.getText().toString().replace(",", " "),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
+                                    "0","1",String.valueOf(spiTipo.getSelectedItemPosition()));
                         else //granel
-                        saveClienteToServer(_supervisor +  _clienteC,edt.getText().toString().replace(",", " "), edt3.getText().toString().replace(",", " "), _supervisor,edt2.getText().toString().replace(",", " ") , String.valueOf(spiTipo.getSelectedItemPosition()),
-                                _tiposub,edt3.getText().toString(),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
-                                "0","1","0");
+                            saveClienteToServer(_supervisor +  _clienteC,edt.getText().toString().replace(",", " "), edt3.getText().toString().replace(",", " "), _supervisor,edt2.getText().toString().replace(",", " ") , String.valueOf(spiTipo.getSelectedItemPosition()),
+                                    _tiposub,edt3.getText().toString(),"0","0",LAT,LONG, (_tt.substring(0,7) + _tt.substring(10,12)),
+                                    "0","1","0");
 
                         Toast.makeText(getApplicationContext(),"Cliente Agregado Correctamente",Toast.LENGTH_SHORT).show();
                     }
@@ -2550,25 +2607,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     if(spiTipo.getSelectedItemPosition() == 1){ // Precio Walmart
 
-                            if(!_cQ25.equals("") ) {
-                                _cwQ25 = _cQ25 + " " + "25Presion" + " 16500 " + String.valueOf(Integer.valueOf(_cQ25) * 16500);
-                                SubTotalCil += Integer.valueOf(_cQ25) * 16500;
-                                TotalImpCil += Integer.valueOf(_cQ25) * 2145;
-                                //TotalCil += SubTotalCil + TotalImpCil;
-                            }
-                            if(!_cQ25r.equals("") ) {
-                                _cwQ25r = _cQ25r + " " + "25Rosca" + " 20240 " + String.valueOf(Integer.valueOf(_cQ25r) * 20240);
-                                SubTotalCil += Integer.valueOf(_cQ25r) * 20240;
-                                TotalImpCil += Integer.valueOf(_cQ25r) * 2631.2;
-                                //TotalCil += SubTotalCil + TotalImpCil;
-                            }
-                            if(!_cQ100r.equals("") ) {
-                                _cwQ100r = _cQ100r + " " + "100Rosca" + " 90000 " + String.valueOf(Integer.valueOf(_cQ100r) * 90000);
+                        if(!_cQ25.equals("") ) {
+                            _cwQ25 = _cQ25 + " " + "25Presion" + " 16500 " + String.valueOf(Integer.valueOf(_cQ25) * 16500);
+                            SubTotalCil += Integer.valueOf(_cQ25) * 16500;
+                            TotalImpCil += Integer.valueOf(_cQ25) * 2145;
+                            //TotalCil += SubTotalCil + TotalImpCil;
+                        }
+                        if(!_cQ25r.equals("") ) {
+                            _cwQ25r = _cQ25r + " " + "25Rosca" + " 20240 " + String.valueOf(Integer.valueOf(_cQ25r) * 20240);
+                            SubTotalCil += Integer.valueOf(_cQ25r) * 20240;
+                            TotalImpCil += Integer.valueOf(_cQ25r) * 2631.2;
+                            //TotalCil += SubTotalCil + TotalImpCil;
+                        }
+                        if(!_cQ100r.equals("") ) {
+                            _cwQ100r = _cQ100r + " " + "100Rosca" + " 90000 " + String.valueOf(Integer.valueOf(_cQ100r) * 90000);
 
-                                SubTotalCil += Integer.valueOf(_cQ100r) * 90000;
-                                TotalImpCil += Integer.valueOf(_cQ100r) * 11700;
-                                //TotalCil += SubTotalCil + TotalImpCil;
-                            }
+                            SubTotalCil += Integer.valueOf(_cQ100r) * 90000;
+                            TotalImpCil += Integer.valueOf(_cQ100r) * 11700;
+                            //TotalCil += SubTotalCil + TotalImpCil;
+                        }
                     }
 
                     _tipodoc = 1;
@@ -2646,10 +2703,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialogBuilder.setMessage("Puedes agregar desglose de billetes");
         dialogBuilder.setPositiveButton("Pura Vida", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                    saveBilletesToServer(edt50k.getText().toString(),edt20k.getText().toString(),edt10k.getText().toString(),edt5k.getText().toString(),edt2k.getText().toString(),edt1k.getText().toString(),edt500.getText().toString(),
-                            edt100.getText().toString(),edt50.getText().toString(),edt25.getText().toString(),edt10.getText().toString(),edt5.getText().toString(),
-                            edtdol.getText().toString(),edtvale.getText().toString());
-                    //Toast.makeText(getApplicationContext(),"El desglose agregado con exito",Toast.LENGTH_LONG).show();
+                saveBilletesToServer(edt50k.getText().toString(),edt20k.getText().toString(),edt10k.getText().toString(),edt5k.getText().toString(),edt2k.getText().toString(),edt1k.getText().toString(),edt500.getText().toString(),
+                        edt100.getText().toString(),edt50.getText().toString(),edt25.getText().toString(),edt10.getText().toString(),edt5.getText().toString(),
+                        edtdol.getText().toString(),edtvale.getText().toString());
+                //Toast.makeText(getApplicationContext(),"El desglose agregado con exito",Toast.LENGTH_LONG).show();
 
 
 
@@ -2821,11 +2878,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 efectivo = edtEfeQ.getText().toString();
-                 transC = edttransQ.getText().toString();
-                 transNum = edtNumeroCuenta.getText().toString();
-                 chkmont = edtchequeQ.getText().toString();
-                 chknum = edtchequeN.getText().toString();
-                 chkbank = edtchequeB.getText().toString();
+                transC = edttransQ.getText().toString();
+                transNum = edtNumeroCuenta.getText().toString();
+                chkmont = edtchequeQ.getText().toString();
+                chknum = edtchequeN.getText().toString();
+                chkbank = edtchequeB.getText().toString();
                 Toast.makeText(getApplicationContext(),"El tipo de pago agregado con exito",Toast.LENGTH_LONG).show();
 
 
@@ -2849,36 +2906,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void GenerateMotivo(){
 
 
-            //final CharSequence[] options = {"xD"};
-            final CharSequence[] options = {"Economico","Competencia","No estaba","Otros"};
+        //final CharSequence[] options = {"xD"};
+        final CharSequence[] options = {"Economico","Competencia","No estaba","Otros"};
 
-            clienteFromdb.clear();
-
-
-
-
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
-            //builder.setCancelable(false);
-            builder.setTitle("Motivo de no compra:");
-            builder.setItems(options, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    //options[which]
+        clienteFromdb.clear();
 
 
 
-                    // the user clicked on options[which]
-                }
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
 
-                    //the user clicked on Cancel
-                }
-            });
-            builder.show();
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+        //builder.setCancelable(false);
+        builder.setTitle("Motivo de no compra:");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //options[which]
+
+
+
+                // the user clicked on options[which]
+            }
+        });
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //the user clicked on Cancel
+            }
+        });
+        builder.show();
 
 
     }
@@ -2918,7 +2975,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             return -1;
         }
+        if(myUserName.getText().toString().equals("anular")){
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int choice) {
+                    switch (choice) {
+                        case DialogInterface.BUTTON_POSITIVE:
 
+
+                            Toast.makeText(getApplicationContext(),"Anulacion hecha con exito",Toast.LENGTH_SHORT).show();
+                          //  saveMecanToServer(_supervisor + ",anular," +  + "," +);
+
+
+
+                            //saveNameToServer("0,"+editTextName.getText().toString()+","+LAT+","+LONG+","+_supervisor);
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+
+                            break;
+                    }
+                }
+            };
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Deseas anular esta factura?");
+
+            builder.setMessage("Numero de factura: "+ "VARIBALE AQUI" +" \n" +
+                    "Fecha: "+ "VARIBALE AQUI" +" \n" +
+                    "Ruta: "+ "VARIBALE AQUI" +" \n" +
+                    "Razon Social: "+ "VARIBALE AQUI" +" \n" +
+                    "Monto: "+ "VARIBALE AQUI" +" \n")
+                    .setPositiveButton("Pura Vida", dialogClickListener)
+                    .setNegativeButton("Cancelar", dialogClickListener).show();
+
+        }
         if(myUserName.getText().toString().equals("cierre")){
             PrintCierre();
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -3022,37 +3112,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-            }
+        }
 
 
 
 
 
 
-            String _t = c.convertLatLonToMGRS(Double.parseDouble(LAT),Double.parseDouble(LONG));
+        String _t = c.convertLatLonToMGRS(Double.parseDouble(LAT),Double.parseDouble(LONG));
 
-            _t = _t.replace(" ","");
-            _CurrentGPS2 = _t;
+        _t = _t.replace(" ","");
+        _CurrentGPS2 = _t;
 
 
-            _CurrentGPS = _t.substring(0,7) + _t.substring(10,12);
+        _CurrentGPS = _t.substring(0,7) + _t.substring(10,12);
 
-            clienteFromdb.clear();
-            indexes.clear();
-            clientes.clear();
-            Cursor cursor = db.getGpsClientes(_CurrentGPS);
-            if (cursor.moveToFirst()) {
-                do {
-                    //Cliente name = new Cliente(
+        clienteFromdb.clear();
+        indexes.clear();
+        clientes.clear();
+        Cursor cursor = db.getGpsClientes(_CurrentGPS);
+        if (cursor.moveToFirst()) {
+            do {
+                //Cliente name = new Cliente(
 
-                    //      cursor.getString(cursor.getColumnIndex("NOMBRE")),cursor.getString(cursor.getColumnIndex("DESCUENTO")),
-                    //      cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS))
-                    //);
-                    //clientes.add(name);
-                    clienteFromdb.add(cursor.getString(cursor.getColumnIndex("NOMBRE")) +","+ cursor.getString(cursor.getColumnIndex("RAZON")));
-                    indexes.add(cursor.getString(cursor.getColumnIndex("id")));
-                } while (cursor.moveToNext());
-            }
+                //      cursor.getString(cursor.getColumnIndex("NOMBRE")),cursor.getString(cursor.getColumnIndex("DESCUENTO")),
+                //      cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATUS))
+                //);
+                //clientes.add(name);
+                clienteFromdb.add(cursor.getString(cursor.getColumnIndex("NOMBRE")) +","+ cursor.getString(cursor.getColumnIndex("RAZON")));
+                indexes.add(cursor.getString(cursor.getColumnIndex("id")));
+            } while (cursor.moveToNext());
+        }
 
 
 
@@ -3084,29 +3174,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 String[] tokens = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)).split(",");
-                if(!tokens[1].equals("mecanico")){
-                //if (!tokens[6].equals("0")){
-                _dat += "-------------\n";
+                if(!tokens[1].equals("mecanico") && !tokens[1].equals("anular")){
+                    //if (!tokens[6].equals("0")){
+                    _dat += "-------------\n";
 
 
-                _dat += tokens[2] + "\n"; // TItulo
-                _dat += "Total factura: " + "\n" + tokens[3] + "\n Descuento:" + tokens[4]  + "\n" ;
+                    _dat += tokens[2] + "\n"; // TItulo
+                    _dat += "Total factura: " + "\n" + tokens[3] + "\n Descuento:" + tokens[4]  + "\n" ;
 
 
-                if (!tokens[6].equals("0")) _dat += "Contado"  + "\n"; else _dat += "Credito" + "\n";
-                //if (tokens[7] != "0") _dat += "30 Lbs :" + "\n"; //Libre recarga
-                if (!tokens[8].equals("0"))  _dat += "20 Lbs :" + tokens[8] +"\n";
-                if (!tokens[9].equals("0"))  _dat += "25 Lbs Presion :" +tokens[9] + "\n";
-                if (!tokens[10].equals("0")) _dat += "30 Lbs Rosca :" +tokens[10] + "\n";
-                if (!tokens[11].equals("0")) _dat += "40 Lbs Rosca :" +tokens[11] + "\n";
-                if (!tokens[12].equals("0")) _dat += "50 Lbs Rosca :" +tokens[12] + "\n";
-                if (!tokens[13].equals("0")) _dat += "100 Lbs Rosca :" +tokens[13] + "\n";
-                if (!tokens[14].equals("0")) _dat += "10 Lbs Rosca :" +tokens[14] + "\n";
-                if (!tokens[15].equals("0")) _dat += "20 Lbs Rosca :" +tokens[15] + "\n";
-                if (!tokens[16].equals("0")) _dat += "25 Lbs Rosca :" +tokens[16] + "\n";
-                if (!tokens[17].equals("0")) _dat += "35 Lbs Rosca :" +tokens[17] + "\n";
-                if (!tokens[18].equals("0")) _dat += "45 Lbs Rosca :" +tokens[18] + "\n";
-                if (!tokens[19].equals("0")) _dat += "60 Lbs Rosca :" +tokens[19] + "\n";
+                    if (!tokens[6].equals("0")) _dat += "Contado"  + "\n"; else _dat += "Credito" + "\n";
+                    //if (tokens[7] != "0") _dat += "30 Lbs :" + "\n"; //Libre recarga
+                    if (!tokens[8].equals("0"))  _dat += "20 Lbs :" + tokens[8] +"\n";
+                    if (!tokens[9].equals("0"))  _dat += "25 Lbs Presion :" +tokens[9] + "\n";
+                    if (!tokens[10].equals("0")) _dat += "30 Lbs Rosca :" +tokens[10] + "\n";
+                    if (!tokens[11].equals("0")) _dat += "40 Lbs Rosca :" +tokens[11] + "\n";
+                    if (!tokens[12].equals("0")) _dat += "50 Lbs Rosca :" +tokens[12] + "\n";
+                    if (!tokens[13].equals("0")) _dat += "100 Lbs Rosca :" +tokens[13] + "\n";
+                    if (!tokens[14].equals("0")) _dat += "10 Lbs Rosca :" +tokens[14] + "\n";
+                    if (!tokens[15].equals("0")) _dat += "20 Lbs Rosca :" +tokens[15] + "\n";
+                    if (!tokens[16].equals("0")) _dat += "25 Lbs Rosca :" +tokens[16] + "\n";
+                    if (!tokens[17].equals("0")) _dat += "35 Lbs Rosca :" +tokens[17] + "\n";
+                    if (!tokens[18].equals("0")) _dat += "45 Lbs Rosca :" +tokens[18] + "\n";
+                    if (!tokens[19].equals("0")) _dat += "60 Lbs Rosca :" +tokens[19] + "\n";
                /* if (!tokens[24].equals("0")) edtEfeQ.setText(tokens[24]);
                 if (!tokens[25].equals("0")) edttransQ.setText(tokens[25]);
                 if (!tokens[26].equals("0")) edtNumeroCuenta .setText(tokens[26]);
@@ -3151,14 +3241,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if(_bt != false)
-        if(mmDevice == null) {
-            try {
-                findBT();
-                openBT();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if(mmDevice == null) {
+                try {
+                    findBT();
+                    openBT();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},10);
@@ -3393,7 +3483,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
     * this method is saving the name to ther server
     * */
-private int _countclie = 0;
+    private int _countclie = 0;
     private void ReadCommand(String _rutaa) {
         _countclie = 0;
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -3411,83 +3501,83 @@ private int _countclie = 0;
                             JSONObject obj = new JSONObject(response);
                             db.DeleteClients();
 
-                                try {
+                            try {
 
 
 
-                                    //String jsonstring = "{ "child": { "something": "value", "something2": "value" } }";
-                                    //JSONObject resobj = new JSONObject(jsonstring);
-                                    Iterator<?> keys = obj.keys();
-                                    while(keys.hasNext() ) {
-                                        String key = (String)keys.next();
+                                //String jsonstring = "{ "child": { "something": "value", "something2": "value" } }";
+                                //JSONObject resobj = new JSONObject(jsonstring);
+                                Iterator<?> keys = obj.keys();
+                                while(keys.hasNext() ) {
+                                    String key = (String)keys.next();
 
-                                        if ( obj.get(key) instanceof JSONObject ) {
-                                            JSONObject xx = new JSONObject(obj.get(key).toString());
-                                            //String t = xx.getString("country");
-                                            if (key.equals("Settings")){
-                                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    if ( obj.get(key) instanceof JSONObject ) {
+                                        JSONObject xx = new JSONObject(obj.get(key).toString());
+                                        //String t = xx.getString("country");
+                                        if (key.equals("Settings")){
+                                            SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                                                editor.putString(URL_MAIN, xx.getString("URLMAIN"));
-                                                editor.putString(URL_MAIN_2, xx.getString("URLMAIN2"));
-                                                editor.putString(CORRECILZA, xx.getString("CORREC"));
-                                                editor.putString(CORRETRAM, xx.getString("CORRET"));
-                                                editor.putString(URL_CLIENTES,xx.getString("URLCLIENTES"));
-                                                editor.putString(URL_COMM, xx.getString("URLCOMM"));
-                                                editor.putString(MIRUTA,xx.getString("RUTA"));
-                                                editor.commit();
+                                            editor.putString(URL_MAIN, xx.getString("URLMAIN"));
+                                            // editor.putString(URL_MAIN_2, xx.getString("URLMAIN2"));
+                                            editor.putString(CORRECILZA, xx.getString("CORREC"));
+                                            editor.putString(CORRETRAM, xx.getString("CORRET"));
+                                            editor.putString(URL_CLIENTES,xx.getString("URLCLIENTES"));
+                                            editor.putString(URL_COMM, xx.getString("URLCOMM"));
+                                            editor.putString(MIRUTA,xx.getString("RUTA"));
+                                            editor.commit();
 
-                                                Log.d("Sett",xx.getString("URLMAIN"));
-                                            }
-
+                                            Log.d("Sett",xx.getString("URLMAIN"));
                                         }
-                                        if ( obj.get(key) instanceof JSONArray ) {
-                                            if (key.equals("AddClient")){
-                                                JSONArray jsonarray = obj.getJSONArray(key); //new JSONArray(key);
-                                                for (int i = 0; i < jsonarray.length(); i++) {
-                                                    _countclie++;
-                                                    JSONObject jsonobject = jsonarray.getJSONObject(i);
-                                                    db.addCliente(jsonobject.getString("id"),jsonobject.getString("nombre"),jsonobject.getString("descuento"),
-                                                            jsonobject.getString("ruta"),jsonobject.getString("razon"),
-                                                            jsonobject.getString("credito"),jsonobject.getString("subcanal"),
-                                                            jsonobject.getString("ldescuento"),jsonobject.getString("lprecioa"),
-                                                            jsonobject.getString("lprecioc"),jsonobject.getString("LAT"),
-                                                            jsonobject.getString("LONG"),jsonobject.getString("GRID"),
-                                                            jsonobject.getString("formapago"),jsonobject.getString("puedofacturar"),
-                                                            jsonobject.getString("tipofactura"),1);
 
-                                                    //String name = jsonobject.getString("nombre");
-                                                    //String url = jsonobject.getString("descuento");
-                                                    //String xd = jsonobject.getString("descuento");
-                                                }
+                                    }
+                                    if ( obj.get(key) instanceof JSONArray ) {
+                                        if (key.equals("AddClient")){
+                                            JSONArray jsonarray = obj.getJSONArray(key); //new JSONArray(key);
+                                            for (int i = 0; i < jsonarray.length(); i++) {
+                                                _countclie++;
+                                                JSONObject jsonobject = jsonarray.getJSONObject(i);
+                                                db.addCliente(jsonobject.getString("id"),jsonobject.getString("nombre"),jsonobject.getString("descuento"),
+                                                        jsonobject.getString("ruta"),jsonobject.getString("razon"),
+                                                        jsonobject.getString("credito"),jsonobject.getString("subcanal"),
+                                                        jsonobject.getString("ldescuento"),jsonobject.getString("lprecioa"),
+                                                        jsonobject.getString("lprecioc"),jsonobject.getString("LAT"),
+                                                        jsonobject.getString("LONG"),jsonobject.getString("GRID"),
+                                                        jsonobject.getString("formapago"),jsonobject.getString("puedofacturar"),
+                                                        jsonobject.getString("tipofactura"),1);
+
+                                                //String name = jsonobject.getString("nombre");
+                                                //String url = jsonobject.getString("descuento");
+                                                //String xd = jsonobject.getString("descuento");
                                             }
-
                                         }
 
                                     }
 
-                                    SharedPreferences.Editor editor = sharedpreferences.edit();
-
-
-                                    editor.putString(COUNT_CLIENTES,String.valueOf(_countclie));
-                                    editor.commit();
-
-
-
-                                } catch (final JSONException e) {
-                                    Log.e("TT" , "Json parsing error: " + e.getMessage());
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(getApplicationContext(),
-                                                    "Json parsing error: " + e.getMessage(),
-                                                    Toast.LENGTH_LONG).show();
-                                        }
-                                    });
                                 }
 
-                                //if there is a success
-                                //storing the name to sqlite with status synced
-                                //saveNameToLocalStorage(name, NAME_SYNCED_WITH_SERVER);
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+
+
+                                editor.putString(COUNT_CLIENTES,String.valueOf(_countclie));
+                                editor.commit();
+
+
+
+                            } catch (final JSONException e) {
+                                Log.e("TT" , "Json parsing error: " + e.getMessage());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(),
+                                                "Json parsing error: " + e.getMessage(),
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+
+                            //if there is a success
+                            //storing the name to sqlite with status synced
+                            //saveNameToLocalStorage(name, NAME_SYNCED_WITH_SERVER);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -3531,7 +3621,7 @@ private int _countclie = 0;
         String format = simpleDateFormat.format(new Date());
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Factura creada correctamente");
+        progressDialog.setMessage("Accion creada correctamente");
         progressDialog.show();
 
         name2 = _data + ","+ format;
@@ -3539,7 +3629,7 @@ private int _countclie = 0;
         final String name = name2;
 
 
-            saveMecanToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(0),Double.valueOf(0));
+        saveMecanToLocalStorage(name, NAME_NOT_SYNCED_WITH_SERVER,Double.valueOf(0),Double.valueOf(0));
         //resetUI();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SAVE_NAME,
                 new Response.Listener<String>() {
@@ -3695,8 +3785,8 @@ private int _countclie = 0;
         progressDialog.show();
         if (transC.equals("") ) transC = "0"; if (transNum.equals("")) transNum = "0"; if (chknum.equals("")) chknum = "0";
         if (chkbank.equals("")) chkbank = "0";if (chkmont.equals("")) chkmont = "0";
-        name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+_actual.getTipoFactura()+ ","+/*_actual.getRuta() +*/ String.valueOf(_facc)+ ","+_actual.getNombre()+","+_actual.getSub_canal();
-        if (_tipodoc == 1) name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+"100"+ ","+/*_actual.getRuta() +*/String.valueOf(_facz)+ ","+_actual.getNombre()+ ","+_cQ25+ ","+_cQ25r+ ","+_cQ100r;
+        name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+_actual.getTipoFactura()+ ","+_actual.getRuta() + String.valueOf(_facc)+ ","+_actual.getNombre()+","+_actual.getSub_canal();
+        if (_tipodoc == 1) name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+"100"+ ","+_actual.getRuta() + String.valueOf(_facz)+ ","+_actual.getNombre()+ ","+_cQ25+ ","+_cQ25r+ ","+_cQ100r;
         if (_tipodoc == 2) name2 = _data + ","+ format + ","+ efectivo + ","+ transC + ","+ transNum + ","+ chknum+ ","+ chkbank + ","+ chkmont + ","+"101"+ ","+/*_actual.getRuta() +*/String.valueOf(_fact)+ ","+_actual.getNombre()+ ","+_cQ25+ ","+_cQ25r+ ","+_cQ100r;
         final String name = name2;
 
@@ -3852,7 +3942,7 @@ private int _countclie = 0;
     }
     private void saveClienteToServer(final String codigo,final String name, final String descuento, final String ruta, final String Razon,final String credito,final String sub_canal,final String ldescuento,
                                      final String lprecioa,final String lprecioc,final String LAT,final String LONG,final String G,final String FormaPago,final String puedoFacturar,final String tipoFactura
-                                    ) {
+    ) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Cliente creado correctamente");
         progressDialog.show();
@@ -4018,34 +4108,34 @@ private int _countclie = 0;
 
 
 
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int choice) {
-                    switch (choice) {
-                        case DialogInterface.BUTTON_POSITIVE:
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice) {
+                    case DialogInterface.BUTTON_POSITIVE:
 
-                               // saveNameToServer("0,"+","+LAT+","+LONG+","+_supervisor);
+                        // saveNameToServer("0,"+","+LAT+","+LONG+","+_supervisor);
 
 
-                            break;
+                        break;
 
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            break;
-                    }
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
                 }
-            };
+            }
+        };
 
 
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder( this );
-            builder.setMessage("Actualizar coordenadas para: ")
-                    .setPositiveButton("Pura Vida", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder( this );
+        builder.setMessage("Actualizar coordenadas para: ")
+                .setPositiveButton("Pura Vida", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
 
 
 
 
 
-        }
+    }
     //Bluetooth Functions
     // this will find a bluetooth printer device
     void findBT() {
